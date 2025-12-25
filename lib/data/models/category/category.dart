@@ -79,6 +79,8 @@ abstract class Category with _$Category {
 
   static const empty = Category(id: -1, name: 'Empty');
 
+  bool get isEmpty => id == -1 && name == 'Empty';
+
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 }

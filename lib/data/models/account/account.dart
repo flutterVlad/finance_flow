@@ -1,35 +1,36 @@
-import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_serializable_uuid_converter/json_serializable_uuid_converter.dart';
 import 'package:uuid/uuid.dart';
 
+part 'account.freezed.dart';
 part 'account.g.dart';
 
-@JsonSerializable(converters: [UuidValueConverter()])
-class Account extends Equatable {
-  final UuidValue uid;
+@freezed
+abstract class Account with _$Account {
+  const Account._();
 
-  final String login;
+  const factory Account({
+    @UuidValueConverter() required UuidValue uid,
+    required String login,
+    required String email,
+    required String firstName,
+    required String lastName,
+  }) = _Account;
 
-  final String firstName;
+  static const Account empty = Account(
+    uid: UuidValue.fromNamespace(.url),
+    login: 'empty',
+    email: 'empty',
+    firstName: 'empty',
+    lastName: 'empty',
+  );
 
-  final String lastName;
-
-  final String email;
-
-  const Account({
-    required this.uid,
-    required this.login,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-  });
-
-  @override
-  List<Object?> get props => [uid, login, firstName, lastName, email];
+  bool get isEmpty =>
+      login == 'empty' &&
+      email == 'empty' &&
+      firstName == 'empty' &&
+      lastName == 'empty';
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);
-
-  Map<String, dynamic> toJson() => _$AccountToJson(this);
 }

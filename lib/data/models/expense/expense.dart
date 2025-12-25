@@ -20,6 +20,8 @@ abstract class Expense with _$Expense {
   static Expense get empty =>
       Expense(category: Category.empty, datetime: DateTime.now(), price: 0);
 
+  bool get isEmpty => category == Category.empty;
+
   String get formattedPrice => price.toStringAsFixed(2);
 
   factory Expense.fromJson(Map<String, dynamic> json) =>
