@@ -6,9 +6,7 @@ import 'package:get_it/get_it.dart';
 
 import 'data/data_sources/local_datasource.dart';
 import 'data/service/hive_service.dart';
-import 'domain/use_cases/create_mock_expenses_use_case.dart';
 import 'domain/use_cases/get_day_expenses_use_case.dart';
-import 'domain/use_cases/update_data_use_case.dart';
 import 'presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import 'presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'presentation/screens/wallet_screen/bloc/wallet_bloc.dart';
@@ -25,16 +23,13 @@ class DI {
     GetIt.I.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
         getDayExpensesUseCase: GetIt.I<GetDayExpensesUseCase>(),
-        getMockExpensesUseCase: GetIt.I<GetMockExpensesUseCase>(),
-        updateDataUseCase: GetIt.I<UpdateDataUseCase>(),
+        // getMockExpensesUseCase: GetIt.I<GetMockExpensesUseCase>(),
+        // updateDataUseCase: GetIt.I<UpdateDataUseCase>(),
         getAllExpensesUseCase: GetIt.I<GetAllExpensesUseCase>(),
         addExpenseUseCase: GetIt.I<AddExpenseUseCase>(),
       ),
     );
-    GetIt.I.registerLazySingleton<WalletBloc>(
-      () =>
-          WalletBloc(getMockExpensesUseCase: GetIt.I<GetMockExpensesUseCase>()),
-    );
+    GetIt.I.registerLazySingleton<WalletBloc>(() => WalletBloc());
     GetIt.I.registerLazySingleton(() => TransactionsCubit());
   }
 
@@ -53,10 +48,6 @@ class DI {
   void _initUseCases() {
     GetIt.I.registerLazySingleton(
       () => GetDayExpensesUseCase(localService: GetIt.I<MockLocalService>()),
-    );
-    GetIt.I.registerLazySingleton(() => const GetMockExpensesUseCase());
-    GetIt.I.registerLazySingleton(
-      () => UpdateDataUseCase(localService: GetIt.I<MockLocalService>()),
     );
     GetIt.I.registerLazySingleton(
       () => GetAllExpensesUseCase(

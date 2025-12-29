@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GradientProgressBar extends StatefulWidget {
-  final double persent;
-  const GradientProgressBar({super.key, this.persent = 0.0});
+  final double percent;
+  const GradientProgressBar({super.key, this.percent = 0.0});
 
   @override
   State<GradientProgressBar> createState() => _GradientProgressBarState();
@@ -23,7 +23,7 @@ class _GradientProgressBarState extends State<GradientProgressBar>
       duration: const Duration(seconds: 3),
     );
 
-    _animationValue = Tween<double>(begin: 0, end: widget.persent).animate(
+    _animationValue = Tween<double>(begin: 0, end: widget.percent).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCirc),
     );
 
@@ -40,8 +40,8 @@ class _GradientProgressBarState extends State<GradientProgressBar>
   @override
   void didUpdateWidget(covariant GradientProgressBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.persent != widget.persent) {
-      _animationValue = Tween<double>(begin: 0, end: widget.persent).animate(
+    if (oldWidget.percent != widget.percent) {
+      _animationValue = Tween<double>(begin: 0, end: widget.percent).animate(
         CurvedAnimation(parent: _controller, curve: Curves.easeInOutCirc),
       );
       _animationColor = _animationValue.drive(

@@ -13,6 +13,16 @@ abstract class HomeState with _$HomeState {
 
   double get balance => incomes.fold(0, (a, b) => a + b.price);
 
+  double get percent {
+    if (balance == 0 && allSpends == 0) {
+      return 0;
+    } else if (balance == 0 && allSpends != 0) {
+      return 1.01;
+    } else {
+      return allSpends / balance;
+    }
+  }
+
   List<Expense> get incomeOnCurrentMonth =>
       incomes.where((e) => e.datetime.isToday).toList();
 

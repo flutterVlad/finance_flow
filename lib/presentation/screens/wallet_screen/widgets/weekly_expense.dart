@@ -167,10 +167,10 @@ class CustomScatterSpot extends ScatterSpot {
   static FlDotPainter _createPainter(ExpenseData expense) {
     return TextDotPainter(
       radius: expense.radius,
-      color: expense.category.color,
+      color: expense.category.color ?? Colors.grey,
       text: expense.formattedPercentage,
       strokeWidth: 2,
-      strokeColor: expense.category.color,
+      strokeColor: expense.category.color ?? Colors.grey,
     );
   }
 }
@@ -208,6 +208,7 @@ class ExpenseDataTransformer {
     for (final expense in inputData) {
       if (groupedExpenses.keys.contains(expense.category.name)) {
         groupedExpenses[expense.category.name] = Expense(
+          id: expense.id,
           category: expense.category,
           datetime: expense.datetime,
           price: expense.price + groupedExpenses[expense.category.name]!.price,

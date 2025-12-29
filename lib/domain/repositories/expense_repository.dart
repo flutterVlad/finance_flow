@@ -6,4 +6,6 @@ abstract class ExpenseRepository {
   Future<List<Expense>> getAllExpenses();
 
   Future<void> deleteExpense(Expense expense);
+
+  Future<void> deleteAllExpenses();
 }

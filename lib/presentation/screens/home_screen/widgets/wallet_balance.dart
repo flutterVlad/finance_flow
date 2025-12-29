@@ -22,9 +22,7 @@ class WalletBalance extends StatelessWidget {
             borderRadius: borderRadius,
             child: InkWell(
               borderRadius: borderRadius,
-              onTap: () {
-                // GetIt.I<HomeBloc>().add(const UpdateHomeEvent());
-              },
+              onTap: () {},
               child: Container(
                 color: primaryColor,
                 child: BackdropFilter(
@@ -61,9 +59,7 @@ class WalletBalance extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        GradientProgressBar(
-                          persent: state.allSpends / state.balance,
-                        ),
+                        GradientProgressBar(percent: state.percent),
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: .spaceBetween,

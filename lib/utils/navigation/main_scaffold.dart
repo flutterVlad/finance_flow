@@ -15,7 +15,7 @@ class MainScaffold extends StatefulWidget {
 class _MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
-  final Duration animationDuration = const Duration(milliseconds: 100);
+  final Duration animationDuration = const Duration(milliseconds: 200);
 
   @override
   void initState() {

@@ -1,12 +1,13 @@
-import 'package:finance_flow/utils/svgs/svg.dart';
-import 'package:finance_flow/utils/svgs/svgs.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/utils/svgs/svg.dart';
+import '/utils/svgs/svgs.dart';
 import '/utils/theme.dart';
 import '../widgets/date_filter.dart';
 
@@ -47,6 +48,7 @@ class _DiagramState extends State<Diagram> {
         if (isAddEmpty) {
           expenses.add(
             Expense(
+              id: UuidValue.fromString(const Uuid().v4()),
               category: Category.empty,
               datetime: DateTime.now(),
               price: difference,
@@ -54,43 +56,83 @@ class _DiagramState extends State<Diagram> {
           );
         }
 
+        final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
+
         return SliverToBoxAdapter(
           child: Padding(
             padding: const .all(16),
             child: AspectRatio(
               aspectRatio: 1.5,
-              child: PieChart(
-                PieChartData(
-                  startDegreeOffset: 90,
-                  sectionsSpace: 1,
-                  centerSpaceRadius: 60,
-                  borderData: FlBorderData(
-                    border: Border.all(width: 100, color: Colors.red),
+              child: Stack(
+                fit: .expand,
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisSize: .min,
+                      children: touchedIndex != -1
+                          ? [
+                              Text(
+                                '${expenses[touchedIndex].formattedPrice} Br',
+                              ),
+                              Text(
+                                expenses[touchedIndex].category.name,
+                                style: const TextStyle(
+                                  color: AppColors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ]
+                          : [
+                              Text('${difference.toStringAsFixed(2)} Br'),
+                              const Text(
+                                'Left to spend',
+                                style: TextStyle(
+                                  color: AppColors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                    ),
                   ),
-                  sections: expenses
-                      .map(
-                        (e) => _makeSectionData(
-                          expense: e,
-                          isTouched: expenses.indexOf(e) == touchedIndex,
-                        ),
-                      )
-                      .toList(),
-                  pieTouchData: PieTouchData(
-                    enabled: true,
-                    touchCallback: (event, response) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            response == null ||
-                            response.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex =
-                            response.touchedSection!.touchedSectionIndex;
-                      });
-                    },
+                  PieChart(
+                    PieChartData(
+                      startDegreeOffset: 90,
+                      sectionsSpace: 1,
+                      centerSpaceRadius: centerSpaceRadius,
+                      sections: expenses
+                          .map(
+                            (e) => _makeSectionData(
+                              expense: e,
+                              radius: centerSpaceRadius / 3,
+                              isTouched:
+                                  expenses.indexOf(e) == touchedIndex &&
+                                  expenses.last != e,
+                            ),
+                          )
+                          .toList(),
+                      pieTouchData: PieTouchData(
+                        enabled: true,
+                        touchCallback: (event, response) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                response == null ||
+                                response.touchedSection == null) {
+                              touchedIndex = -1;
+                              return;
+                            }
+                            if (response.touchedSection!.touchedSectionIndex ==
+                                expenses.length - 1) {
+                              touchedIndex = -1;
+                              return;
+                            }
+                            touchedIndex =
+                                response.touchedSection!.touchedSectionIndex;
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
@@ -102,13 +144,14 @@ class _DiagramState extends State<Diagram> {
   PieChartSectionData _makeSectionData({
     required Expense expense,
     bool isTouched = false,
+    double radius = 30,
   }) {
     return PieChartSectionData(
       value: expense.price,
       color: expense.category.color,
-      showTitle: isTouched,
+      showTitle: false,
       borderSide: BorderSide(width: isTouched ? 3 : 1),
-      radius: 30,
+      radius: radius,
       titleStyle: const TextStyle(color: AppColors.grey, fontSize: 12),
       title: '${expense.formattedPrice}\n${expense.category.name}',
       titlePositionPercentageOffset: 1.8,
@@ -153,6 +196,7 @@ class Income extends StatelessWidget {
                       padding: const .symmetric(vertical: 8.0),
                       child: ListView.separated(
                         shrinkWrap: true,
+                        padding: .zero,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           if (index + 1 == incomeExpenses.length + 1) {
@@ -162,6 +206,7 @@ class Income extends StatelessWidget {
                         },
                         separatorBuilder: (context, index) => Divider(
                           color: AppColors.grey.withValues(alpha: 0.5),
+                          height: 20,
                           indent: 5,
                           endIndent: 5,
                         ),
@@ -191,7 +236,7 @@ class _Element extends StatelessWidget {
       return Row(
         spacing: 8,
         children: [
-          Svg(expense!.category.iconAsset, color: AppColors.grey, size: 25),
+          Svg(expense!.category.iconAsset, color: AppColors.grey, size: 30),
           Column(
             crossAxisAlignment: .start,
             children: [
@@ -209,7 +254,7 @@ class _Element extends StatelessWidget {
     return Row(
       spacing: 8,
       children: [
-        const Svg(Svgs.addRounded, color: AppColors.grey),
+        const Svg(Svgs.addRounded, color: AppColors.grey, size: 30),
         Text('Add $elementName'),
       ],
     );

@@ -14,6 +14,7 @@ abstract class TransactionsState with _$TransactionsState {
   }) = _TransactionsState;
 
   Expense get validExpense => Expense(
+    id: UuidValue.fromString(const Uuid().v4()),
     name: nameInput.value,
     category: categoryInput.value,
     datetime: datetimeInput.value,

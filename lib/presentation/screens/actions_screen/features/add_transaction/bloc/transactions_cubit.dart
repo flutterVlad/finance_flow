@@ -3,6 +3,7 @@ import 'package:finance_flow/data/models/expense/expense.dart';
 import 'package:finance_flow/presentation/screens/actions_screen/features/add_transaction/bloc/input_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'transactions_cubit.freezed.dart';
 part 'transactions_state.dart';

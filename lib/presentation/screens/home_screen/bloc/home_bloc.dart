@@ -9,9 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
 import '/domain/use_cases/base_use_case.dart';
-import '/domain/use_cases/create_mock_expenses_use_case.dart';
 import '/domain/use_cases/get_day_expenses_use_case.dart';
-import '/domain/use_cases/update_data_use_case.dart';
 
 part 'home_bloc.freezed.dart';
 part 'home_event.dart';
@@ -19,20 +17,21 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetDayExpensesUseCase _getDayExpensesUseCase;
-  final GetMockExpensesUseCase _getMockExpensesUseCase;
-  final UpdateDataUseCase _updateDataUseCase;
+
+  // final GetMockExpensesUseCase _getMockExpensesUseCase;
+  // final UpdateDataUseCase _updateDataUseCase;
   final GetAllExpensesUseCase _getAllExpensesUseCase;
   final AddExpenseUseCase _addExpenseUseCase;
 
   HomeBloc({
     required GetDayExpensesUseCase getDayExpensesUseCase,
-    required GetMockExpensesUseCase getMockExpensesUseCase,
-    required UpdateDataUseCase updateDataUseCase,
+    // required GetMockExpensesUseCase getMockExpensesUseCase,
+    // required UpdateDataUseCase updateDataUseCase,
     required GetAllExpensesUseCase getAllExpensesUseCase,
     required AddExpenseUseCase addExpenseUseCase,
   }) : _getDayExpensesUseCase = getDayExpensesUseCase,
-       _getMockExpensesUseCase = getMockExpensesUseCase,
-       _updateDataUseCase = updateDataUseCase,
+       // _getMockExpensesUseCase = getMockExpensesUseCase,
+       // _updateDataUseCase = updateDataUseCase,
        _getAllExpensesUseCase = getAllExpensesUseCase,
        _addExpenseUseCase = addExpenseUseCase,
        super(HomeState(monthFilter: DateTime.now())) {
@@ -69,9 +68,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _updateData(Emitter<HomeState> emit) async {
-    final allExpenses = _updateDataUseCase.execute(const NoParams());
-    final dayExpenses = _getDayExpensesUseCase.execute(allExpenses);
-    emit(state.copyWith(allExpenses: allExpenses, dayExpenses: dayExpenses));
+    // final allExpenses = _updateDataUseCase.execute(const NoParams());
+    // final dayExpenses = _getDayExpensesUseCase.execute(allExpenses);
+    // emit(state.copyWith(allExpenses: allExpenses, dayExpenses: dayExpenses));
   }
 
   Future<void> _filterMonth(

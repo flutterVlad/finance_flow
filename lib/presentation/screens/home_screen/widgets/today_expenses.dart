@@ -97,8 +97,12 @@ class SingleExpense extends StatelessWidget {
               ),
             ),
             Text(
-              '- ${expense.formattedPrice} Br',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              '${expense.isIncome ? '+' : '-'} ${expense.formattedPrice} Br',
+              style: TextStyle(
+                color: expense.isIncome
+                    ? Colors.green
+                    : Theme.of(context).colorScheme.error,
+              ),
             ),
           ],
         ),

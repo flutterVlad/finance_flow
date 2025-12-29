@@ -12,11 +12,15 @@ class Svg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorFilter = color != null
+        ? ColorFilter.mode(color!, BlendMode.srcIn)
+        : icon.color != null
+        ? ColorFilter.mode(icon.color!, BlendMode.srcIn)
+        : null;
+
     return SvgPicture.asset(
       icon.asset,
-      colorFilter: color != null
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
+      colorFilter: colorFilter,
       width: size ?? icon.size,
       height: size ?? icon.size,
     );

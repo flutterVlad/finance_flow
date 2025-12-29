@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_serializable_uuid_converter/json_serializable_uuid_converter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../category/category.dart';
 
@@ -10,6 +12,7 @@ abstract class Expense with _$Expense {
   const Expense._();
 
   const factory Expense({
+    @UuidValueConverter() required UuidValue id,
     @Default('') String name,
     required Category category,
     required DateTime datetime,
@@ -17,8 +20,12 @@ abstract class Expense with _$Expense {
     @Default(false) bool isIncome,
   }) = _Expense;
 
-  static Expense get empty =>
-      Expense(category: Category.empty, datetime: DateTime.now(), price: 0);
+  static Expense get empty => Expense(
+    id: const UuidValue.fromNamespace(.url),
+    category: Category.empty,
+    datetime: DateTime.now(),
+    price: 0,
+  );
 
   bool get isEmpty => category == Category.empty;
 

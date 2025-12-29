@@ -1,57 +1,11 @@
-import 'package:finance_flow/utils/svgs/svgs.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/utils/extensions.dart';
+import '/utils/svgs/svgs.dart';
 
 part 'category.freezed.dart';
 part 'category.g.dart';
-
-// @JsonSerializable()
-// class Category extends Equatable {
-//   final int id;
-//
-//   final String name;
-//
-//   final bool isIncome;
-//
-//   final String? parentId;
-//
-//   final double? budget;
-//
-//   @JsonKey(fromJson: ColorHelper.colorFromJson, toJson: ColorHelper.colorToJson)
-//   final Color color;
-//
-//   final SvgData iconAsset;
-//
-//   const Category({
-//     required this.id,
-//     required this.name,
-//     this.isIncome = false,
-//     this.parentId,
-//     this.budget,
-//     this.color = Colors.grey,
-//     this.iconAsset = Svgs.home,
-//   });
-//
-//   factory Category.empty() => const Category(id: -1, name: 'Empty');
-//
-//   factory Category.fromJson(Map<String, dynamic> json) =>
-//       _$CategoryFromJson(json);
-//
-//   Map<String, dynamic> toJson() => _$CategoryToJson(this);
-//
-//   @override
-//   List<Object?> get props => [
-//     id,
-//     name,
-//     isIncome,
-//     parentId,
-//     budget,
-//     color,
-//     iconAsset,
-//   ];
-// }
 
 @freezed
 abstract class Category with _$Category {
@@ -68,7 +22,7 @@ abstract class Category with _$Category {
       toJson: ColorHelper.colorToJson,
     )
     @Default(Colors.grey)
-    Color color,
+    Color? color,
     @JsonKey(
       fromJson: SvgDataHelper.svgDataFromJson,
       toJson: SvgDataHelper.svgDataToJson,

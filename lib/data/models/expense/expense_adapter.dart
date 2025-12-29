@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '/data/models/hive_adapter_ids.dart';
 import 'expense.dart';
@@ -11,6 +12,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   Expense read(BinaryReader reader) {
     final map = Map<String, dynamic>.from(reader.readMap());
     return Expense(
+      id: UuidValue.fromString(map['id']),
       name: map['name'],
       category: map['category'],
       datetime: DateTime.parse(map['datetime']),

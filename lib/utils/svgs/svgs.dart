@@ -16,8 +16,8 @@ abstract class SvgData with _$SvgData {
       fromJson: ColorHelper.colorFromJson,
       toJson: ColorHelper.colorToJson,
     )
-    @Default(Colors.grey)
-    Color color,
+    // @Default(Colors.grey)
+    Color? color,
     @Default(20) double size,
   }) = _SvgData;
 

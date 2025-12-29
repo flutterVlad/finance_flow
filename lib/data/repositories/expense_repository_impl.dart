@@ -9,12 +9,12 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<void> addExpense(Expense expense) async {
-    await hiveService.putData<Expense>(expense.hashCode, expense);
+    await hiveService.putData<Expense>(expense.id.uuid, expense);
   }
 
   @override
   Future<void> deleteExpense(Expense expense) async {
-    await hiveService.deleteData<Expense>(expense.toString());
+    await hiveService.deleteData<Expense>(expense.id.uuid);
   }
 
   @override
@@ -22,5 +22,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     final result = await hiveService.getAllData<Expense>();
 
     return result;
+  }
+
+  @override
+  Future<void> deleteAllExpenses() async {
+    await hiveService.deleteAllData<Expense>();
   }
 }
