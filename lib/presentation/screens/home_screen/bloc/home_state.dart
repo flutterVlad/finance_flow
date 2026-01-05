@@ -5,36 +5,55 @@ abstract class HomeState with _$HomeState {
   const HomeState._();
 
   const factory HomeState({
-    @Default([]) List<DayExpense> dayExpenses,
+    @Default([]) List<DayExpense> allDayExpenses,
     @Default([]) List<Expense> allExpenses,
     @Default([]) List<Expense> incomes,
     required DateTime monthFilter,
   }) = _HomeState;
 
+  List<DayExpense> get monthDayExpense =>
+      allDayExpenses.where((e) => e.date.isCurrentMonth).toList();
+
+  List<Expense> get monthExpenses =>
+      allExpenses.where((e) => e.datetime.isCurrentMonth).toList();
+
+  List<Expense> get monthIncomes =>
+      incomes.where((e) => e.datetime.isCurrentMonth).toList();
+
+  List<Expense> get incomesOnSelectedMonth =>
+      incomes.where((e) => e.datetime.isSelectedMonth(monthFilter)).toList();
+
   double get balance => incomes.fold(0, (a, b) => a + b.price);
 
+  double get monthBalance =>
+      balance -
+      allExpenses
+          .where((e) => !e.datetime.isCurrentMonth)
+          .fold(0, (a, b) => a + b.price);
+
+  double get balanceOnSelectedMonth => incomes
+      .where((e) => e.datetime.isSelectedMonth(monthFilter))
+      .fold(0, (a, b) => a + b.price);
+
   double get percent {
-    if (balance == 0 && allSpends == 0) {
+    if (monthBalance == 0 && allSpends == 0) {
       return 0;
-    } else if (balance == 0 && allSpends != 0) {
+    } else if (monthBalance == 0 && allSpends != 0) {
       return 1.01;
     } else {
-      return allSpends / balance;
+      return allSpends / monthBalance;
     }
   }
 
-  List<Expense> get incomeOnCurrentMonth =>
-      incomes.where((e) => e.datetime.isToday).toList();
+  double get allSpends => monthExpenses.fold(0, (a, b) => a + b.price);
 
-  double get allSpends => dayExpenses.fold(0, (a, b) => a + b.daySpend);
+  double get spendsOnSelectedMonth => allExpenses
+      .where((e) => e.datetime.isSelectedMonth(monthFilter))
+      .fold(0, (a, b) => a + b.price);
 
-  double get spendsOnCurrentMonth => dayExpenses
-      .where((e) => e.date.month == monthFilter.month)
-      .fold(0, (a, b) => a + b.daySpend);
-
-  List<Expense> get expenseOnCurrentMonth {
+  List<Expense> get expenseOnSelectedMonth {
     final expenses = allExpenses.where(
-      (e) => e.datetime.month == monthFilter.month,
+      (e) => e.datetime.isSelectedMonth(monthFilter),
     );
 
     final Map<Category, Expense> mapExp = {};
@@ -57,21 +76,20 @@ abstract class HomeState with _$HomeState {
     return result;
   }
 
-  DateTime get startOfWeek {
-    final today = DateTime.now();
-    return today.subtract(Duration(days: today.weekday - 1));
-  }
-
-  DateTime get endOfWeek => startOfWeek.add(const Duration(days: 6));
-
   List<DayExpense> get curWeekDayExpenses {
-    final result = List.generate(7, (i) => DayExpense(date: DateTime.now()));
+    final today = DateTime.now();
 
-    final weekExp = dayExpenses
+    final result = List.generate(7, (i) => DayExpense(date: today));
+
+    final weekExp = allDayExpenses
         .where(
           (e) =>
-              e.date.isBefore(endOfWeek.subtract(const Duration(days: 1))) &&
-              e.date.isAfter(startOfWeek.subtract(const Duration(days: 1))),
+              e.date.isBefore(
+                today.endOfWeek.subtract(const Duration(days: 1)),
+              ) &&
+              e.date.isAfter(
+                today.startOfWeek.subtract(const Duration(days: 1)),
+              ),
         )
         .toList();
 
@@ -82,11 +100,35 @@ abstract class HomeState with _$HomeState {
     return result;
   }
 
+  List<Expense> get comparedCurrentWeekExpenses {
+    final Map<Category, Expense> tempExpenseMap = {};
+
+    for (final expense in curWeekExpenses) {
+      if (tempExpenseMap.keys.contains(expense.category)) {
+        tempExpenseMap[expense.category] = tempExpenseMap[expense.category]!
+            .copyWith(
+              price: tempExpenseMap[expense.category]!.price + expense.price,
+            );
+      } else {
+        tempExpenseMap[expense.category] = expense;
+      }
+    }
+
+    final result = tempExpenseMap.values.toList();
+    result.sort((a, b) => b.price.compareTo(a.price));
+
+    return result;
+  }
+
   List<Expense> get curWeekExpenses => allExpenses
       .where(
         (e) =>
-            e.datetime.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
-            e.datetime.isBefore(endOfWeek.subtract(const Duration(days: 1))),
+            e.datetime.isAfter(
+              DateTime.now().startOfWeek.subtract(const Duration(days: 1)),
+            ) &&
+            e.datetime.isBefore(
+              DateTime.now().endOfWeek.subtract(const Duration(days: 1)),
+            ),
       )
       .toList();
 
@@ -96,24 +138,7 @@ abstract class HomeState with _$HomeState {
             .daySpend
       : 0;
 
-  List<Expense> get todayExpenses => dayExpenses
-      .where((e) => e.date.day == DateTime.now().day)
+  List<Expense> get todayExpenses => allDayExpenses
+      .where((e) => e.date.isToday)
       .fold([], (a, b) => a + b.dayExpenses);
-}
-
-enum BudgetInputError { empty, invalid }
-
-class BudgetInput extends FormzInput<String, BudgetInputError> {
-  const BudgetInput.pure() : super.pure('');
-
-  const BudgetInput.dirty({String value = ''}) : super.dirty(value);
-
-  @override
-  BudgetInputError? validator(String value) {
-    if (value.isEmpty) return BudgetInputError.empty;
-    if (double.tryParse(value)?.isNegative ?? false) {
-      return BudgetInputError.invalid;
-    }
-    return null;
-  }
 }

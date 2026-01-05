@@ -1,10 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
+import '/presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/svgs/svgs.dart';
@@ -40,21 +43,20 @@ class _DiagramState extends State<Diagram> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final expenses = state.expenseOnCurrentMonth;
+        final expenses = state.expenseOnSelectedMonth;
 
-        final difference = state.balance - state.spendsOnCurrentMonth;
+        final difference =
+            state.balanceOnSelectedMonth - state.spendsOnSelectedMonth;
         final isAddEmpty = difference > 0;
 
-        if (isAddEmpty) {
-          expenses.add(
-            Expense(
-              id: UuidValue.fromString(const Uuid().v4()),
-              category: Category.empty,
-              datetime: DateTime.now(),
-              price: difference,
-            ),
-          );
-        }
+        final emptyExpense = Expense(
+          id: UuidValue.fromString(const Uuid().v4()),
+          category: Category.empty,
+          datetime: DateTime.now(),
+          price: difference,
+        );
+
+        if (isAddEmpty) expenses.add(emptyExpense);
 
         final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
 
@@ -97,16 +99,16 @@ class _DiagramState extends State<Diagram> {
                   PieChart(
                     PieChartData(
                       startDegreeOffset: 90,
-                      sectionsSpace: 1,
+                      sectionsSpace: 2,
                       centerSpaceRadius: centerSpaceRadius,
                       sections: expenses
                           .map(
                             (e) => _makeSectionData(
                               expense: e,
-                              radius: centerSpaceRadius / 3,
+                              radius: centerSpaceRadius / 2.5,
                               isTouched:
                                   expenses.indexOf(e) == touchedIndex &&
-                                  expenses.last != e,
+                                  e != emptyExpense,
                             ),
                           )
                           .toList(),
@@ -121,7 +123,8 @@ class _DiagramState extends State<Diagram> {
                               return;
                             }
                             if (response.touchedSection!.touchedSectionIndex ==
-                                expenses.length - 1) {
+                                    expenses.length - 1 &&
+                                expenses.length != 1) {
                               touchedIndex = -1;
                               return;
                             }
@@ -150,7 +153,7 @@ class _DiagramState extends State<Diagram> {
       value: expense.price,
       color: expense.category.color,
       showTitle: false,
-      borderSide: BorderSide(width: isTouched ? 3 : 1),
+      borderSide: BorderSide(width: isTouched ? 2 : 0),
       radius: radius,
       titleStyle: const TextStyle(color: AppColors.grey, fontSize: 12),
       title: '${expense.formattedPrice}\n${expense.category.name}',
@@ -166,7 +169,7 @@ class Income extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final incomeExpenses = state.incomeOnCurrentMonth;
+        final incomeExpenses = state.incomesOnSelectedMonth;
 
         final double income = incomeExpenses.fold(.0, (a, b) => a + b.price);
 
@@ -200,7 +203,16 @@ class Income extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           if (index + 1 == incomeExpenses.length + 1) {
-                            return const _Element(elementName: 'income');
+                            return _Element(
+                              elementName: 'income',
+                              onTap: () {
+                                context.pushNamed(
+                                  'add_transaction',
+                                  extra: GetIt.I<TransactionsCubit>()
+                                      .initIncomeTransaction,
+                                );
+                              },
+                            );
                           }
                           return _Element(expense: incomeExpenses[index]);
                         },
@@ -227,36 +239,43 @@ class Income extends StatelessWidget {
 class _Element extends StatelessWidget {
   final Expense? expense;
   final String elementName;
+  final void Function()? onTap;
 
-  const _Element({this.expense, this.elementName = ''});
+  const _Element({this.expense, this.elementName = '', this.onTap});
 
   @override
   Widget build(BuildContext context) {
     if (expense != null) {
-      return Row(
-        spacing: 8,
-        children: [
-          Svg(expense!.category.iconAsset, color: AppColors.grey, size: 30),
-          Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(expense!.category.name),
-              Text(
-                expense!.formattedPrice,
-                style: const TextStyle(color: AppColors.grey, fontSize: 12),
-              ),
-            ],
-          ),
-        ],
+      return GestureDetector(
+        onTap: onTap,
+        child: Row(
+          spacing: 8,
+          children: [
+            Svg(expense!.category.iconAsset, color: AppColors.grey, size: 30),
+            Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(expense!.category.name),
+                Text(
+                  expense!.formattedPrice,
+                  style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
       );
     }
 
-    return Row(
-      spacing: 8,
-      children: [
-        const Svg(Svgs.addRounded, color: AppColors.grey, size: 30),
-        Text('Add $elementName'),
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        spacing: 8,
+        children: [
+          const Svg(Svgs.addRounded, color: AppColors.grey, size: 30),
+          Text('Add $elementName'),
+        ],
+      ),
     );
   }
 }

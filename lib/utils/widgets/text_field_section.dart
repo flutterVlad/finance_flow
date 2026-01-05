@@ -22,6 +22,7 @@ class Section extends StatelessWidget {
   final bool isBool;
   final bool boolValue;
   final void Function(bool)? onBoolChange;
+  final bool enabled;
 
   const Section({
     super.key,
@@ -43,6 +44,7 @@ class Section extends StatelessWidget {
     this.isBool = false,
     this.boolValue = false,
     this.onBoolChange,
+    this.enabled = true,
   });
 
   @override
@@ -59,7 +61,7 @@ class Section extends StatelessWidget {
             child: TextFormField(
               enableSuggestions: enableSuggestions,
               controller: controller,
-              enabled: onTap == null,
+              enabled: onTap == null && enabled,
               style: onTap != null
                   ? const TextStyle(color: AppColors.onSecondary)
                   : null,
@@ -110,7 +112,7 @@ class Section extends StatelessWidget {
           Text(title, style: const TextStyle(fontWeight: .bold, fontSize: 16)),
           Switch.adaptive(
             value: boolValue,
-            onChanged: onBoolChange,
+            onChanged: enabled ? onBoolChange : (_) {},
             activeTrackColor: AppColors.primary,
           ),
         ],

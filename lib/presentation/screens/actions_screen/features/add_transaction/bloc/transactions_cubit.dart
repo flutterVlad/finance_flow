@@ -13,12 +13,26 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     : super(
         TransactionsState(
           datetimeInput: TransactionDateTimeInput.dirty(value: DateTime.now()),
+          categoryInput: TransactionCategoryInput.dirty(
+            value: defaultCategories[3],
+          ),
         ),
       );
 
   void setName(String? name) {
     emit(
       state.copyWith(nameInput: TransactionNameInput.dirty(value: name ?? '')),
+    );
+  }
+
+  void initIncomeTransaction() {
+    emit(
+      state.copyWith(
+        isIncome: true,
+        categoryInput: TransactionCategoryInput.dirty(
+          value: defaultCategories.firstWhere((e) => e.id == 33),
+        ),
+      ),
     );
   }
 
@@ -34,6 +48,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     emit(
       state.copyWith(
         categoryInput: TransactionCategoryInput.dirty(value: category),
+        isIncome: category.isIncome,
       ),
     );
   }
@@ -55,6 +70,9 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       TransactionsState(
         datetimeInput: TransactionDateTimeInput.dirty(value: DateTime.now()),
         isIncome: false,
+        categoryInput: TransactionCategoryInput.dirty(
+          value: defaultCategories[3],
+        ),
       ),
     );
   }

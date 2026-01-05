@@ -33,6 +33,22 @@ extension DateTimeMonth on DateTime {
 
     return today.day - 1 == day && today.month == month && today.year == year;
   }
+
+  bool get isCurrentMonth {
+    final today = DateTime.now();
+
+    return today.month == month && today.year == year;
+  }
+
+  DateTime get startOfWeek {
+    final today = DateTime.now();
+    return today.subtract(Duration(days: today.weekday - 1));
+  }
+
+  DateTime get endOfWeek => startOfWeek.add(const Duration(days: 6));
+
+  bool isSelectedMonth(DateTime date) =>
+      date.month == month && date.year == year;
 }
 
 extension Json on Color {

@@ -27,4 +27,6 @@ abstract class TransactionsState with _$TransactionsState {
       amountInput.isValid &&
       categoryInput.isValid &&
       datetimeInput.isValid;
+
+  bool get isIncomeCategorySelected => categoryInput.value.isIncome;
 }

@@ -72,7 +72,7 @@ class WalletBalance extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Budget ${state.balance} Br',
+                              'Budget ${state.monthBalance.toStringAsFixed(2)} Br',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

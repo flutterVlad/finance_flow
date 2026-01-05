@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '/presentation/screens/actions_screen/actions_screen.dart';
 import '/presentation/screens/actions_screen/features/add_transaction/add_transaction_screen.dart';
-import '/presentation/screens/home_screen/features/view_all_expenses_screen.dart';
+import '/presentation/screens/home_screen/features/view_all_expenses/view_all_expenses_screen.dart';
 import '/presentation/screens/home_screen/home_screen.dart';
 import '/presentation/screens/statistics_screen/statistics_screen.dart';
 import '/presentation/screens/wallet_screen/wallet_screen.dart';
@@ -101,7 +101,7 @@ final router = GoRouter(
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
-          child: const AddTransactionScreen(),
+          child: AddTransactionScreen(onInit: state.extra as Function()?),
         );
       },
     ),

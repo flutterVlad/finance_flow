@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/data/models/category/category.dart';
 import '../svgs/svg.dart';
@@ -14,12 +15,13 @@ abstract class AppBottomSheet {
     bool useSafeArea = false,
     bool isScrollControlled = false,
     double scaleFactor = 0.7,
+    EdgeInsets? padding,
   }) async {
     return await showModalBottomSheet(
       isScrollControlled: isScrollControlled,
       useSafeArea: useSafeArea,
       shape: const RoundedRectangleBorder(
-        borderRadius: .vertical(top: .circular(48)),
+        borderRadius: .vertical(top: .circular(24)),
       ),
       backgroundColor: AppColors.secondary,
       constraints:
@@ -32,12 +34,14 @@ abstract class AppBottomSheet {
       context: context,
       builder: (context) {
         return Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 32,
-            right: 32,
-            left: 32,
-            bottom: MediaQuery.viewInsetsOf(context).bottom + 32,
-          ),
+          padding:
+              padding ??
+              EdgeInsetsGeometry.only(
+                top: 32,
+                right: 32,
+                left: 32,
+                bottom: MediaQuery.viewInsetsOf(context).bottom + 32,
+              ),
           child: item,
         );
       },
@@ -73,61 +77,87 @@ abstract class AppBottomSheet {
     );
   }
 
-  static Widget chooseCategoryItem(
-    List<Category> categories,
-    void Function(Category category) onTap,
-  ) {
-    return Column(
-      spacing: 16,
-      children: [
-        const Row(
-          spacing: 16,
-          children: [
-            Icon(Icons.list, color: AppColors.grey),
-            Text(
-              'Categories',
-              style: TextStyle(fontWeight: .bold, fontSize: 16),
-            ),
-          ],
-        ),
-        Expanded(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-            ),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              final category = categories[index];
-
-              return InkWell(
-                onTap: () {
-                  onTap.call(category);
-                },
-                borderRadius: .circular(20),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: .circular(20),
-                        border: Border.all(color: AppColors.grey),
-                      ),
-                      padding: const .all(8),
-                      child: Svg(category.iconAsset),
-                    ),
-                    Text(
-                      category.name,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: .ellipsis,
-                    ),
-                  ],
-                ),
-              );
-            },
+  static Widget chooseCategoryItem({
+    List<Category> categories = const [],
+    List<Category> incomeCategory = const [],
+    void Function(Category category)? onTap,
+  }) {
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        spacing: 8,
+        children: [
+          const Row(
+            spacing: 16,
+            children: [
+              Icon(Icons.list, color: AppColors.grey),
+              Text(
+                'Categories',
+                style: TextStyle(fontWeight: .bold, fontSize: 16),
+              ),
+            ],
           ),
-        ),
-      ],
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: .circular(30),
+            ),
+            child: const TabBar(
+              indicatorPadding: .all(4),
+              tabs: [
+                Tab(text: 'Expenses', height: 40),
+                Tab(text: 'Incomes', height: 40),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [categories, incomeCategory]
+                  .map(
+                    (e) => GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                          ),
+                      itemCount: e.length,
+                      itemBuilder: (context, index) {
+                        final category = e[index];
+
+                        return InkWell(
+                          onTap: () {
+                            onTap?.call(category);
+                            if (context.canPop()) context.pop();
+                          },
+                          borderRadius: .circular(20),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: .circular(20),
+                                  border: Border.all(color: AppColors.grey),
+                                ),
+                                padding: const .all(8),
+                                child: Svg(category.iconAsset),
+                              ),
+                              Text(
+                                category.name,
+                                style: const TextStyle(fontSize: 12),
+                                overflow: .ellipsis,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/utils/extensions.dart';
 import '/utils/svgs/svgs.dart';
+import '/utils/theme.dart';
 
 part 'category.freezed.dart';
 part 'category.g.dart';
@@ -21,7 +22,7 @@ abstract class Category with _$Category {
       fromJson: ColorHelper.colorFromJson,
       toJson: ColorHelper.colorToJson,
     )
-    @Default(Colors.grey)
+    @Default(AppColors.lightGrey)
     Color? color,
     @JsonKey(
       fromJson: SvgDataHelper.svgDataFromJson,

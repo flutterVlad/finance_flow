@@ -31,8 +31,8 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
     return Scaffold(
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          final List<DayExpense> filteredExpenses = state.dayExpenses
-              .where((e) => e.date.month == state.monthFilter.month)
+          final List<DayExpense> filteredDayExpenses = state.allDayExpenses
+              .where((e) => e.date.isSelectedMonth(state.monthFilter))
               .toList();
 
           return CustomScrollView(
@@ -65,7 +65,7 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
                   ),
                 ),
               ),
-              if (filteredExpenses.isEmpty)
+              if (filteredDayExpenses.isEmpty)
                 SliverFillRemaining(
                   child: Center(
                     child: SizedBox(
@@ -81,7 +81,7 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
                     ),
                   ),
                 ),
-              ...filteredExpenses.map((day) {
+              ...filteredDayExpenses.map((day) {
                 final title = day.date.isToday
                     ? 'Today'
                     : day.date.isYesterday
@@ -149,7 +149,7 @@ class MonthFilter extends StatelessWidget {
                         style: TextStyle(color: AppColors.onPrimary),
                       ),
                       Text(
-                        '${state.spendsOnCurrentMonth.toStringAsFixed(2)} Br',
+                        '${state.spendsOnSelectedMonth.toStringAsFixed(2)} Br',
                         style: const TextStyle(
                           color: AppColors.onPrimary,
                           fontSize: 20,

@@ -70,4 +70,5 @@ abstract class AppColors {
   static const Color surface = Colors.white;
   static const Color onSurface = Color(0xff262635);
   static const Color grey = Color.fromARGB(255, 145, 145, 145);
+  static const Color lightGrey = Color.fromARGB(255, 199, 199, 199);
 }

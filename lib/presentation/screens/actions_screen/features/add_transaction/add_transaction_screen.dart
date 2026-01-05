@@ -1,4 +1,3 @@
-import 'package:finance_flow/presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/category/category.dart';
+import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
@@ -15,7 +15,9 @@ import '/utils/widgets/text_field_section.dart';
 import 'bloc/transactions_cubit.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  final void Function()? onInit;
+
+  const AddTransactionScreen({super.key, this.onInit});
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -30,8 +32,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   late final TextEditingController _categoryController;
   late final TextEditingController _dateController;
 
-  Category selectedCategory = defaultCategories[3];
-
   @override
   void initState() {
     super.initState();
@@ -42,6 +42,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     _dateController = TextEditingController(
       text: DateFormat('d MMMM y').format(DateTime.now()),
     );
+    widget.onInit?.call();
   }
 
   @override
@@ -64,76 +65,79 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         ),
       ),
       body: BlocBuilder<TransactionsCubit, TransactionsState>(
-        builder: (context, state) => SingleChildScrollView(
-          child: Padding(
-            padding: const .all(16),
-            child: Form(
-              child: Column(
-                crossAxisAlignment: .start,
-                spacing: 16,
-                children: [
-                  Section(
-                    controller: _nameController,
-                    title: 'Transaction name',
-                    hintText: 'Trip to Turkey',
-                    keyboardType: .text,
-                    onSubmit: bloc.setName,
-                  ),
-                  Section(
-                    controller: _amountController,
-                    title: 'Amount',
-                    hintText: '120',
-                    suffix: const Text(' Br'),
-                    keyboardType: const .numberWithOptions(decimal: true),
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onSubmit: bloc.setAmount,
-                  ),
-                  Section(
-                    controller: _categoryController,
-                    onTap: () async {
-                      await _chooseCategory(context);
-                    },
-                    title: 'Category',
-                    hintText: selectedCategory.name,
-                    suffixIcon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey,
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const .all(16),
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  spacing: 16,
+                  children: [
+                    Section(
+                      controller: _nameController,
+                      title: 'Transaction name',
+                      hintText: 'Trip to Turkey',
+                      keyboardType: .text,
+                      onSubmit: bloc.setName,
                     ),
-                    prefixIcon: Svg(
-                      selectedCategory.iconAsset,
-                      color: AppColors.primary,
-                      size: 30,
+                    Section(
+                      controller: _amountController,
+                      title: 'Amount',
+                      hintText: '120',
+                      suffix: const Text(' Br'),
+                      keyboardType: const .numberWithOptions(decimal: true),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onSubmit: bloc.setAmount,
                     ),
-                  ),
-                  Section(
-                    title: 'Date and time',
-                    controller: _dateController,
-                    suffixIcon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey,
+                    Section(
+                      controller: _categoryController,
+                      onTap: () async {
+                        await _chooseCategory(context);
+                      },
+                      title: 'Category',
+                      hintText: state.categoryInput.value.name,
+                      suffixIcon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.grey,
+                      ),
+                      prefixIcon: Svg(
+                        state.categoryInput.value.iconAsset,
+                        color: AppColors.primary,
+                        size: 30,
+                      ),
                     ),
-                    onTap: () {
-                      AppBottomSheet.showDatePicker(context, (date) {
-                        _dateController.text = DateFormat(
-                          'd MMMM y',
-                        ).format(date);
-                        bloc.setDate(date);
-                      });
-                    },
-                  ),
-                  Section(
-                    title: 'Income',
-                    boolValue: state.isIncome,
-                    isBool: true,
-                    onBoolChange: (newBool) {
-                      bloc.setIncome(newBool);
-                    },
-                  ),
-                ],
+                    Section(
+                      title: 'Date and time',
+                      controller: _dateController,
+                      suffixIcon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.grey,
+                      ),
+                      onTap: () {
+                        AppBottomSheet.showDatePicker(context, (date) {
+                          _dateController.text = DateFormat(
+                            'd MMMM y',
+                          ).format(date);
+                          bloc.setDate(date);
+                        });
+                      },
+                    ),
+                    Section(
+                      title: 'Income',
+                      enabled: !state.isIncomeCategorySelected,
+                      boolValue: state.isIncome,
+                      isBool: true,
+                      onBoolChange: (newBool) {
+                        bloc.setIncome(newBool);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -151,7 +155,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ? () {
                           homeBloc.add(AddExpenseEvent(state.validExpense));
                           Fluttertoast.showToast(
-                            gravity: .SNACKBAR,
+                            gravity: .TOP,
                             msg:
                                 'Expense "${state.validExpense.name}" created successfully',
                             backgroundColor: Colors.green,
@@ -186,12 +190,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
-      item: AppBottomSheet.chooseCategoryItem(defaultCategories, (category) {
-        bloc.setCategory(category);
-        selectedCategory = category;
-        _categoryController.text = category.name;
-        if (context.canPop()) context.pop();
-      }),
+      item: AppBottomSheet.chooseCategoryItem(
+        categories: defaultCategories.sublist(
+          0,
+          defaultCategories.indexWhere((e) => e.isIncome == true),
+        ),
+        incomeCategory: defaultCategories.sublist(
+          defaultCategories.indexWhere((e) => e.isIncome == true),
+        ),
+        onTap: (category) {
+          bloc.setCategory(category);
+          _categoryController.text = category.name;
+        },
+      ),
     );
   }
 }

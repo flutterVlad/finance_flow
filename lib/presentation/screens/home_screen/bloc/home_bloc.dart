@@ -3,7 +3,6 @@ import 'package:finance_flow/domain/use_cases/add_expense_use_case.dart';
 import 'package:finance_flow/domain/use_cases/get_all_expenses_use_case.dart';
 import 'package:finance_flow/utils/extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
@@ -17,21 +16,14 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetDayExpensesUseCase _getDayExpensesUseCase;
-
-  // final GetMockExpensesUseCase _getMockExpensesUseCase;
-  // final UpdateDataUseCase _updateDataUseCase;
   final GetAllExpensesUseCase _getAllExpensesUseCase;
   final AddExpenseUseCase _addExpenseUseCase;
 
   HomeBloc({
     required GetDayExpensesUseCase getDayExpensesUseCase,
-    // required GetMockExpensesUseCase getMockExpensesUseCase,
-    // required UpdateDataUseCase updateDataUseCase,
     required GetAllExpensesUseCase getAllExpensesUseCase,
     required AddExpenseUseCase addExpenseUseCase,
   }) : _getDayExpensesUseCase = getDayExpensesUseCase,
-       // _getMockExpensesUseCase = getMockExpensesUseCase,
-       // _updateDataUseCase = updateDataUseCase,
        _getAllExpensesUseCase = getAllExpensesUseCase,
        _addExpenseUseCase = addExpenseUseCase,
        super(HomeState(monthFilter: DateTime.now())) {
@@ -50,28 +42,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _init(Emitter<HomeState> emit) async {
-    // final allExpenses = _getMockExpensesUseCase.execute(const NoParams());
-    final allExpenses = await _getAllExpensesUseCase.execute(const NoParams());
+    final allFetchedExpenses = await _getAllExpensesUseCase.execute(
+      const NoParams(),
+    );
 
-    final incomes = allExpenses.where((e) => e.isIncome).toList();
-    final expenses = allExpenses.where((e) => !e.isIncome).toList();
+    final incomes = allFetchedExpenses.where((e) => e.isIncome).toList();
+    final allExpenses = allFetchedExpenses.where((e) => !e.isIncome).toList();
 
-    final dayExpenses = _getDayExpensesUseCase.execute(expenses);
+    final dayExpenses = _getDayExpensesUseCase.execute(allExpenses);
 
     emit(
       state.copyWith(
-        dayExpenses: dayExpenses,
-        allExpenses: expenses,
+        allDayExpenses: dayExpenses,
+        allExpenses: allExpenses,
         incomes: incomes,
       ),
     );
   }
 
-  Future<void> _updateData(Emitter<HomeState> emit) async {
-    // final allExpenses = _updateDataUseCase.execute(const NoParams());
-    // final dayExpenses = _getDayExpensesUseCase.execute(allExpenses);
-    // emit(state.copyWith(allExpenses: allExpenses, dayExpenses: dayExpenses));
-  }
+  Future<void> _updateData(Emitter<HomeState> emit) async {}
 
   Future<void> _filterMonth(
     FilterMonthEvent event,
@@ -104,7 +93,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(
       state.copyWith(
         allExpenses: expenses,
-        dayExpenses: dayExpenses,
+        allDayExpenses: dayExpenses,
         incomes: incomes,
       ),
     );
