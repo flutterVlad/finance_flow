@@ -1,3 +1,4 @@
+import 'package:finance_flow/utils/widgets/primary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,7 @@ abstract class AppBottomSheet {
     bool useRootNavigator = false,
     bool useSafeArea = false,
     bool isScrollControlled = false,
-    double scaleFactor = 0.7,
+    double? scaleFactor,
     EdgeInsets? padding,
   }) async {
     return await showModalBottomSheet(
@@ -24,26 +25,15 @@ abstract class AppBottomSheet {
         borderRadius: .vertical(top: .circular(24)),
       ),
       backgroundColor: AppColors.secondary,
-      constraints:
-          constrains ??
-          BoxConstraints(
-            minWidth: MediaQuery.widthOf(context),
-            maxHeight: scaleFactor * MediaQuery.heightOf(context),
-          ),
+      constraints: scaleFactor != null
+          ? BoxConstraints(
+              maxHeight: MediaQuery.heightOf(context) * scaleFactor,
+            )
+          : null,
       useRootNavigator: useRootNavigator,
       context: context,
       builder: (context) {
-        return Padding(
-          padding:
-              padding ??
-              EdgeInsetsGeometry.only(
-                top: 32,
-                right: 32,
-                left: 32,
-                bottom: MediaQuery.viewInsetsOf(context).bottom + 32,
-              ),
-          child: item,
-        );
+        return _KeyboardAwareBottomSheet(item: item);
       },
     );
   }
@@ -60,6 +50,7 @@ abstract class AppBottomSheet {
       isScrollControlled: false,
       scaleFactor: 0.4,
       item: Column(
+        mainAxisSize: .min,
         children: [
           const Text(
             'Choose date',
@@ -77,6 +68,19 @@ abstract class AppBottomSheet {
     );
   }
 
+  static Widget createCard() {
+    return SafeArea(
+      child: Padding(
+        padding: const .only(right: 16, left: 16, bottom: 16),
+        child: Column(
+          spacing: 8,
+          mainAxisSize: .min,
+          children: [PrimaryButton(onTap: () {}, text: 'Submit')],
+        ),
+      ),
+    );
+  }
+
   static Widget chooseCategoryItem({
     List<Category> categories = const [],
     List<Category> incomeCategory = const [],
@@ -87,15 +91,18 @@ abstract class AppBottomSheet {
       child: Column(
         spacing: 8,
         children: [
-          const Row(
-            spacing: 16,
-            children: [
-              Icon(Icons.list, color: AppColors.grey),
-              Text(
-                'Categories',
-                style: TextStyle(fontWeight: .bold, fontSize: 16),
-              ),
-            ],
+          const Padding(
+            padding: .symmetric(horizontal: 16),
+            child: Row(
+              spacing: 16,
+              children: [
+                Icon(Icons.list, color: AppColors.grey),
+                Text(
+                  'Categories',
+                  style: TextStyle(fontWeight: .bold, fontSize: 16),
+                ),
+              ],
+            ),
           ),
           Container(
             height: 40,
@@ -123,6 +130,7 @@ abstract class AppBottomSheet {
                             crossAxisSpacing: 16,
                           ),
                       itemCount: e.length,
+                      padding: const .symmetric(horizontal: 16),
                       itemBuilder: (context, index) {
                         final category = e[index];
 
@@ -135,8 +143,10 @@ abstract class AppBottomSheet {
                           child: Column(
                             children: [
                               Container(
+                                width: 56,
+                                height: 56,
                                 decoration: BoxDecoration(
-                                  borderRadius: .circular(20),
+                                  borderRadius: .circular(30),
                                   border: Border.all(color: AppColors.grey),
                                 ),
                                 padding: const .all(8),
@@ -158,6 +168,30 @@ abstract class AppBottomSheet {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _KeyboardAwareBottomSheet extends StatelessWidget {
+  final Widget item;
+  final EdgeInsets? padding;
+
+  const _KeyboardAwareBottomSheet({required this.item, this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          padding?.copyWith(
+            bottom:
+                MediaQuery.of(context).viewInsets.bottom +
+                (padding?.bottom ?? 0),
+          ) ??
+          EdgeInsets.only(
+            top: 32,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+      child: item,
     );
   }
 }

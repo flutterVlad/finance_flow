@@ -22,6 +22,7 @@ abstract class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
+      surfaceTintColor: Colors.transparent,
     ),
     tabBarTheme: TabBarThemeData(
       labelColor: AppColors.onPrimary,

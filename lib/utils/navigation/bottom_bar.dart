@@ -1,3 +1,4 @@
+import 'package:finance_flow/utils/widgets/glass_container.dart';
 import 'package:flutter/material.dart';
 
 import '../svgs/svg.dart';
@@ -46,19 +47,17 @@ class BottomBar extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const .only(left: 32, right: 32),
+      padding: const .symmetric(horizontal: 32),
       child: SizedBox(
-        height: 56,
+        height: 72,
         child: ClipRRect(
-          borderRadius: .circular(50),
+          borderRadius: .circular(32),
           child: BackdropFilter(
-            filter: .blur(sigmaX: 3, sigmaY: 3),
-            child: Material(
-              color: AppColors.primary.withValues(alpha: 0.6),
-              child: Padding(
-                padding: const .all(8),
-                child: Row(mainAxisAlignment: .spaceBetween, children: items),
-              ),
+            filter: .blur(sigmaY: 10, sigmaX: 10),
+            child: GlassContainer(
+              borderRadius: .circular(32),
+              padding: const .all(8),
+              child: Row(mainAxisAlignment: .spaceBetween, children: items),
             ),
           ),
         ),
@@ -79,8 +78,8 @@ class BottomBarItem extends StatelessWidget {
     super.key,
     required this.icon,
     this.isSelected = false,
-    this.selectedColor = AppColors.primary500,
-    this.disabledColor = AppColors.onPrimary,
+    this.selectedColor = AppColors.primary,
+    this.disabledColor = AppColors.onSurface,
     this.onPressed,
     this.animationDuration = const Duration(milliseconds: 200),
   });
@@ -91,21 +90,18 @@ class BottomBarItem extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
+        child: AnimatedGlassContainer(
           duration: animationDuration,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
+          width: isSelected ? 56 : 48,
+          height: isSelected ? 56 : 48,
+          isSelected: isSelected,
+          padding: const .all(8),
+          child: Svg(
+            icon,
             color: isSelected
-                ? selectedColor.withValues(alpha: 0.5)
-                : Colors.transparent,
-          ),
-          child: Padding(
-            padding: const .all(8),
-            child: Svg(
-              icon,
-              color: isSelected ? selectedColor : disabledColor,
-              size: 24,
-            ),
+                ? selectedColor.withValues(alpha: 0.7)
+                : disabledColor.withValues(alpha: 0.7),
+            size: 24,
           ),
         ),
       ),

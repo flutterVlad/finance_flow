@@ -1,34 +1,31 @@
+import 'package:finance_flow/utils/widgets/app_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../utils/svgs/svgs.dart';
+import '/utils/svgs/svgs.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_text_button.dart';
-
 import 'wallet_card.dart';
 
-class CardSwipper extends StatefulWidget {
-  const CardSwipper({super.key});
+class CardSwiper extends StatefulWidget {
+  const CardSwiper({super.key});
 
   @override
-  State<CardSwipper> createState() => _CardSwipperState();
+  State<CardSwiper> createState() => _CardSwiperState();
 }
 
-class _CardSwipperState extends State<CardSwipper>
+class _CardSwiperState extends State<CardSwiper>
     with SingleTickerProviderStateMixin {
-  late final PageController _pageController;
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
 
-    _pageController = PageController();
     _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -49,18 +46,9 @@ class _CardSwipperState extends State<CardSwipper>
             fit: .expand,
             children: [
               PageView(
-                controller: _pageController,
                 onPageChanged: _handlePageViewChanged,
                 children: cards.map((el) {
-                  return WalletCard(
-                    card: CardData(
-                      type: el.type,
-                      number: el.number,
-                      owner: el.owner,
-                      duration: el.duration,
-                      icon: el.icon,
-                    ),
-                  );
+                  return WalletCard(card: el);
                 }).toList(),
               ),
               Positioned(
@@ -69,7 +57,14 @@ class _CardSwipperState extends State<CardSwipper>
                 child: AppTextButton(
                   text: '+Add card',
                   color: AppColors.primary500,
-                  onPressed: () {},
+                  onPressed: () {
+                    AppBottomSheet.show(
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      item: AppBottomSheet.createCard(),
+                    );
+                  },
                 ),
               ),
               Positioned(

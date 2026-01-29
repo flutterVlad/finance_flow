@@ -23,14 +23,12 @@ class DI {
     GetIt.I.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
         getDayExpensesUseCase: GetIt.I<GetDayExpensesUseCase>(),
-        // getMockExpensesUseCase: GetIt.I<GetMockExpensesUseCase>(),
-        // updateDataUseCase: GetIt.I<UpdateDataUseCase>(),
         getAllExpensesUseCase: GetIt.I<GetAllExpensesUseCase>(),
         addExpenseUseCase: GetIt.I<AddExpenseUseCase>(),
       ),
     );
     GetIt.I.registerLazySingleton<WalletBloc>(() => WalletBloc());
-    GetIt.I.registerLazySingleton(() => TransactionsCubit());
+    GetIt.I.registerFactory(() => TransactionsCubit());
   }
 
   void _initRepositories() {

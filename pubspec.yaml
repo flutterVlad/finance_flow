@@ -31,6 +31,7 @@ dependencies:
   equatable: ^2.0.5
   get_it: ^9.2.0
   json_serializable_uuid_converter: ^1.0.0
+  credit_card_form: ^1.0.1
 
   cupertino_icons: ^1.0.8
 

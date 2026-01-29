@@ -62,6 +62,16 @@ extension Json on Color {
   }
 }
 
+extension ColorChange on Color {
+  Color darken([double value = 0.1]) {
+    return withValues(red: r - value, green: g - value, blue: b - value);
+  }
+
+  Color light([double value = 0.1]) {
+    return withValues(red: r + value, green: g + value, blue: b + value);
+  }
+}
+
 abstract class ColorHelper {
   static Color? colorFromJson(Map<dynamic, dynamic>? json) {
     if (json == null) return null;

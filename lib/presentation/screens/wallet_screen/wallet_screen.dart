@@ -14,7 +14,7 @@ class WalletScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           title: Text('Wallet', style: TextStyle(fontWeight: .bold)),
         ),
-        SliverToBoxAdapter(child: CardSwipper()),
+        SliverToBoxAdapter(child: CardSwiper()),
         SliverToBoxAdapter(child: SafeArea(top: false, child: WeeklyExpense())),
       ],
     );

@@ -99,9 +99,13 @@ final router = GoRouter(
       path: '/add_transaction',
       name: 'add_transaction',
       pageBuilder: (context, state) {
+        bool isAddIncome = false;
+
+        if (state.extra != null) isAddIncome = state.extra as bool;
+
         return MaterialPage(
           key: state.pageKey,
-          child: AddTransactionScreen(onInit: state.extra as Function()?),
+          child: AddTransactionScreen(isAddIncome: isAddIncome),
         );
       },
     ),

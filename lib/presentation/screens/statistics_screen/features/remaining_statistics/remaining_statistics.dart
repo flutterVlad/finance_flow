@@ -1,13 +1,13 @@
+import 'package:collection/collection.dart';
+import 'package:finance_flow/utils/extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
-import '/presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/svgs/svgs.dart';
@@ -116,9 +116,15 @@ class _DiagramState extends State<Diagram> {
                         enabled: true,
                         touchCallback: (event, response) {
                           setState(() {
-                            if (!event.isInterestedForInteractions ||
-                                response == null ||
-                                response.touchedSection == null) {
+                            // if (!event.isInterestedForInteractions ||
+                            //     response == null ||
+                            //     response.touchedSection == null) {
+                            //   touchedIndex = -1;
+                            //   return;
+                            // }
+                            if (response == null) return;
+                            if (response.touchedSection!.touchedSectionIndex ==
+                                touchedIndex) {
                               touchedIndex = -1;
                               return;
                             }
@@ -129,7 +135,8 @@ class _DiagramState extends State<Diagram> {
                               return;
                             }
                             touchedIndex =
-                                response.touchedSection!.touchedSectionIndex;
+                                response.touchedSection?.touchedSectionIndex ??
+                                -1;
                           });
                         },
                       ),
@@ -153,8 +160,11 @@ class _DiagramState extends State<Diagram> {
       value: expense.price,
       color: expense.category.color,
       showTitle: false,
-      borderSide: BorderSide(width: isTouched ? 2 : 0),
-      radius: radius,
+      borderSide: BorderSide(
+        width: isTouched ? 2 : 0,
+        color: expense.category.color!.darken(),
+      ),
+      radius: isTouched ? radius + 10 : radius,
       titleStyle: const TextStyle(color: AppColors.grey, fontSize: 12),
       title: '${expense.formattedPrice}\n${expense.category.name}',
       titlePositionPercentageOffset: 1.8,
@@ -168,7 +178,12 @@ class Income extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (prev, curr) => !const ListEquality().equals(
+        prev.incomesOnSelectedMonth,
+        curr.incomesOnSelectedMonth,
+      ),
       builder: (context, state) {
+        print('rebuild');
         final incomeExpenses = state.incomesOnSelectedMonth;
 
         final double income = incomeExpenses.fold(.0, (a, b) => a + b.price);
@@ -208,8 +223,7 @@ class Income extends StatelessWidget {
                               onTap: () {
                                 context.pushNamed(
                                   'add_transaction',
-                                  extra: GetIt.I<TransactionsCubit>()
-                                      .initIncomeTransaction,
+                                  extra: true,
                                 );
                               },
                             );

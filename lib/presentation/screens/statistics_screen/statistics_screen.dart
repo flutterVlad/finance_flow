@@ -1,4 +1,5 @@
 import 'package:finance_flow/utils/theme.dart';
+import 'package:finance_flow/utils/widgets/page_keep_alive_wrapper.dart';
 import 'package:flutter/material.dart';
 
 import 'features/remaining_statistics/remaining_statistics.dart';
@@ -35,8 +36,8 @@ class StatisticsScreen extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            Center(child: Text('First')),
-            RemainingStatistics(),
+            PageKeepAliveWrapper(child: Center(child: Text('First'))),
+            PageKeepAliveWrapper(child: RemainingStatistics()),
           ],
         ),
       ),

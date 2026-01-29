@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:finance_flow/utils/theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,7 @@ class Chart extends StatefulWidget {
     super.key,
     this.barColor = Colors.blue,
     this.touchedBarColor = Colors.red,
-    this.barBackgroundColor = const Color.fromARGB(255, 194, 191, 191),
+    this.barBackgroundColor = AppColors.onSurface,
     this.values = const [],
     this.maxWeekSpends = 0,
   });
@@ -67,8 +68,8 @@ class _ChartState extends State<Chart> {
       aspectRatio: 1.5,
       child: BarChart(
         barChartData,
-        // duration: const Duration(seconds: 1),
-        curve: Curves.easeInOutCirc,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
       ),
     );
   }
@@ -79,7 +80,7 @@ class _ChartState extends State<Chart> {
     double maxY = 20,
     bool isTouched = false,
     Color? barColor,
-    double width = 16,
+    double width = 18,
     List<int> showTooltips = const [],
   }) {
     barColor ??= widget.barColor;
@@ -97,7 +98,14 @@ class _ChartState extends State<Chart> {
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: max(maxY, initMaxY),
-            color: widget.barBackgroundColor,
+            gradient: LinearGradient(
+              begin: .topCenter,
+              end: .bottomCenter,
+              colors: [
+                widget.barBackgroundColor.withValues(alpha: 0.1),
+                widget.barBackgroundColor.withValues(alpha: 0.3),
+              ],
+            ),
           ),
         ),
       ],

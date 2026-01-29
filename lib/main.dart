@@ -1,9 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:flutter/material.dart';
 
-import '/presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/presentation/screens/wallet_screen/bloc/wallet_bloc.dart';
 import '/utils/navigation/router.dart';
@@ -19,7 +18,6 @@ class FinanceFlowApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => GetIt.I<HomeBloc>()),
         BlocProvider(create: (_) => GetIt.I<WalletBloc>()),
-        BlocProvider(create: (_) => GetIt.I<TransactionsCubit>()),
       ],
       child: MaterialApp.router(
         restorationScopeId: 'app',
