@@ -1,3 +1,4 @@
+import 'package:finance_flow/presentation/screens/home_screen/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -117,6 +118,13 @@ final router = GoRouter(
           key: state.pageKey,
           child: const ViewAllExpensesScreen(),
         );
+      },
+    ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      pageBuilder: (context, state) {
+        return MaterialPage(key: state.pageKey, child: const SettingsScreen());
       },
     ),
   ],

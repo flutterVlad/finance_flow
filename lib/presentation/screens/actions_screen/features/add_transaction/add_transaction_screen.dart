@@ -32,6 +32,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   late final TextEditingController _amountController;
   late final TextEditingController _categoryController;
   late final TextEditingController _dateController;
+  late final TextEditingController _timeController;
 
   @override
   void initState() {
@@ -44,6 +45,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     _dateController = TextEditingController(
       text: DateFormat('d MMMM y').format(DateTime.now()),
     );
+    _timeController = TextEditingController(
+      text: DateFormat('H:m').format(DateTime.now()),
+    );
   }
 
   @override
@@ -52,6 +56,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     _amountController.dispose();
     _categoryController.dispose();
     _dateController.dispose();
+    _timeController.dispose();
     super.dispose();
   }
 
@@ -60,6 +65,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
+        extendBody: true,
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           title: const Text(
@@ -113,29 +119,66 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                       ),
                       Section(
-                        title: 'Date and time',
+                        title: 'Date',
                         controller: _dateController,
                         suffixIcon: const Icon(
                           Icons.keyboard_arrow_down,
                           color: AppColors.grey,
                         ),
                         onTap: () {
-                          AppBottomSheet.showDatePicker(context, (date) {
-                            _dateController.text = DateFormat(
-                              'd MMMM y',
-                            ).format(date);
-                            bloc.setDate(date);
-                          });
+                          AppBottomSheet.showDatePicker(
+                            context: context,
+                            mode: .date,
+                            onDateTimeChanged: (date) {
+                              _dateController.text = DateFormat(
+                                'd MMMM y',
+                              ).format(date);
+                              bloc.setDate(
+                                state.datetimeInput.value.copyWith(
+                                  day: date.day,
+                                  month: date.month,
+                                  year: date.year,
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                       Section(
-                        title: 'Income',
-                        enabled: !state.isIncomeCategorySelected,
-                        boolValue: state.isIncome,
-                        isBool: true,
-                        onBoolChange: (newBool) {
-                          bloc.setIncome(newBool);
+                        title: 'Time',
+                        controller: _timeController,
+                        suffixIcon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.grey,
+                        ),
+                        onTap: () {
+                          AppBottomSheet.showDatePicker(
+                            context: context,
+                            mode: .time,
+                            onDateTimeChanged: (date) {
+                              _timeController.text = DateFormat(
+                                'H:m',
+                              ).format(date);
+                              bloc.setDate(
+                                state.datetimeInput.value.copyWith(
+                                  hour: date.hour,
+                                  minute: date.minute,
+                                ),
+                              );
+                            },
+                          );
                         },
+                      ),
+                      SafeArea(
+                        child: Section(
+                          title: 'Income',
+                          enabled: !state.isIncomeCategorySelected,
+                          boolValue: state.isIncome,
+                          isBool: true,
+                          onBoolChange: (newBool) {
+                            bloc.setIncome(newBool);
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -145,6 +188,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           },
         ),
         bottomNavigationBar: SafeArea(
+          top: false,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: BlocBuilder<TransactionsCubit, TransactionsState>(

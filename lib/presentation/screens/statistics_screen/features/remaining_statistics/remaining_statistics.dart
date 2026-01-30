@@ -10,7 +10,6 @@ import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
-import '/utils/svgs/svgs.dart';
 import '/utils/theme.dart';
 import '../widgets/date_filter.dart';
 
@@ -47,6 +46,19 @@ class _DiagramState extends State<Diagram> {
 
         final difference =
             state.balanceOnSelectedMonth - state.spendsOnSelectedMonth;
+
+        if (difference == 0) {
+          return const SliverToBoxAdapter(
+            child: Padding(
+              padding: .all(16.0),
+              child: AspectRatio(
+                aspectRatio: 1.5,
+                child: Center(child: Text('No data')),
+              ),
+            ),
+          );
+        }
+
         final isAddEmpty = difference > 0;
 
         final emptyExpense = Expense(
@@ -183,7 +195,6 @@ class Income extends StatelessWidget {
         curr.incomesOnSelectedMonth,
       ),
       builder: (context, state) {
-        print('rebuild');
         final incomeExpenses = state.incomesOnSelectedMonth;
 
         final double income = incomeExpenses.fold(.0, (a, b) => a + b.price);

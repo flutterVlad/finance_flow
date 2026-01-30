@@ -15,6 +15,7 @@ class StatisticsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
+          centerTitle: true,
           title: const Text('Budget', style: TextStyle(fontWeight: .bold)),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(40),

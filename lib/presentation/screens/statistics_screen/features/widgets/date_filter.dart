@@ -24,8 +24,8 @@ class DateFilter extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   AppBottomSheet.showDatePicker(
-                    context,
-                    (date) {
+                    context: context,
+                    onDateTimeChanged: (date) {
                       bloc.add(FilterMonthEvent(date));
                     },
                     mode: .monthYear,

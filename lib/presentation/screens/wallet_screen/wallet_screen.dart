@@ -12,6 +12,7 @@ class WalletScreen extends StatelessWidget {
       slivers: [
         SliverAppBar(
           backgroundColor: Colors.transparent,
+          centerTitle: true,
           title: Text('Wallet', style: TextStyle(fontWeight: .bold)),
         ),
         SliverToBoxAdapter(child: CardSwiper()),

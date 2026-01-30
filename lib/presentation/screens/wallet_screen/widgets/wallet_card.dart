@@ -1,7 +1,6 @@
-import 'package:finance_flow/utils/svgs/svg.dart';
-import 'package:finance_flow/utils/svgs/svgs.dart';
 import 'package:flutter/material.dart';
 
+import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 
 class WalletCard extends StatelessWidget {

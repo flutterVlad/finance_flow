@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../extensions.dart';
-
-part 'svgs.freezed.dart';
-part 'svgs.g.dart';
+part of 'svg.dart';
 
 @freezed
 abstract class SvgData with _$SvgData {

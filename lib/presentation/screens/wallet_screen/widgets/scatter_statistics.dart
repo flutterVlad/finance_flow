@@ -122,10 +122,7 @@ class _ExpenseDataTransformer {
 
     final data = groupedExpenses.values.toList();
 
-    final totalAmount = data.fold(
-      0.0,
-      (sum, amount) => sum + amount.price,
-    );
+    final totalAmount = data.fold(0.0, (sum, amount) => sum + amount.price);
 
     data.sort((a, b) => b.price.compareTo(a.price));
 

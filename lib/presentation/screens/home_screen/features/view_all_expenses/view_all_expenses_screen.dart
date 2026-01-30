@@ -160,9 +160,13 @@ class MonthFilter extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTapDown: (details) async {
-                    AppBottomSheet.showDatePicker(context, (date) {
-                      onUpdate?.call(date);
-                    }, mode: .monthYear);
+                    AppBottomSheet.showDatePicker(
+                      context: context,
+                      onDateTimeChanged: (date) {
+                        onUpdate?.call(date);
+                      },
+                      mode: .monthYear,
+                    );
                   },
                   child: Row(
                     mainAxisSize: .min,

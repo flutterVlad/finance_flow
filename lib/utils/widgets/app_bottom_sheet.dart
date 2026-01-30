@@ -33,16 +33,18 @@ abstract class AppBottomSheet {
       useRootNavigator: useRootNavigator,
       context: context,
       builder: (context) {
-        return _KeyboardAwareBottomSheet(item: item);
+        return _KeyboardAwareBottomSheet(item: item, padding: padding);
       },
     );
   }
 
-  static Future<void> showDatePicker(
-    BuildContext context,
-    void Function(DateTime date) onDateTimeChanged, {
+  static Future<void> showDatePicker({
+    required BuildContext context,
+    required void Function(DateTime date) onDateTimeChanged,
     CupertinoDatePickerMode? mode,
     DateTime? initialDateTime,
+    DateTime? firstDate,
+    DateTime? lastDate,
   }) async {
     await show(
       context: context,

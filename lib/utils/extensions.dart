@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:finance_flow/utils/svgs/svgs.dart';
+import '/utils/svgs/svg.dart';
 
 extension DateTimeMonth on DateTime {
   String get strMonthShort => months[month - 1].substring(0, 3);

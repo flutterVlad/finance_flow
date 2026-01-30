@@ -1,3 +1,4 @@
+import 'package:finance_flow/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +19,7 @@ class FinanceFlowApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => GetIt.I<HomeBloc>()),
         BlocProvider(create: (_) => GetIt.I<WalletBloc>()),
+        BlocProvider(create: (_) => GetIt.I<SettingsBloc>(),)
       ],
       child: MaterialApp.router(
         restorationScopeId: 'app',

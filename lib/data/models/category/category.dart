@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/utils/extensions.dart';
-import '/utils/svgs/svgs.dart';
+import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 
 part 'category.freezed.dart';

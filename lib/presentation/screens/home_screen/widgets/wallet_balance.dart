@@ -43,7 +43,7 @@ class WalletBalance extends StatelessWidget {
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  '${state.allSpends.toStringAsFixed(2)} Br',
+                                  '${state.remains.toStringAsFixed(2)} Br',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -65,7 +65,7 @@ class WalletBalance extends StatelessWidget {
                           mainAxisAlignment: .spaceBetween,
                           children: [
                             Text(
-                              'Spent ${state.allSpends.toStringAsFixed(2)} Br',
+                              'Spent ${state.monthSpends.toStringAsFixed(2)} Br',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/utils/widgets/animated_gradiant_border.dart';
 
@@ -52,22 +53,46 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
               crossAxisAlignment: .center,
               children: [
                 // Аватар
-                Opacity(
-                  opacity: opacity,
-                  child: SizedBox(
-                    width: 56 * scale,
-                    height: 56 * scale,
-                    child: AnimatedGradiantBorder(
-                      blurRadius: 10,
-                      thickness: 2,
-                      topColor: Colors.red,
-                      bottomColor: Colors.blue,
-                      duration: const Duration(seconds: 5),
-                      child: ClipRRect(
-                        borderRadius: .circular(28 * scale),
-                        child: Image.network(
-                          'https://cdn.pixabay.com/photo/2021/03/03/10/17/man-6064964_1280.jpg',
-                          fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed('settings');
+                  },
+                  child: Opacity(
+                    opacity: opacity,
+                    child: SizedBox(
+                      width: 56 * scale,
+                      height: 56 * scale,
+                      child: AnimatedGradiantBorder(
+                        blurRadius: 10,
+                        thickness: 2,
+                        topColor: Colors.red,
+                        bottomColor: Colors.blue,
+                        duration: const Duration(seconds: 5),
+                        child: ClipRRect(
+                          borderRadius: .circular(28 * scale),
+                          child: Image.network(
+                            'https://cdn.pixabay.com/photo/2021/03/03/10/17/man-6064964_1280.jpg',
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) {
+                              return const SizedBox.shrink();
+                            },
+                            loadingBuilder: (_, child, event) {
+                              if (event?.cumulativeBytesLoaded ==
+                                  event?.expectedTotalBytes) {
+                                return child;
+                              }
+
+                              return Center(
+                                child: CircularProgressIndicator.adaptive(
+                                  strokeWidth: 2,
+                                  value:
+                                      ((event?.cumulativeBytesLoaded ?? 1) /
+                                      (event?.expectedTotalBytes?.toInt() ??
+                                          1)),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

@@ -1,8 +1,8 @@
-import 'package:finance_flow/utils/svgs/svg.dart';
-import 'package:finance_flow/utils/svgs/svgs.dart';
-import 'package:finance_flow/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '/utils/svgs/svg.dart';
+import '/utils/theme.dart';
 
 class ActionsScreen extends StatelessWidget {
   const ActionsScreen({super.key});
@@ -13,6 +13,7 @@ class ActionsScreen extends StatelessWidget {
       slivers: [
         const SliverAppBar(
           backgroundColor: Colors.transparent,
+          centerTitle: true,
           title: Text('Actions', style: TextStyle(fontWeight: .bold)),
         ),
         SliverToBoxAdapter(

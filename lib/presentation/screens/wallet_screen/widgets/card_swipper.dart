@@ -1,7 +1,7 @@
 import 'package:finance_flow/utils/widgets/app_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-import '/utils/svgs/svgs.dart';
+import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_text_button.dart';
 import 'wallet_card.dart';

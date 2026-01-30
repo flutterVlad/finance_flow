@@ -23,29 +23,27 @@ abstract class HomeState with _$HomeState {
   List<Expense> get incomesOnSelectedMonth =>
       incomes.where((e) => e.datetime.isSelectedMonth(monthFilter)).toList();
 
-  double get balance => incomes.fold(0, (a, b) => a + b.price);
+  double get allBalance => incomes.fold(0, (a, b) => a + b.price);
 
-  double get monthBalance =>
-      balance -
-      allExpenses
-          .where((e) => !e.datetime.isCurrentMonth)
-          .fold(0, (a, b) => a + b.price);
+  double get monthBalance => monthIncomes.fold(0, (a, b) => a + b.price);
 
   double get balanceOnSelectedMonth => incomes
       .where((e) => e.datetime.isSelectedMonth(monthFilter))
       .fold(0, (a, b) => a + b.price);
 
   double get percent {
-    if (monthBalance == 0 && allSpends == 0) {
+    if (monthBalance == 0 && monthSpends == 0) {
       return 0;
-    } else if (monthBalance == 0 && allSpends != 0) {
+    } else if (monthBalance == 0 && monthSpends != 0) {
       return 1.01;
     } else {
-      return allSpends / monthBalance;
+      return monthSpends / monthBalance;
     }
   }
 
-  double get allSpends => monthExpenses.fold(0, (a, b) => a + b.price);
+  double get monthSpends => monthExpenses.fold(0, (a, b) => a + b.price);
+
+  double get remains => monthBalance - monthSpends;
 
   double get spendsOnSelectedMonth => allExpenses
       .where((e) => e.datetime.isSelectedMonth(monthFilter))

@@ -1,9 +1,8 @@
-import 'package:finance_flow/utils/widgets/glass_container.dart';
 import 'package:flutter/material.dart';
 
-import '../svgs/svg.dart';
-import '../svgs/svgs.dart';
-import '../theme.dart';
+import '/utils/svgs/svg.dart';
+import '/utils/theme.dart';
+import '/utils/widgets/glass_container.dart';
 
 class BottomBar extends StatelessWidget {
   final void Function(int) onTap;
