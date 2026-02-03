@@ -18,6 +18,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       datetime: DateTime.parse(map['datetime']),
       price: map['price'],
       isIncome: map['isIncome'],
+      accountId: map['accountId'],
     );
   }
 

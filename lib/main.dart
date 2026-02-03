@@ -17,9 +17,9 @@ class FinanceFlowApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => GetIt.I<SettingsBloc>()),
         BlocProvider(create: (_) => GetIt.I<HomeBloc>()),
         BlocProvider(create: (_) => GetIt.I<WalletBloc>()),
-        BlocProvider(create: (_) => GetIt.I<SettingsBloc>()),
       ],
       child: MaterialApp.router(
         restorationScopeId: 'app',

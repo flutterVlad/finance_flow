@@ -72,16 +72,33 @@ final class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Future<Response> deleteAccount(String uid) async {
+    await _deleteAccountExpenses(uid);
     return await hiveService.deleteData<Account>(uid);
   }
 
   @override
   Future<Response> deleteAllAccounts() async {
+    final allExpenses = await hiveService.getAllData<Expense>();
+    final deletedExpenses = allExpenses.where((e) => e.accountId != null);
+
+    for (final el in deletedExpenses) {
+      await hiveService.deleteData<Expense>(el.id.uuid);
+    }
+
     return await hiveService.deleteAllData<Account>();
   }
 
   @override
   Future<Uint8List?> pickImage() async {
     return await imagePickerService.pickImage();
+  }
+
+  Future<void> _deleteAccountExpenses(String accountId) async {
+    final allExpenses = await hiveService.getAllData<Expense>();
+    final deletedExpenses = allExpenses.where((e) => e.accountId == accountId);
+
+    for (final el in deletedExpenses) {
+      await hiveService.deleteData<Expense>(el.id.uuid);
+    }
   }
 }

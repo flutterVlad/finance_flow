@@ -2,7 +2,7 @@ part of 'home_bloc.dart';
 
 @freezed
 abstract class HomeEvent with _$HomeEvent {
-  const factory HomeEvent.init() = InitHomeEvent;
+  const factory HomeEvent.init({String? accountId}) = InitHomeEvent;
 
   const factory HomeEvent.updateData() = UpdateHomeEvent;
 

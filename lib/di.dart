@@ -24,17 +24,18 @@ class DI {
   }
 
   void _initBloc() {
+    GetIt.I.registerSingleton<SettingsBloc>(
+      SettingsBloc(settingsRepository: GetIt.I<SettingsRepository>()),
+    );
     GetIt.I.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
         getDayExpensesUseCase: GetIt.I<GetDayExpensesUseCase>(),
         getAllExpensesUseCase: GetIt.I<GetAllExpensesUseCase>(),
         addExpenseUseCase: GetIt.I<AddExpenseUseCase>(),
+        settingsBloc: GetIt.I<SettingsBloc>(),
       ),
     );
     GetIt.I.registerLazySingleton<WalletBloc>(() => WalletBloc());
-    GetIt.I.registerLazySingleton<SettingsBloc>(
-      () => SettingsBloc(settingsRepository: GetIt.I<SettingsRepository>()),
-    );
     GetIt.I.registerFactory(() => TransactionsCubit());
   }
 

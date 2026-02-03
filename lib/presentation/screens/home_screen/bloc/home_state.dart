@@ -5,6 +5,7 @@ abstract class HomeState with _$HomeState {
   const HomeState._();
 
   const factory HomeState({
+    String? accountId,
     @Default([]) List<DayExpense> allDayExpenses,
     @Default([]) List<Expense> allExpenses,
     @Default([]) List<Expense> incomes,

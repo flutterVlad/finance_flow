@@ -2,33 +2,31 @@ import 'package:formz/formz.dart';
 
 import '/data/models/category/category.dart';
 
-enum InputError { empty, invalid }
-
-class TransactionNameInput extends FormzInput<String, InputError> {
+class TransactionNameInput extends FormzInput<String, String?> {
   const TransactionNameInput.pure({String value = ''}) : super.pure(value);
 
   const TransactionNameInput.dirty({String value = ''}) : super.dirty(value);
 
   @override
-  InputError? validator(String value) {
-    return value.isEmpty ? InputError.empty : null;
+  String? validator(String value) {
+    return value.isEmpty ? 'Field can not be an empty' : null;
   }
 }
 
-class TransactionAmountInput extends FormzInput<String, InputError> {
+class TransactionAmountInput extends FormzInput<String, String?> {
   const TransactionAmountInput.pure({String value = ''}) : super.pure(value);
 
   const TransactionAmountInput.dirty({String value = ''}) : super.dirty(value);
 
   @override
-  InputError? validator(String value) {
-    if (value.isEmpty) return InputError.empty;
-    if (double.tryParse(value)?.isNegative ?? false) return InputError.invalid;
+  String? validator(String value) {
+    if (value.isEmpty) return 'Field can not be an empty';
+    if (double.tryParse(value)?.isNegative ?? false) return 'Value invalid';
     return null;
   }
 }
 
-class TransactionCategoryInput extends FormzInput<Category, InputError> {
+class TransactionCategoryInput extends FormzInput<Category, String?> {
   const TransactionCategoryInput.pure({Category value = Category.empty})
     : super.pure(Category.empty);
 
@@ -36,12 +34,12 @@ class TransactionCategoryInput extends FormzInput<Category, InputError> {
     : super.dirty(value);
 
   @override
-  InputError? validator(Category value) {
-    return value == Category.empty ? InputError.empty : null;
+  String? validator(Category value) {
+    return value == Category.empty ? 'Field can not be an empty' : null;
   }
 }
 
-class TransactionDateTimeInput extends FormzInput<DateTime, InputError> {
+class TransactionDateTimeInput extends FormzInput<DateTime, String?> {
   TransactionDateTimeInput.pure({DateTime? value})
     : super.pure(value ?? DateTime.now());
 
@@ -49,7 +47,9 @@ class TransactionDateTimeInput extends FormzInput<DateTime, InputError> {
     : super.dirty(value ?? DateTime.now());
 
   @override
-  InputError? validator(DateTime value) {
-    return value.isAfter(DateTime.now()) ? InputError.invalid : null;
+  String? validator(DateTime value) {
+    return value.isAfter(DateTime.now())
+        ? 'Date can not be laster than today'
+        : null;
   }
 }

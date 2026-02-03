@@ -18,6 +18,7 @@ abstract class Expense with _$Expense {
     required DateTime datetime,
     required double price,
     @Default(false) bool isIncome,
+    String? accountId,
   }) = _Expense;
 
   static Expense get empty => Expense(

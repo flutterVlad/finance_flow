@@ -1,7 +1,7 @@
+import 'package:finance_flow/utils/widgets/toast_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -89,12 +89,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         hintText: 'Trip to Turkey',
                         keyboardType: .text,
                         onSubmit: bloc.setName,
+                        errorText: state.nameInput.displayError,
                       ),
                       Section(
                         controller: _amountController,
                         title: 'Amount',
                         hintText: '120',
                         suffix: const Text(' Br'),
+                        errorText: state.amountInput.displayError,
                         keyboardType: const .numberWithOptions(decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -108,6 +110,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         },
                         title: 'Category',
                         hintText: state.categoryInput.value.name,
+                        errorText: state.categoryInput.displayError,
                         suffixIcon: const Icon(
                           Icons.keyboard_arrow_down,
                           color: AppColors.grey,
@@ -125,6 +128,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           Icons.keyboard_arrow_down,
                           color: AppColors.grey,
                         ),
+                        errorText: state.datetimeInput.displayError,
                         onTap: () {
                           AppBottomSheet.showDatePicker(
                             context: context,
@@ -151,6 +155,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           Icons.keyboard_arrow_down,
                           color: AppColors.grey,
                         ),
+                        errorText: state.datetimeInput.displayError,
                         onTap: () {
                           AppBottomSheet.showDatePicker(
                             context: context,
@@ -198,12 +203,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   enabled: state.isFormValid,
                   onTap: () {
                     homeBloc.add(AddExpenseEvent(state.validExpense));
-                    Fluttertoast.showToast(
-                      gravity: .TOP,
-                      msg:
+                    ToastService.showToast(
+                      message:
                           'Expense "${state.validExpense.name}" created successfully',
-                      backgroundColor: Colors.green,
-                      textColor: AppColors.onPrimary,
+                      success: true,
                     );
                     if (context.canPop()) context.pop();
                   },
