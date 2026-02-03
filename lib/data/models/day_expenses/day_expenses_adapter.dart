@@ -3,7 +3,9 @@ import 'package:hive_flutter/adapters.dart';
 import '/data/models/hive_adapter_ids.dart';
 import 'day_expenses.dart';
 
-class DayExpensesAdapter extends TypeAdapter<DayExpense> {
+class DayExpensesAdapter implements TypeAdapter<DayExpense> {
+  const DayExpensesAdapter();
+
   @override
   final int typeId = HiveAdapterIds.dayExpense;
 

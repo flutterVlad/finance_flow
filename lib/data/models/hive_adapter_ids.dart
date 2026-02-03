@@ -5,4 +5,5 @@ abstract class HiveAdapterIds {
   static const int recurrence = 3;
   static const int expense = 4;
   static const int dayExpense = 5;
+  static const int bankCard = 6;
 }

@@ -1,3 +1,4 @@
+import 'package:finance_flow/data/service/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'data/data_sources/local_datasource.dart';
@@ -13,7 +14,6 @@ import 'domain/use_cases/get_day_expenses_use_case.dart';
 import 'presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import 'presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
-import 'presentation/screens/wallet_screen/bloc/wallet_bloc.dart';
 
 class DI {
   Future<void> initDI() async {
@@ -35,7 +35,6 @@ class DI {
         settingsBloc: GetIt.I<SettingsBloc>(),
       ),
     );
-    GetIt.I.registerLazySingleton<WalletBloc>(() => WalletBloc());
     GetIt.I.registerFactory(() => TransactionsCubit());
   }
 
@@ -52,9 +51,10 @@ class DI {
   }
 
   Future<void> _initServices() async {
+    GetIt.I.registerLazySingleton(() => const SecureStorageService());
     GetIt.I.registerLazySingleton(() => const MockLocalService());
     GetIt.I.registerLazySingleton(() => const ImagePickerService());
-    GetIt.I.registerLazySingleton(() => HiveService());
+    GetIt.I.registerLazySingleton(() => const HiveService());
     await GetIt.I<HiveService>().init();
   }
 

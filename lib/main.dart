@@ -5,7 +5,6 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
-import '/presentation/screens/wallet_screen/bloc/wallet_bloc.dart';
 import '/utils/navigation/router.dart';
 import '/utils/theme.dart';
 import 'di.dart';
@@ -19,7 +18,6 @@ class FinanceFlowApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => GetIt.I<SettingsBloc>()),
         BlocProvider(create: (_) => GetIt.I<HomeBloc>()),
-        BlocProvider(create: (_) => GetIt.I<WalletBloc>()),
       ],
       child: MaterialApp.router(
         restorationScopeId: 'app',

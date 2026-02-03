@@ -4,7 +4,9 @@ import 'package:uuid/uuid.dart';
 import '/data/models/hive_adapter_ids.dart';
 import 'expense.dart';
 
-class ExpenseAdapter extends TypeAdapter<Expense> {
+class ExpenseAdapter implements TypeAdapter<Expense> {
+  const ExpenseAdapter();
+
   @override
   final int typeId = HiveAdapterIds.expense;
 

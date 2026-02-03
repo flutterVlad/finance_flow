@@ -1,4 +1,3 @@
-import 'package:finance_flow/utils/widgets/primary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,10 +16,12 @@ abstract class AppBottomSheet {
     bool isScrollControlled = false,
     double? scaleFactor,
     EdgeInsets? padding,
+    bool isDismissible = true,
   }) async {
     return await showModalBottomSheet(
       isScrollControlled: isScrollControlled,
       useSafeArea: useSafeArea,
+      isDismissible: isDismissible,
       shape: const RoundedRectangleBorder(
         borderRadius: .vertical(top: .circular(24)),
       ),
@@ -66,19 +67,6 @@ abstract class AppBottomSheet {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  static Widget createCard() {
-    return SafeArea(
-      child: Padding(
-        padding: const .only(right: 16, left: 16, bottom: 16),
-        child: Column(
-          spacing: 8,
-          mainAxisSize: .min,
-          children: [PrimaryButton(onTap: () {}, text: 'Submit')],
-        ),
       ),
     );
   }

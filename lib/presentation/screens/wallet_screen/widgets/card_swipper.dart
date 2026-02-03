@@ -1,3 +1,4 @@
+import 'package:finance_flow/presentation/screens/wallet_screen/widgets/create_card_form.dart';
 import 'package:finance_flow/utils/widgets/app_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,9 @@ class _CardSwiperState extends State<CardSwiper>
                       context: context,
                       isScrollControlled: true,
                       useRootNavigator: true,
-                      item: AppBottomSheet.createCard(),
+                      isDismissible: false,
+                      padding: const .only(top: 16),
+                      item: const CreateCardForm(),
                     );
                   },
                 ),

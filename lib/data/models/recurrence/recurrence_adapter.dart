@@ -3,7 +3,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '/data/models/hive_adapter_ids.dart';
 import 'recurrence.dart';
 
-class RecurrenceAdapter extends TypeAdapter<Recurrence> {
+class RecurrenceAdapter implements TypeAdapter<Recurrence> {
+  const RecurrenceAdapter();
+
   @override
   final int typeId = HiveAdapterIds.recurrence;
 
@@ -29,7 +31,9 @@ class RecurrenceAdapter extends TypeAdapter<Recurrence> {
           typeId == other.typeId;
 }
 
-class RecurrenceTypeAdapter extends TypeAdapter<RecurrenceType> {
+class RecurrenceTypeAdapter implements TypeAdapter<RecurrenceType> {
+  const RecurrenceTypeAdapter();
+
   @override
   final int typeId = HiveAdapterIds.recurrenceType;
 

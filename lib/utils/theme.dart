@@ -17,6 +17,7 @@ abstract class AppTheme {
         borderRadius: .circular(16),
         borderSide: .none,
       ),
+      hintStyle: const TextStyle(color: AppColors.lightGrey),
     ),
     scaffoldBackgroundColor: AppColors.secondary,
     appBarTheme: const AppBarTheme(

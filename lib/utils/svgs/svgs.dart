@@ -25,6 +25,15 @@ class Svgs {
     size: 35,
   );
 
+  static const SvgData mir = SvgData('assets/svg/mir.svg', size: 20);
+
+  static const SvgData unknownCard = SvgData(
+    'assets/svg/unknown_card.svg',
+    size: 20,
+  );
+
+  static const SvgData unionPay = SvgData('assets/svg/union_pay.svg', size: 20);
+
   static const SvgData money = SvgData('assets/svg/money.svg', size: 35);
 
   static const SvgData category = SvgData('assets/svg/category.svg', size: 35);
@@ -43,6 +52,8 @@ class Svgs {
   static const SvgData pieChart = SvgData('assets/svg/pie_chart.svg', size: 20);
 
   static const SvgData beauty = SvgData('assets/svg/beauty.svg', size: 20);
+
+  static const SvgData belcard = SvgData('assets/svg/belcard.svg', size: 20);
 
   static const SvgData bill = SvgData('assets/svg/bill.svg', size: 20);
 

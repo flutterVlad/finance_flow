@@ -1,22 +1,22 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import '/data/models/hive_adapter_ids.dart';
-import 'account.dart';
+import 'bank_card.dart';
 
-class AccountAdapter implements TypeAdapter<Account> {
-  const AccountAdapter();
-
-  @override
-  final int typeId = HiveAdapterIds.account;
+class BankCardAdapter implements TypeAdapter<BankCard> {
+  const BankCardAdapter();
 
   @override
-  Account read(BinaryReader reader) {
+  final int typeId = HiveAdapterIds.bankCard;
+
+  @override
+  BankCard read(BinaryReader reader) {
     final json = Map<String, dynamic>.from(reader.readMap());
-    return Account.fromJson(json);
+    return BankCard.fromJson(json);
   }
 
   @override
-  void write(BinaryWriter writer, Account obj) {
+  void write(BinaryWriter writer, BankCard obj) {
     writer.writeMap(obj.toJson());
   }
 
@@ -26,7 +26,7 @@ class AccountAdapter implements TypeAdapter<Account> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AccountAdapter &&
+      other is BankCardAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

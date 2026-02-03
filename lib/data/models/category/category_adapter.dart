@@ -3,7 +3,9 @@ import 'package:hive_flutter/adapters.dart';
 import '/data/models/hive_adapter_ids.dart';
 import 'category.dart';
 
-class CategoryAdapter extends TypeAdapter<Category> {
+class CategoryAdapter implements TypeAdapter<Category> {
+  const CategoryAdapter();
+
   @override
   final int typeId = HiveAdapterIds.category;
 
