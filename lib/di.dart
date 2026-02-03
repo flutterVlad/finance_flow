@@ -4,6 +4,7 @@ import 'data/data_sources/local_datasource.dart';
 import 'data/repositories/expense_repository_impl.dart';
 import 'data/repositories/settings_repository_impl.dart';
 import 'data/service/hive_service.dart';
+import 'data/service/image_picker.dart';
 import 'domain/repositories/expense_repository.dart';
 import 'domain/repositories/settings_repository.dart';
 import 'domain/use_cases/add_expense_use_case.dart';
@@ -42,12 +43,16 @@ class DI {
       () => ExpenseRepositoryImpl(hiveService: GetIt.I<HiveService>()),
     );
     GetIt.I.registerLazySingleton<SettingsRepository>(
-      () => SettingsRepositoryImpl(hiveService: GetIt.I<HiveService>()),
+      () => SettingsRepositoryImpl(
+        hiveService: GetIt.I<HiveService>(),
+        imagePickerService: GetIt.I<ImagePickerService>(),
+      ),
     );
   }
 
   Future<void> _initServices() async {
     GetIt.I.registerLazySingleton(() => const MockLocalService());
+    GetIt.I.registerLazySingleton(() => const ImagePickerService());
     GetIt.I.registerLazySingleton(() => HiveService());
     await GetIt.I<HiveService>().init();
   }

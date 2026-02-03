@@ -7,9 +7,9 @@ class Email extends FormzInput<String?, String> {
 
   @override
   String? validator(String? value) {
-    final regExp = RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$');
-    if (value == null) return null;
-    if (regExp.hasMatch(value)) return 'Incorrect email format';
+    final regExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    if (value == null || value.isEmpty) return null;
+    if (!regExp.hasMatch(value)) return 'Incorrect email format';
 
     return null;
   }
@@ -22,6 +22,7 @@ class FirstName extends FormzInput<String?, String> {
 
   @override
   String? validator(String? value) {
+    if (value?.isEmpty ?? true) return 'Field not can be empty';
     return null;
   }
 }
@@ -33,8 +34,7 @@ class LastName extends FormzInput<String?, String> {
 
   @override
   String? validator(String? value) {
+    if (value?.isEmpty ?? true) return 'Field not can be empty';
     return null;
   }
 }
-
-

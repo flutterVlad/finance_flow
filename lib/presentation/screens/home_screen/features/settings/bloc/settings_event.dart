@@ -8,5 +8,14 @@ abstract class SettingsEvent with _$SettingsEvent {
 
   const factory SettingsEvent.changeLanguage() = ChangeLanguageEvent;
 
-  const factory SettingsEvent.savePersonInfo() = SavePersonInfoEvent;
+  const factory SettingsEvent.savePersonInfo({required AccountForm form}) =
+      SavePersonInfoEvent;
+
+  const factory SettingsEvent.createAccount({required AccountForm form}) =
+      CreateAccountEvent;
+
+  const factory SettingsEvent.deleteAccount({required String uid}) =
+      DeleteAccountEvent;
+
+  const factory SettingsEvent.deleteAllAccounts() = DeleteAllAccountsEvent;
 }

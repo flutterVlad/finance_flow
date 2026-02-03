@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-import 'widgets/avatar_view.dart';
+import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/screens/home_screen/widgets/avatar_view.dart';
+import '/utils/widgets/toast_service.dart';
 import 'widgets/settings_column.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -8,11 +12,17 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final account = context.select(
+      (SettingsBloc settings) => settings.state.selectedAccount,
+    );
+
     final firstSettings = [
       SettingElement(
         icon: Icons.person,
         title: 'Personal Information',
-        onTap: () {},
+        onTap: () {
+          context.pushNamed('editAccount', extra: account);
+        },
       ),
       SettingElement(icon: Icons.language, title: 'Language', onTap: () {}),
       SettingElement(
@@ -59,24 +69,46 @@ class SettingsScreen extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: const Text(
-              'My Profile',
-              style: TextStyle(fontWeight: .bold),
+    return BlocListener<SettingsBloc, SettingsState>(
+      listener: (context, state) {
+        if (state.response != null) {
+          ToastService.showToast(
+            message: state.response?.message,
+            success: state.response?.success,
+          );
+        }
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: const Text(
+                'My Profile',
+                style: TextStyle(fontWeight: .bold),
+              ),
+              pinned: true,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    context.read<SettingsBloc>().add(
+                      const DeleteAllAccountsEvent(),
+                    );
+                  },
+                  icon: const Icon(Icons.more_vert),
+                ),
+              ],
             ),
-            pinned: true,
-            actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
-            ],
-          ),
-          const SliverToBoxAdapter(child: AvatarView()),
-          SliverToBoxAdapter(child: SettingsColumn(elements: firstSettings)),
-          SliverToBoxAdapter(child: SettingsColumn(elements: secondSettings)),
-          SliverToBoxAdapter(child: SettingsColumn(elements: thirdSettings)),
-        ],
+            const SliverToBoxAdapter(
+              child: AspectRatio(
+                aspectRatio: 2.5,
+                child: Center(child: AvatarView(imageSize: 80)),
+              ),
+            ),
+            SliverToBoxAdapter(child: SettingsColumn(elements: firstSettings)),
+            SliverToBoxAdapter(child: SettingsColumn(elements: secondSettings)),
+            SliverToBoxAdapter(child: SettingsColumn(elements: thirdSettings)),
+          ],
+        ),
       ),
     );
   }

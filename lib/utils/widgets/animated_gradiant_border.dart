@@ -92,6 +92,7 @@ class _AnimatedGradiantBorderState extends State<AnimatedGradiantBorder>
         final aspectRatio = constrains.maxWidth / constrains.maxHeight;
 
         return Stack(
+          fit: .expand,
           children: [
             widget.child != null
                 ? ClipRRect(

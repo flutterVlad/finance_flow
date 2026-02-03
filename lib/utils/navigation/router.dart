@@ -1,9 +1,11 @@
-import 'package:finance_flow/presentation/screens/home_screen/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '/data/models/account/account.dart';
 import '/presentation/screens/actions_screen/actions_screen.dart';
 import '/presentation/screens/actions_screen/features/add_transaction/add_transaction_screen.dart';
+import '/presentation/screens/home_screen/features/settings/features/edit_account_info.dart';
+import '/presentation/screens/home_screen/features/settings/settings_screen.dart';
 import '/presentation/screens/home_screen/features/view_all_expenses/view_all_expenses_screen.dart';
 import '/presentation/screens/home_screen/home_screen.dart';
 import '/presentation/screens/statistics_screen/statistics_screen.dart';
@@ -125,6 +127,20 @@ final router = GoRouter(
       name: 'settings',
       pageBuilder: (context, state) {
         return MaterialPage(key: state.pageKey, child: const SettingsScreen());
+      },
+    ),
+    GoRoute(
+      path: '/editAccount',
+      name: 'editAccount',
+      pageBuilder: (context, state) {
+        Account? account;
+
+        if (state.extra != null) account = state.extra as Account;
+
+        return MaterialPage(
+          key: state.pageKey,
+          child: EditAccountScreen(account: account),
+        );
       },
     ),
   ],

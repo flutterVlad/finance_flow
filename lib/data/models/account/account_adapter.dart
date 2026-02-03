@@ -9,7 +9,7 @@ class AccountAdapter extends TypeAdapter<Account> {
 
   @override
   Account read(BinaryReader reader) {
-    final json = reader.readMap() as Map<String, dynamic>;
+    final json = Map<String, dynamic>.from(reader.readMap());
     return Account.fromJson(json);
   }
 

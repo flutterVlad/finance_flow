@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '/utils/widgets/animated_gradiant_border.dart';
+import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/screens/home_screen/widgets/avatar_view.dart';
 
 class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
@@ -53,78 +55,23 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
               crossAxisAlignment: .center,
               children: [
                 // Аватар
-                GestureDetector(
+                AvatarView(
                   onTap: () {
                     context.pushNamed('settings');
                   },
-                  child: Opacity(
-                    opacity: opacity,
-                    child: SizedBox(
-                      width: 56 * scale,
-                      height: 56 * scale,
-                      child: AnimatedGradiantBorder(
-                        blurRadius: 10,
-                        thickness: 2,
-                        topColor: Colors.red,
-                        bottomColor: Colors.blue,
-                        duration: const Duration(seconds: 5),
-                        child: ClipRRect(
-                          borderRadius: .circular(28 * scale),
-                          child: Image.network(
-                            'https://cdn.pixabay.com/photo/2021/03/03/10/17/man-6064964_1280.jpg',
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) {
-                              return const SizedBox.shrink();
-                            },
-                            loadingBuilder: (_, child, event) {
-                              if (event?.cumulativeBytesLoaded ==
-                                  event?.expectedTotalBytes) {
-                                return child;
-                              }
-
-                              return Center(
-                                child: CircularProgressIndicator.adaptive(
-                                  strokeWidth: 2,
-                                  value:
-                                      ((event?.cumulativeBytesLoaded ?? 1) /
-                                      (event?.expectedTotalBytes?.toInt() ??
-                                          1)),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  opacity: opacity,
+                  imageSize: 56 * scale,
+                  blurRadius: 10,
+                  thickness: 2,
                 ),
 
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
 
                 // Текст
                 Expanded(
-                  child: Opacity(
+                  child: _AppBarTitle(
                     opacity: textOpacity.toDouble(),
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      mainAxisAlignment: .center,
-                      children: [
-                        Text(
-                          'Welcome back 👋',
-                          style: TextStyle(
-                            fontSize: 14 * fontSizeFactor,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Text(
-                          'Vlad Yurashevich',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20 * fontSizeFactor,
-                          ),
-                        ),
-                      ],
-                    ),
+                    fontSizeFactor: fontSizeFactor,
                   ),
                 ),
 
@@ -167,5 +114,50 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(BlurAppBarDelegate oldDelegate) {
     return oldDelegate.minHeight != minHeight ||
         oldDelegate.maxHeight != maxHeight;
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle({this.opacity = 1, this.fontSizeFactor = 1});
+
+  final double opacity;
+  final double fontSizeFactor;
+
+  @override
+  Widget build(BuildContext context) {
+    final account = context.select(
+      (SettingsBloc bloc) => bloc.state.selectedAccount,
+    );
+    final isFullInfo = account != null;
+
+    final fontSize = isFullInfo ? 14 : 18;
+    final textColor = isFullInfo ? Colors.grey : null;
+    final fontWeight = isFullInfo ? null : FontWeight.bold;
+
+    return Opacity(
+      opacity: opacity,
+      child: Column(
+        crossAxisAlignment: .start,
+        mainAxisAlignment: .center,
+        children: [
+          Text(
+            'Welcome back 👋',
+            style: TextStyle(
+              fontSize: fontSize * fontSizeFactor,
+              color: textColor,
+              fontWeight: fontWeight,
+            ),
+          ),
+          if (isFullInfo)
+            Text(
+              '${account.firstName} ${account.lastName}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20 * fontSizeFactor,
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }

@@ -6,6 +6,8 @@ extension FormToAccountMapper on AccountForm {
     email: email.value,
     firstName: firstName.value,
     lastName: lastName.value,
+    image: image,
+    isPrimary: isPrimary,
   );
 }
 
@@ -15,5 +17,7 @@ extension AccountToFormMapper on Account {
     email: .pure(email),
     firstName: .pure(firstName),
     lastName: .pure(lastName),
+    image: image,
+    isPrimary: isPrimary,
   );
 }

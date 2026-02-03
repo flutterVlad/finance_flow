@@ -1,10 +1,11 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../models/account/account_adapter.dart';
-import '../models/category/category_adapter.dart';
-import '../models/day_expenses/day_expenses_adapter.dart';
-import '../models/expense/expense_adapter.dart';
-import '../models/recurrence/recurrence_adapter.dart';
+import '/data/models/account/account_adapter.dart';
+import '/data/models/category/category_adapter.dart';
+import '/data/models/day_expenses/day_expenses_adapter.dart';
+import '/data/models/expense/expense_adapter.dart';
+import '/data/models/recurrence/recurrence_adapter.dart';
+import '/data/models/response/response.dart';
 
 class HiveService {
   Future<void> init() async {
@@ -22,40 +23,71 @@ class HiveService {
   }
 
   Future<T?> getData<T>(dynamic key) async {
-    final box = await Hive.openBox<T>(T.toString());
-    final T? model = box.get(key);
+    try {
+      final box = await Hive.openBox<T>(T.toString());
+      final T? model = box.get(key);
 
-    return model;
+      return model;
+    } on HiveError catch (_) {
+      rethrow;
+    }
   }
 
   Future<List<T>> getAllData<T>() async {
-    final box = await Hive.openBox<T>(T.toString());
-    final List<T> data = box.values.toList();
+    try {
+      final box = await Hive.openBox<T>(T.toString());
+      final List<T> data = box.values.toList();
 
-    return data;
+      return data;
+    } on HiveError catch (_) {
+      rethrow;
+    }
   }
 
-  Future<void> putData<T>(dynamic key, T model) async {
+  Future<Response> putData<T>(dynamic key, T model) async {
     final box = await Hive.openBox<T>(T.toString());
 
-    await box.put(key, model);
+    try {
+      await box.put(key, model);
+      return const Response(message: 'Data put to hive', success: true);
+    } on HiveError catch (e) {
+      return Response(message: e.message);
+    }
   }
 
-  Future<void> deleteData<T>(dynamic key) async {
+  Future<Response> deleteData<T>(dynamic key) async {
     final box = await Hive.openBox<T>(T.toString());
 
-    await box.delete(key);
+    try {
+      await box.delete(key);
+      return const Response(message: 'Data delete from give', success: true);
+    } on HiveError catch (e) {
+      return Response(message: e.message);
+    }
   }
 
-  Future<void> deleteAllData<T>() async {
+  Future<Response> deleteAllData<T>() async {
     final box = await Hive.openBox<T>(T.toString());
 
-    await box.clear();
+    try {
+      await box.clear();
+      return const Response(
+        message: 'All data delete from hive',
+        success: true,
+      );
+    } on HiveError catch (e) {
+      return Response(message: e.message);
+    }
   }
 
-  Future<void> updateData<T>(dynamic key, T model) async {
+  Future<Response> updateData<T>(dynamic key, T model) async {
     final box = await Hive.openBox<T>(T.toString());
 
-    await box.put(key, model);
+    try {
+      await box.put(key, model);
+      return const Response(message: 'Data updated in hive', success: true);
+    } on HiveError catch (e) {
+      return Response(message: e.message);
+    }
   }
 }
