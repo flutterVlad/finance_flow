@@ -26,9 +26,13 @@ class HiveService {
     Hive.registerAdapter(const BankCardAdapter());
   }
 
-  Future<T?> getData<T>(dynamic key, {List<int>? encryptKey}) async {
+  Future<T?> getData<T>(
+    dynamic key, {
+    List<int>? encryptKey,
+    String? boxKey,
+  }) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
       final T? model = box.get(key);
 
       return model;
@@ -37,9 +41,9 @@ class HiveService {
     }
   }
 
-  Future<List<T>> getAllData<T>({List<int>? encryptKey}) async {
+  Future<List<T>> getAllData<T>({List<int>? encryptKey, String? boxKey}) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
       final List<T> data = box.values.toList();
 
       return data;
@@ -52,9 +56,10 @@ class HiveService {
     dynamic key,
     T model, {
     List<int>? encryptKey,
+    String? boxKey,
   }) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
 
       await box.put(key, model);
       return const Response(message: 'Data put to hive', success: true);
@@ -63,9 +68,13 @@ class HiveService {
     }
   }
 
-  Future<Response> deleteData<T>(dynamic key, {List<int>? encryptKey}) async {
+  Future<Response> deleteData<T>(
+    dynamic key, {
+    List<int>? encryptKey,
+    String? boxKey,
+  }) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
 
       await box.delete(key);
       return const Response(message: 'Data delete from give', success: true);
@@ -74,9 +83,12 @@ class HiveService {
     }
   }
 
-  Future<Response> deleteAllData<T>({List<int>? encryptKey}) async {
+  Future<Response> deleteAllData<T>({
+    List<int>? encryptKey,
+    String? boxKey,
+  }) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
       await box.clear();
 
       return const Response(
@@ -92,9 +104,10 @@ class HiveService {
     dynamic key,
     T model, {
     List<int>? encryptKey,
+    String? boxKey,
   }) async {
     try {
-      final box = await _openBox<T>(encryptKey);
+      final box = await _openBox<T>(encryptKey, boxKey);
 
       await box.put(key, model);
       return const Response(message: 'Data updated in hive', success: true);
@@ -103,9 +116,9 @@ class HiveService {
     }
   }
 
-  Future<Box<T>> _openBox<T>([List<int>? encryptKey]) async {
+  Future<Box<T>> _openBox<T>([List<int>? encryptKey, String? boxKey]) async {
     return await Hive.openBox<T>(
-      T.toString(),
+      boxKey ?? T.toString(),
       encryptionCipher: encryptKey != null ? HiveAesCipher(encryptKey) : null,
     );
   }

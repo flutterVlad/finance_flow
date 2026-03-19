@@ -18,4 +18,10 @@ abstract class SettingsEvent with _$SettingsEvent {
       DeleteAccountEvent;
 
   const factory SettingsEvent.deleteAllAccounts() = DeleteAllAccountsEvent;
+
+  const factory SettingsEvent.getCards() = GetCardsEvent;
+
+  const factory SettingsEvent.saveCard(CardForm form) = SaveCardEvent;
+
+  const factory SettingsEvent.removeCard(String number) = RemoveCardEvent;
 }

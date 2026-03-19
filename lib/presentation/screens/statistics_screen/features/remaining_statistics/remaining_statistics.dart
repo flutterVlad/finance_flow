@@ -83,31 +83,24 @@ class _DiagramState extends State<Diagram> {
                   Center(
                     child: Column(
                       mainAxisSize: .min,
-                      children: touchedIndex != -1
-                          ? [
-                              Text(
-                                '${expenses[touchedIndex].formattedPrice} Br',
-                              ),
-                              Text(
-                                expenses[touchedIndex].category.name,
-                                style: const TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ]
-                          : [
-                              Text('${difference.toStringAsFixed(2)} Br'),
-                              const Text(
-                                'Left to spend',
-                                style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
+                      children: [
+                        AnimatedNumber(
+                          text:
+                              "${touchedIndex != -1 ? expenses[touchedIndex].formattedPrice : difference.toStringAsFixed(2)} Br",
+                        ),
+                        AnimatedNumber(
+                          text: touchedIndex != -1
+                              ? expenses[touchedIndex].category.name
+                              : "Left to spend",
+                          style: const TextStyle(
+                            color: AppColors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   PieChart(
                     PieChartData(
                       startDegreeOffset: 90,
@@ -126,30 +119,30 @@ class _DiagramState extends State<Diagram> {
                           .toList(),
                       pieTouchData: PieTouchData(
                         enabled: true,
-                        touchCallback: (event, response) {
-                          setState(() {
-                            // if (!event.isInterestedForInteractions ||
-                            //     response == null ||
-                            //     response.touchedSection == null) {
-                            //   touchedIndex = -1;
-                            //   return;
-                            // }
-                            if (response == null) return;
-                            if (response.touchedSection!.touchedSectionIndex ==
-                                touchedIndex) {
-                              touchedIndex = -1;
-                              return;
-                            }
-                            if (response.touchedSection!.touchedSectionIndex ==
-                                    expenses.length - 1 &&
-                                expenses.length != 1) {
-                              touchedIndex = -1;
-                              return;
-                            }
-                            touchedIndex =
-                                response.touchedSection?.touchedSectionIndex ??
-                                -1;
-                          });
+                        touchCallback: (event, response) async {
+                          if (event is! FlTapUpEvent) return;
+
+                          if (response == null ||
+                              response.touchedSection == null) {
+                            setState(() => touchedIndex = -1);
+                            return;
+                          }
+
+                          final tappedIndex =
+                              response.touchedSection!.touchedSectionIndex;
+
+                          if (isAddEmpty &&
+                              tappedIndex == expenses.length - 1) {
+                            setState(() => touchedIndex = -1);
+                            return;
+                          }
+
+                          if (tappedIndex == touchedIndex) {
+                            setState(() => touchedIndex = -1);
+                            return;
+                          }
+
+                          setState(() => touchedIndex = tappedIndex);
                         },
                       ),
                     ),
@@ -301,6 +294,33 @@ class _Element extends StatelessWidget {
           Text('Add $elementName'),
         ],
       ),
+    );
+  }
+}
+
+class AnimatedNumber extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+
+  const AnimatedNumber({super.key, required this.text, this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.3),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
+      },
+      child: Text(text, key: ValueKey(text), style: style),
     );
   }
 }

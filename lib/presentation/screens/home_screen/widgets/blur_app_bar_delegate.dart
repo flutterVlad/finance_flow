@@ -55,14 +55,14 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
               crossAxisAlignment: .center,
               children: [
                 // Аватар
-                AvatarView(
-                  onTap: () {
-                    context.pushNamed('settings');
-                  },
+                Opacity(
                   opacity: opacity,
-                  imageSize: 56 * scale,
-                  blurRadius: 10,
-                  thickness: 2,
+                  child: AvatarView(
+                    onTap: () => context.pushNamed('settings'),
+                    imageSize: 56 * scale,
+                    blurRadius: 10,
+                    thickness: 2,
+                  ),
                 ),
 
                 const SizedBox(width: 16),

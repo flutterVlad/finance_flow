@@ -1,5 +1,7 @@
 import '/data/models/account/account.dart';
+import '/data/models/bank_card/bank_card.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
 extension FormToAccountMapper on AccountForm {
   Account toDomain() => Account(
@@ -19,5 +21,15 @@ extension AccountToFormMapper on Account {
     lastName: .pure(lastName),
     image: image,
     isPrimary: isPrimary,
+  );
+}
+
+extension CardFormToModel on CardForm {
+  BankCard toModel() => BankCard(
+    cardType: BankCard.detectCardType(cardNumber.value),
+    number: cardNumber.value,
+    owner: ownerName.value,
+    duration: duration.value,
+    cvv: cvv.value,
   );
 }

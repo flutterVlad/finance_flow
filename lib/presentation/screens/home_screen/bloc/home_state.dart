@@ -140,4 +140,7 @@ abstract class HomeState with _$HomeState {
   List<Expense> get todayExpenses => allDayExpenses
       .where((e) => e.date.isToday)
       .fold([], (a, b) => a + b.dayExpenses);
+
+  List<DayExpense> get filteredDayExpenses =>
+      allDayExpenses.where((e) => e.date.isSelectedMonth(monthFilter)).toList();
 }

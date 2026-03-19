@@ -1,11 +1,14 @@
-import 'package:finance_flow/data/service/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'data/data_sources/local_datasource.dart';
+import 'data/repositories/card_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
 import 'data/repositories/settings_repository_impl.dart';
+import 'data/service/encryption_key_service.dart';
 import 'data/service/hive_service.dart';
 import 'data/service/image_picker.dart';
+import 'data/service/secure_storage_service.dart';
+import 'domain/repositories/card_repository.dart';
 import 'domain/repositories/expense_repository.dart';
 import 'domain/repositories/settings_repository.dart';
 import 'domain/use_cases/add_expense_use_case.dart';
@@ -25,7 +28,10 @@ class DI {
 
   void _initBloc() {
     GetIt.I.registerSingleton<SettingsBloc>(
-      SettingsBloc(settingsRepository: GetIt.I<SettingsRepository>()),
+      SettingsBloc(
+        settingsRepository: GetIt.I<SettingsRepository>(),
+        cardRepository: GetIt.I<CardRepository>(),
+      ),
     );
     GetIt.I.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
@@ -48,10 +54,20 @@ class DI {
         imagePickerService: GetIt.I<ImagePickerService>(),
       ),
     );
+    GetIt.I.registerLazySingleton<CardRepository>(
+      () => CardRepositoryImpl(
+        hiveService: GetIt.I<HiveService>(),
+        encryptionKeyService: GetIt.I<EncryptionKeyService>(),
+      ),
+    );
   }
 
   Future<void> _initServices() async {
     GetIt.I.registerLazySingleton(() => const SecureStorageService());
+    GetIt.I.registerLazySingleton(
+      () =>
+          EncryptionKeyService(secureStorage: GetIt.I<SecureStorageService>()),
+    );
     GetIt.I.registerLazySingleton(() => const MockLocalService());
     GetIt.I.registerLazySingleton(() => const ImagePickerService());
     GetIt.I.registerLazySingleton(() => const HiveService());

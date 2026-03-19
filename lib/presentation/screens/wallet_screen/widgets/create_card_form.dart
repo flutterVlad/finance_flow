@@ -1,12 +1,14 @@
-import 'package:finance_flow/utils/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
+import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/inputs/card_cvv_input.dart';
 import '/utils/widgets/inputs/card_duration_input.dart';
 import '/utils/widgets/inputs/card_number_input.dart';
 import '/utils/widgets/inputs/card_owner_input.dart';
+import '/utils/widgets/primary_button.dart';
 
 class CreateCardForm extends StatefulWidget {
   const CreateCardForm({super.key, this.form});
@@ -19,6 +21,7 @@ class CreateCardForm extends StatefulWidget {
 
 class _CreateCardFormState extends State<CreateCardForm> {
   late final ValueNotifier<CardForm> formNotifier;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -35,55 +38,94 @@ class _CreateCardFormState extends State<CreateCardForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const .only(right: 16, left: 16, bottom: 16),
-        child: Column(
-          spacing: 16,
-          mainAxisSize: .min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: .circular(20),
-                color: AppColors.onPrimary,
-                border: .all(color: AppColors.lightGrey, width: 1),
-              ),
-              child: ClipRRect(
-                borderRadius: .circular(20),
-                child: Column(
-                  mainAxisSize: .min,
-                  children: [
-                    CardNumber(formNotifier: formNotifier),
-                    const Divider(height: 0, color: AppColors.lightGrey),
-                    CardOwner(formNotifier: formNotifier),
-                    const Divider(height: 0, color: AppColors.lightGrey),
-                    IntrinsicHeight(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CardDuration(formNotifier: formNotifier),
-                          ),
-                          const VerticalDivider(
-                            thickness: 1,
-                            color: AppColors.lightGrey,
-                          ),
-                          Expanded(child: CardCVV(formNotifier: formNotifier)),
-                        ],
-                      ),
-                    ),
-                  ],
+    return ValueListenableBuilder(
+      valueListenable: formNotifier,
+      builder: (context, form, _) => PopScope(
+        canPop: form.isEmpty,
+        onPopInvokedWithResult: (didPop, _) async {
+          if (didPop) return;
+
+          final shouldPop = await showAdaptiveDialog<bool>(
+            context: context,
+            builder: (dialogContext) => AlertDialog.adaptive(
+              title: const Text("Выйти?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(false);
+                  },
+                  child: const Text(
+                    "Отмена",
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
-              ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: const Text("Подтвердить"),
+                ),
+              ],
             ),
-            ValueListenableBuilder(
-              valueListenable: formNotifier,
-              builder: (context, form, _) => PrimaryButton(
-                enabled: form.isValid,
-                onTap: () {},
-                text: 'Submit',
-              ),
+          );
+
+          if (shouldPop == true && context.mounted) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: SafeArea(
+          child: Padding(
+            padding: const .only(right: 16, left: 16, bottom: 16),
+            child: Column(
+              spacing: 16,
+              mainAxisSize: .min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: .circular(20),
+                    color: AppColors.onPrimary,
+                    border: .all(color: AppColors.lightGrey, width: 1),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: .circular(20),
+                    child: Column(
+                      mainAxisSize: .min,
+                      children: [
+                        CardNumber(formNotifier: formNotifier),
+                        const Divider(height: 0, color: AppColors.lightGrey),
+                        CardOwner(formNotifier: formNotifier),
+                        const Divider(height: 0, color: AppColors.lightGrey),
+                        IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CardDuration(formNotifier: formNotifier),
+                              ),
+                              const VerticalDivider(
+                                thickness: 1,
+                                color: AppColors.lightGrey,
+                              ),
+                              Expanded(
+                                child: CardCVV(formNotifier: formNotifier),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                PrimaryButton(
+                  enabled: form.isValid,
+                  onTap: () async {
+                    GetIt.I<SettingsBloc>().add(SaveCardEvent(form));
+                    Navigator.of(context).pop();
+                  },
+                  text: 'Submit',
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

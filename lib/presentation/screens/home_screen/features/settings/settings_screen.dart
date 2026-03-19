@@ -73,8 +73,8 @@ class SettingsScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.response != null) {
           ToastService.showToast(
-            message: state.response?.message,
-            success: state.response?.success,
+            message: state.response!.message,
+            status: state.response!.success ? .success : .error,
           );
         }
       },

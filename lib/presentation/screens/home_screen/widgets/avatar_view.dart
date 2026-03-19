@@ -12,7 +12,6 @@ class AvatarView extends StatelessWidget {
     super.key,
     this.image,
     this.onTap,
-    this.opacity = 1,
     this.imageSize = 56,
     this.isPreview = true,
     this.editIconSize = 25,
@@ -21,7 +20,6 @@ class AvatarView extends StatelessWidget {
   }) : assert(imageSize > 0, 'imageSize not can be a zero or less'),
        assert(editIconSize > 0, 'editIconSize not cat be a zero or less');
 
-  final double opacity;
   final bool isPreview;
   final Uint8List? image;
   final VoidCallback? onTap;
@@ -36,30 +34,22 @@ class AvatarView extends StatelessWidget {
       (SettingsBloc bloc) => bloc.state.selectedAccount,
     );
 
-    final Widget icon;
+    final Uint8List? imageBytes =
+        image ??
+        (account?.image != null ? Uint8List.fromList(account!.image!) : null);
 
-    if (image != null) {
-      icon = Image.memory(
-        Uint8List.fromList(image!.toList()),
-        fit: .cover,
-        errorBuilder: (_, _, _) {
-          return const ColoredBox(color: AppColors.onPrimary);
-        },
-      );
-    } else if (account?.image != null) {
-      icon = Image.memory(
-        Uint8List.fromList(account!.image!),
-        fit: .cover,
-        errorBuilder: (_, _, _) {
-          return const ColoredBox(color: AppColors.onPrimary);
-        },
-      );
-    } else {
-      icon = const ColoredBox(
-        color: AppColors.onPrimary,
-        child: Icon(Icons.person),
-      );
-    }
+    final icon = imageBytes != null
+        ? Image.memory(
+            imageBytes,
+            fit: .cover,
+            gaplessPlayback: true,
+            errorBuilder: (_, _, _) =>
+                const ColoredBox(color: AppColors.onPrimary),
+          )
+        : const ColoredBox(
+            color: AppColors.onPrimary,
+            child: Icon(Icons.person),
+          );
 
     final child = isPreview
         ? AnimatedGradiantBorder(
@@ -89,8 +79,7 @@ class AvatarView extends StatelessWidget {
     return GestureDetector(
       behavior: .opaque,
       onTap: onTap,
-      child: Opacity(
-        opacity: opacity,
+      child: RepaintBoundary(
         child: SizedBox(height: imageSize, width: imageSize, child: child),
       ),
     );

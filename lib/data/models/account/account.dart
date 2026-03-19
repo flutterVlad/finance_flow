@@ -19,6 +19,7 @@ abstract class Account with _$Account {
     String? firstName,
     String? lastName,
     @Uint8ListConverter() Uint8List? image,
+    @Default([]) List<String> bankCardNumbers,
     @Default(true) bool isPrimary,
   }) = _Account;
 

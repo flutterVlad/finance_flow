@@ -18,6 +18,7 @@ abstract class SettingsState with _$SettingsState {
     @Default([]) List<Account> allAccounts,
     @Default(Language.us) Language language,
     Response? response,
+    @Default([]) List<BankCard> cards,
   }) = _SettingsState;
 
   bool get isAccountEmpty => selectedAccount == null;

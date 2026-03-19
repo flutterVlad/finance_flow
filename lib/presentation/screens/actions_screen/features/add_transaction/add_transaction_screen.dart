@@ -195,7 +195,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         bottomNavigationBar: SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: BlocBuilder<TransactionsCubit, TransactionsState>(
               builder: (context, state) {
                 return PrimaryButton(
@@ -206,7 +206,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     ToastService.showToast(
                       message:
                           'Expense "${state.validExpense.name}" created successfully',
-                      success: true,
+                      status: .success,
                     );
                     if (context.canPop()) context.pop();
                   },

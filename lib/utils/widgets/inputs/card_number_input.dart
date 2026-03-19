@@ -80,7 +80,7 @@ class _CardInputState extends State<CardNumberInput> {
               length: 16,
               replace: (' ', 4),
             );
-            _cardType = _detectCardType(value);
+            _cardType = BankCard.detectCardType(value);
           });
           widget.onChanged?.call(value);
         },
@@ -101,24 +101,6 @@ class _CardInputState extends State<CardNumberInput> {
       return 'Invalid length (must be 16 numbers)';
     }
     return null;
-  }
-
-  CardType _detectCardType(String number) {
-    String cleanNumber = number.replaceAll(RegExp(r'\D'), '');
-
-    if (cleanNumber.startsWith('4')) return CardType.visa;
-    if (cleanNumber.startsWith(RegExp(r'220[0-4]'))) return CardType.mir;
-    if (cleanNumber.startsWith('9112') || cleanNumber.startsWith('6033')) {
-      return CardType.belcard;
-    }
-    if (cleanNumber.startsWith(RegExp(r'5[1-5]')) ||
-        cleanNumber.startsWith(
-          RegExp(r'222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720'),
-        )) {
-      return CardType.mastercard;
-    }
-    if (cleanNumber.startsWith('62')) return CardType.unionPay;
-    return CardType.unknown;
   }
 
   @override

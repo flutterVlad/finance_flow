@@ -16,6 +16,12 @@ abstract class CardForm with _$CardForm, FormzMixin {
 
   @override
   List<FormzInput> get inputs => [cardNumber, ownerName, duration, cvv];
+
+  bool get isEmpty =>
+      cardNumber.value.isEmpty &&
+      ownerName.value.isEmpty &&
+      duration.value.isEmpty &&
+      cvv.value.isEmpty;
 }
 
 class CardNumber extends FormzInput<String, String?> {
