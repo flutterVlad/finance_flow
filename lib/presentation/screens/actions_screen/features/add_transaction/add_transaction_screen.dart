@@ -1,4 +1,3 @@
-import 'package:finance_flow/utils/widgets/toast_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,12 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/category/category.dart';
+import '/data/models/currency/currency.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
 import '/utils/widgets/primary_button.dart';
 import '/utils/widgets/text_field_section.dart';
+import '/utils/widgets/toast_service.dart';
+import '/utils/widgets/vertical_picker.dart';
 import 'bloc/transactions_cubit.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -33,6 +35,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   late final TextEditingController _categoryController;
   late final TextEditingController _dateController;
   late final TextEditingController _timeController;
+
+  Currency currency = .byn;
 
   @override
   void initState() {
@@ -95,11 +99,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         controller: _amountController,
                         title: 'Amount',
                         hintText: '120',
-                        suffix: const Text(' Br'),
+                        suffixIcon: VerticalPicker<Currency>(
+                          onSelected: (val) => setState(() => currency = val),
+                          items: Currency.values,
+                          initialItem: .byn,
+                          builder: (el) =>
+                              Svg(el.icon, color: Colors.grey, size: 16),
+                        ),
                         errorText: state.amountInput.displayError,
                         keyboardType: const .numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                          TextInputFormatter.withFunction((_, newValue) {
+                            return newValue.copyWith(
+                              text: newValue.text.replaceAll(',', "."),
+                            );
+                          }),
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d{0,2}'),
+                          ),
                         ],
                         onSubmit: bloc.setAmount,
                       ),
@@ -160,6 +177,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           AppBottomSheet.showDatePicker(
                             context: context,
                             mode: .time,
+                            header: "Choose time",
                             onDateTimeChanged: (date) {
                               _timeController.text = DateFormat(
                                 'H:m',

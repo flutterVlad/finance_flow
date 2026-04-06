@@ -142,4 +142,10 @@ class Svgs {
   );
 
   static const SvgData travel = SvgData('assets/svg/travel.svg', size: 20);
+
+  static const SvgData byn = SvgData('assets/svg/byn.svg', size: 20);
+
+  static const SvgData dollar = SvgData('assets/svg/dollar.svg', size: 20);
+
+  static const SvgData euro = SvgData('assets/svg/euro.svg', size: 20);
 }

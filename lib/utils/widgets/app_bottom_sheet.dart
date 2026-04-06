@@ -46,6 +46,7 @@ abstract class AppBottomSheet {
     DateTime? initialDateTime,
     DateTime? firstDate,
     DateTime? lastDate,
+    String? header,
   }) async {
     await show(
       context: context,
@@ -55,15 +56,17 @@ abstract class AppBottomSheet {
       item: Column(
         mainAxisSize: .min,
         children: [
-          const Text(
-            'Choose date',
-            style: TextStyle(fontSize: 16, fontWeight: .bold),
+          Text(
+            header ?? 'Choose date',
+            style: const TextStyle(fontSize: 16, fontWeight: .bold),
           ),
           Expanded(
             child: CupertinoDatePicker(
               mode: mode ?? .dateAndTime,
               onDateTimeChanged: onDateTimeChanged,
               initialDateTime: initialDateTime,
+              dateOrder: .dmy,
+              use24hFormat: true,
             ),
           ),
         ],

@@ -12,9 +12,6 @@ abstract class HomeState with _$HomeState {
     required DateTime monthFilter,
   }) = _HomeState;
 
-  List<DayExpense> get monthDayExpense =>
-      allDayExpenses.where((e) => e.date.isCurrentMonth).toList();
-
   List<Expense> get monthExpenses =>
       allExpenses.where((e) => e.datetime.isCurrentMonth).toList();
 
@@ -23,8 +20,6 @@ abstract class HomeState with _$HomeState {
 
   List<Expense> get incomesOnSelectedMonth =>
       incomes.where((e) => e.datetime.isSelectedMonth(monthFilter)).toList();
-
-  double get allBalance => incomes.fold(0, (a, b) => a + b.price);
 
   double get monthBalance => monthIncomes.fold(0, (a, b) => a + b.price);
 

@@ -4,9 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 
-import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/svgs/svg.dart';
@@ -44,10 +42,9 @@ class _DiagramState extends State<Diagram> {
       builder: (context, state) {
         final expenses = state.expenseOnSelectedMonth;
 
-        final difference =
-            state.balanceOnSelectedMonth - state.spendsOnSelectedMonth;
+        final allSpends = state.spendsOnSelectedMonth;
 
-        if (difference == 0) {
+        if (allSpends == 0) {
           return const SliverToBoxAdapter(
             child: Padding(
               padding: .all(16.0),
@@ -58,17 +55,6 @@ class _DiagramState extends State<Diagram> {
             ),
           );
         }
-
-        final isAddEmpty = difference > 0;
-
-        final emptyExpense = Expense(
-          id: UuidValue.fromString(const Uuid().v4()),
-          category: Category.empty,
-          datetime: DateTime.now(),
-          price: difference,
-        );
-
-        if (isAddEmpty) expenses.add(emptyExpense);
 
         final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
 
@@ -86,12 +72,12 @@ class _DiagramState extends State<Diagram> {
                       children: [
                         AnimatedNumber(
                           text:
-                              "${touchedIndex != -1 ? expenses[touchedIndex].formattedPrice : difference.toStringAsFixed(2)} Br",
+                              "${touchedIndex != -1 ? expenses[touchedIndex].formattedPrice : allSpends.toStringAsFixed(2)} Br",
                         ),
                         AnimatedNumber(
                           text: touchedIndex != -1
                               ? expenses[touchedIndex].category.name
-                              : "Left to spend",
+                              : "All spends",
                           style: const TextStyle(
                             color: AppColors.grey,
                             fontSize: 12,
@@ -111,15 +97,13 @@ class _DiagramState extends State<Diagram> {
                             (e) => _makeSectionData(
                               expense: e,
                               radius: centerSpaceRadius / 2.5,
-                              isTouched:
-                                  expenses.indexOf(e) == touchedIndex &&
-                                  e != emptyExpense,
+                              isTouched: expenses.indexOf(e) == touchedIndex,
                             ),
                           )
                           .toList(),
                       pieTouchData: PieTouchData(
                         enabled: true,
-                        touchCallback: (event, response) async {
+                        touchCallback: (event, response) {
                           if (event is! FlTapUpEvent) return;
 
                           if (response == null ||
@@ -130,12 +114,6 @@ class _DiagramState extends State<Diagram> {
 
                           final tappedIndex =
                               response.touchedSection!.touchedSectionIndex;
-
-                          if (isAddEmpty &&
-                              tappedIndex == expenses.length - 1) {
-                            setState(() => touchedIndex = -1);
-                            return;
-                          }
 
                           if (tappedIndex == touchedIndex) {
                             setState(() => touchedIndex = -1);

@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 
+import '/data/repositories/currency_repository_impl.dart';
+import '/domain/repositories/currency_repository.dart';
 import 'data/data_sources/local_datasource.dart';
 import 'data/repositories/card_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
@@ -59,6 +61,9 @@ class DI {
         hiveService: GetIt.I<HiveService>(),
         encryptionKeyService: GetIt.I<EncryptionKeyService>(),
       ),
+    );
+    GetIt.I.registerLazySingleton<CurrencyRepository>(
+      () => const CurrencyRepositoryImpl(),
     );
   }
 
