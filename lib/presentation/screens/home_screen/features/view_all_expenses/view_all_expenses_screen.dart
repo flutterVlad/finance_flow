@@ -10,6 +10,7 @@ import '/presentation/screens/home_screen/widgets/today_expenses.dart';
 import '/utils/constants.dart';
 import '/utils/extensions.dart';
 import '/utils/theme.dart';
+import '/utils/widgets/animated_text.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
 
 class ViewAllExpensesScreen extends StatefulWidget {
@@ -20,14 +21,6 @@ class ViewAllExpensesScreen extends StatefulWidget {
 }
 
 class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
-  late final DateFormat _dateFormat;
-
-  @override
-  void initState() {
-    super.initState();
-    _dateFormat = DateFormat('d MMMM y');
-  }
-
   @override
   void dispose() {
     GetIt.I<HomeBloc>().add(const ClearMonthFilterEvent());
@@ -56,7 +49,7 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
               else
                 ViewAllExpensesList(
                   dayExpenses: filteredDayExpenses,
-                  dateFormat: _dateFormat,
+                  dateFormat: DateFormat('d MMMM y'),
                 ),
             ],
           );
@@ -123,35 +116,9 @@ class ViewAllExpensesEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverFillRemaining(
+    return const SliverFillRemaining(
       child: Center(
-        child: SizedBox(
-          width: AppDimensions.emptyStateImageSize,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.emptyStateImageRadius,
-            ),
-            child: Image.network(
-              AppAssets.emptyStateImage,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return const Center(
-                  child: Icon(
-                    Icons.inbox_outlined,
-                    size: 64,
-                    color: AppColors.grey,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
+        child: Text("No data no this month", style: AppTextStyles.headerStyle),
       ),
     );
   }
@@ -170,9 +137,14 @@ class ViewAllExpensesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList.builder(
-      itemCount: dayExpenses.length,
+      itemCount: dayExpenses.length + 1,
       itemBuilder: (context, index) {
+        if (index == dayExpenses.length) {
+          return const SafeArea(top: false, child: SizedBox.shrink());
+        }
+
         final day = dayExpenses[index];
+
         return ViewAllExpensesDayItem(
           day: day,
           dateFormat: dateFormat,
@@ -211,10 +183,10 @@ class ViewAllExpensesDayItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(title, style: AppTextStyles.dateLabelStyle),
-          ...day.dayExpenses.map(
-            (expense) => AnimatedExpenseItem(
-              expense: expense,
-              delay: Duration(milliseconds: animationDelay),
+          ...day.dayExpenses.indexed.map(
+            (entries) => AnimatedExpenseItem(
+              expense: entries.$2,
+              delay: Duration(milliseconds: animationDelay + entries.$1 * 30),
             ),
           ),
         ],
@@ -259,10 +231,8 @@ class _AnimatedExpenseItemState extends State<AnimatedExpenseItem>
   }
 
   void _scheduleAnimation() {
-    Future.delayed(widget.delay, () {
-      if (mounted) {
-        _controller.forward();
-      }
+    Future.delayed(widget.delay).then((_) {
+      if (mounted) _controller.forward();
     });
   }
 
@@ -301,72 +271,66 @@ class MonthFilter extends StatelessWidget {
         right: AppDimensions.defaultPadding,
         left: AppDimensions.defaultPadding,
       ),
-      child: Material(
-        borderRadius: .circular(AppDimensions.cornerRadius16),
-        color: AppColors.primary,
-        child: Padding(
-          padding: const .all(AppDimensions.defaultPadding),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: AppDimensions.smallPadding,
-                  children: [
-                    const Text(
-                      AppStrings.spendThisMonth,
-                      style: AppTextStyles.monthFilterTitleStyle,
-                    ),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                      child: Text(
-                        key: ValueKey(spendsOnSelectedMonth),
-                        '${spendsOnSelectedMonth.toStringAsFixed(2)} Br',
-                        style: AppTextStyles.monthFilterAmountStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTapDown: (details) async {
-                  AppBottomSheet.showDatePicker(
-                    context: context,
-                    onDateTimeChanged: (date) {
-                      onUpdate?.call(date);
-                    },
-                    mode: .monthYear,
-                  );
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: AppDimensions.smallPadding,
-                  crossAxisAlignment: .end,
-                  mainAxisAlignment: .spaceBetween,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                      child: Text(
-                        key: ValueKey(selectedMonth.millisecondsSinceEpoch),
-                        DateFormat('MMMM').format(selectedMonth),
+      child: GestureDetector(
+        onTap: () {
+          AppBottomSheet.showDatePicker(
+            context: context,
+            onDateTimeChanged: (date) {
+              onUpdate?.call(date);
+            },
+            mode: .monthYear,
+          );
+        },
+        child: Material(
+          borderRadius: .circular(AppDimensions.cornerRadius16),
+          color: AppColors.primary,
+          child: Padding(
+            padding: const .all(AppDimensions.defaultPadding),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .start,
+                    spacing: AppDimensions.smallPadding,
+                    children: [
+                      const Text(
+                        AppStrings.spendThisMonth,
                         style: AppTextStyles.monthFilterTitleStyle,
                       ),
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.onPrimary,
-                    ),
-                  ],
+                      AnimatedText(
+                        text: '${spendsOnSelectedMonth.toCleanString()} Br',
+                        style: AppTextStyles.monthFilterAmountStyle,
+                        useLayoutBuilder: true,
+                        textAlignment: .left,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    spacing: AppDimensions.smallPadding,
+                    mainAxisAlignment: .end,
+                    children: [
+                      AnimatedText(
+                        text: DateFormat(
+                          'MMMM',
+                        ).format(selectedMonth).capitalize(),
+                        style: AppTextStyles.monthFilterTitleStyle,
+                        useLayoutBuilder: true,
+                        textAlignment: .right,
+                      ),
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.onPrimary,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

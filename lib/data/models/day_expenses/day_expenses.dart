@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '/utils/extensions.dart';
 import '../expense/expense.dart';
 
 part 'day_expenses.freezed.dart';
@@ -19,7 +20,7 @@ abstract class DayExpense with _$DayExpense {
 
   double get daySpend => dayExpenses.fold(.0, (a, b) => a + b.price);
 
-  String get formattedAllSpends => daySpend.toStringAsFixed(2);
+  String get formattedAllSpends => daySpend.toCleanString();
 
   factory DayExpense.fromJson(Map<String, dynamic> json) =>
       _$DayExpenseFromJson(json);

@@ -46,7 +46,7 @@ class ScatterExpensesList extends StatelessWidget {
                   children: [
                     Text(expense.category.name),
                     Text(
-                      expense.formattedPrice,
+                      '${expense.formattedPrice} Br',
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.grey,

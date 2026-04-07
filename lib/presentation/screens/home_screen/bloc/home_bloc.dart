@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '/data/models/category/category.dart';
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
 import '/domain/use_cases/add_expense_use_case.dart';

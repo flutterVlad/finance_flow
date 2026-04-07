@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/utils/extensions.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
 
@@ -47,7 +48,9 @@ class DateFilter extends StatelessWidget {
                         SizedBox(
                           width: 115,
                           child: Text(
-                            DateFormat('MMMM y').format(state.monthFilter),
+                            DateFormat(
+                              'LLLL y',
+                            ).format(state.monthFilter).capitalize(),
                             textDirection: .rtl,
                           ),
                         ),

@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:finance_flow/utils/extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,8 +6,10 @@ import 'package:go_router/go_router.dart';
 
 import '/data/models/expense/expense.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
+import '/utils/widgets/animated_text.dart';
 import '../widgets/date_filter.dart';
 
 class RemainingStatistics extends StatelessWidget {
@@ -38,6 +39,8 @@ class _DiagramState extends State<Diagram> {
 
   @override
   Widget build(BuildContext context) {
+    final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         final expenses = state.expenseOnSelectedMonth;
@@ -56,7 +59,13 @@ class _DiagramState extends State<Diagram> {
           );
         }
 
-        final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
+        final price = touchedIndex != -1
+            ? expenses[touchedIndex].formattedPrice
+            : allSpends.toCleanString();
+
+        final title = touchedIndex != -1
+            ? expenses[touchedIndex].category.name
+            : "All spends";
 
         return SliverToBoxAdapter(
           child: Padding(
@@ -70,14 +79,9 @@ class _DiagramState extends State<Diagram> {
                     child: Column(
                       mainAxisSize: .min,
                       children: [
-                        AnimatedNumber(
-                          text:
-                              "${touchedIndex != -1 ? expenses[touchedIndex].formattedPrice : allSpends.toStringAsFixed(2)} Br",
-                        ),
-                        AnimatedNumber(
-                          text: touchedIndex != -1
-                              ? expenses[touchedIndex].category.name
-                              : "All spends",
+                        AnimatedText(text: "$price Br"),
+                        AnimatedText(
+                          text: title,
                           style: const TextStyle(
                             color: AppColors.grey,
                             fontSize: 12,
@@ -187,7 +191,7 @@ class Income extends StatelessWidget {
                           style: TextStyle(fontWeight: .bold),
                         ),
                         Text(
-                          '${income.toStringAsFixed(2)} Br',
+                          '${income.toCleanString()} Br',
                           style: const TextStyle(color: AppColors.primary),
                         ),
                       ],
@@ -272,33 +276,6 @@ class _Element extends StatelessWidget {
           Text('Add $elementName'),
         ],
       ),
-    );
-  }
-}
-
-class AnimatedNumber extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-
-  const AnimatedNumber({super.key, required this.text, this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.3),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          ),
-        );
-      },
-      child: Text(text, key: ValueKey(text), style: style),
     );
   }
 }

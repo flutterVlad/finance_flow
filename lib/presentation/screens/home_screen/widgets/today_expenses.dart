@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/expense/expense.dart';
+import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/widgets/app_text_button.dart';
 import '../bloc/home_bloc.dart';
@@ -84,14 +85,30 @@ class SingleExpense extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: .start,
+                spacing: 4,
                 children: [
                   Text(
-                    expense.category.name,
+                    expense.name.capitalize(),
                     style: const TextStyle(fontWeight: .bold, fontSize: 16),
+                    maxLines: 1,
+                    overflow: .ellipsis,
                   ),
-                  Text(
-                    DateFormat.jm('ru_RU').format(expense.datetime),
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  RichText(
+                    text: TextSpan(
+                      text: expense.category.name,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: .bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text:
+                              ' - ${DateFormat.jm().format(expense.datetime)}',
+                          style: const TextStyle(fontWeight: .normal),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

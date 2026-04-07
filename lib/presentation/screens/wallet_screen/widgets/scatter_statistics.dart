@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/expense/expense.dart';
+import '/utils/extensions.dart';
 import 'text_dot_painter.dart';
 
 class ScatterStatistics extends StatelessWidget {
@@ -94,7 +95,7 @@ class _ExpenseScatterData {
     required this.category,
   });
 
-  String get formattedAmount => '${amount.toStringAsFixed(2)} Br';
+  String get formattedAmount => '${amount.toCleanString()} Br';
 
   String get formattedPercentage => '${percentage.round()}%';
 }

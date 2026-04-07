@@ -8,10 +8,10 @@ import 'package:intl/intl.dart';
 import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
-import '/presentation/screens/statistics_screen/features/remaining_statistics/remaining_statistics.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
+import '/utils/widgets/animated_text.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
 import '/utils/widgets/primary_button.dart';
 import '/utils/widgets/text_field_section.dart';
@@ -51,7 +51,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       text: DateFormat('d MMMM y').format(DateTime.now()),
     );
     _timeController = TextEditingController(
-      text: DateFormat('H:m').format(DateTime.now()),
+      text: DateFormat('HH:mm').format(DateTime.now()),
     );
   }
 
@@ -194,7 +194,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             header: "Choose time",
                             onDateTimeChanged: (date) {
                               _timeController.text = DateFormat(
-                                'H:m',
+                                'HH:mm',
                               ).format(date);
                               bloc.setDate(
                                 state.datetimeInput.value.copyWith(
@@ -296,7 +296,7 @@ class _CurrencyAction extends StatelessWidget {
               builder: (_, state) {
                 final currency = state.getRate(state.selectedCurrency);
 
-                return AnimatedNumber(
+                return AnimatedText(
                   text: "${currency?.value.toCleanString() ?? ''} Br",
                   style: const TextStyle(color: Colors.white),
                 );

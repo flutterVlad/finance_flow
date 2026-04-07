@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/utils/extensions.dart';
 import '/utils/widgets/gradient_progress_bar.dart';
 
 class WalletBalance extends StatelessWidget {
@@ -43,7 +44,7 @@ class WalletBalance extends StatelessWidget {
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  '${state.remains.toStringAsFixed(2)} Br',
+                                  '${state.remains.toCleanString()} Br',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -65,14 +66,14 @@ class WalletBalance extends StatelessWidget {
                           mainAxisAlignment: .spaceBetween,
                           children: [
                             Text(
-                              'Spent ${state.monthSpends.toStringAsFixed(2)} Br',
+                              'Spent ${state.monthSpends.toCleanString()} Br',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
                             ),
                             Text(
-                              'Budget ${state.monthBalance.toStringAsFixed(2)} Br',
+                              'Budget ${state.monthBalance.toCleanString()} Br',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

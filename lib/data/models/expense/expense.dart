@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_serializable_uuid_converter/json_serializable_uuid_converter.dart';
 import 'package:uuid/uuid.dart';
 
+import '/utils/extensions.dart';
 import '../category/category.dart';
 
 part 'expense.freezed.dart';
@@ -30,7 +31,7 @@ abstract class Expense with _$Expense {
 
   bool get isEmpty => category == Category.empty;
 
-  String get formattedPrice => price.toStringAsFixed(2);
+  String get formattedPrice => price.toCleanString();
 
   factory Expense.fromJson(Map<String, dynamic> json) =>
       _$ExpenseFromJson(json);

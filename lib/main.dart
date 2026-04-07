@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
@@ -33,6 +34,7 @@ class FinanceFlowApp extends StatelessWidget {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ru_RU', null);
+  Intl.defaultLocale = "ru_RU";
   await DI().initDI();
   runApp(const FinanceFlowApp());
 }

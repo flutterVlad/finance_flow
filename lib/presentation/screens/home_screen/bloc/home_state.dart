@@ -50,24 +50,7 @@ abstract class HomeState with _$HomeState {
       (e) => e.datetime.isSelectedMonth(monthFilter),
     );
 
-    final Map<Category, Expense> mapExp = {};
-
-    for (final expense in expenses) {
-      if (mapExp.keys.contains(expense.category)) {
-        mapExp[expense.category] =
-            mapExp[expense.category]?.copyWith(
-              price: mapExp[expense.category]?.price ?? 0 + expense.price,
-            ) ??
-            Expense.empty;
-      } else {
-        mapExp[expense.category] = expense;
-      }
-    }
-
-    final result = mapExp.values.toList();
-    result.sort((a, b) => a.price.compareTo(b.price));
-
-    return result;
+    return _unionExpensesByCategory(expenses.toList());
   }
 
   List<DayExpense> get curWeekDayExpenses {
@@ -94,17 +77,20 @@ abstract class HomeState with _$HomeState {
     return result;
   }
 
-  List<Expense> get comparedCurrentWeekExpenses {
-    final Map<Category, Expense> tempExpenseMap = {};
+  List<Expense> get comparedCurrentWeekExpenses =>
+      _unionExpensesByCategory(curWeekExpenses);
 
-    for (final expense in curWeekExpenses) {
-      if (tempExpenseMap.keys.contains(expense.category)) {
-        tempExpenseMap[expense.category] = tempExpenseMap[expense.category]!
-            .copyWith(
-              price: tempExpenseMap[expense.category]!.price + expense.price,
-            );
+  List<Expense> _unionExpensesByCategory(List<Expense> items) {
+    final Map<String, Expense> tempExpenseMap = {};
+
+    for (final expense in items) {
+      if (tempExpenseMap.keys.contains(expense.category.name)) {
+        var temp = tempExpenseMap[expense.category.name]!;
+        tempExpenseMap[expense.category.name] = temp.copyWith(
+          price: temp.price + expense.price,
+        );
       } else {
-        tempExpenseMap[expense.category] = expense;
+        tempExpenseMap[expense.category.name] = expense;
       }
     }
 
