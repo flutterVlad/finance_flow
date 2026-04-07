@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/screens/statistics_screen/features/remaining_statistics/remaining_statistics.dart';
+import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
@@ -36,11 +38,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   late final TextEditingController _dateController;
   late final TextEditingController _timeController;
 
-  Currency currency = .byn;
-
   @override
   void initState() {
     super.initState();
+    bloc.getCurrencyRate();
     if (widget.isAddIncome) bloc.initIncomeTransaction();
     _nameController = TextEditingController();
     _amountController = TextEditingController();
@@ -76,6 +77,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             'Add transaction',
             style: TextStyle(fontWeight: .bold),
           ),
+          actionsPadding: const .only(right: 16),
+          actions: [const _CurrencyAction()],
         ),
         body: BlocBuilder<TransactionsCubit, TransactionsState>(
           builder: (context, state) {
@@ -100,11 +103,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         title: 'Amount',
                         hintText: '120',
                         suffixIcon: VerticalPicker<Currency>(
-                          onSelected: (val) => setState(() => currency = val),
+                          onSelected: bloc.setCurrency,
                           items: Currency.values,
                           initialItem: .byn,
-                          builder: (el) =>
-                              Svg(el.icon, color: Colors.grey, size: 16),
+                          builder: (el) {
+                            final isSelected = el == state.selectedCurrency;
+
+                            return TweenAnimationBuilder(
+                              tween: ColorTween(
+                                begin: isSelected ? Colors.grey : Colors.black,
+                                end: isSelected ? Colors.black : Colors.grey,
+                              ),
+                              duration: const Duration(milliseconds: 200),
+                              builder: (_, color, _) =>
+                                  Svg(el.icon, color: color, size: 16),
+                            );
+                          },
                         ),
                         errorText: state.amountInput.displayError,
                         keyboardType: const .numberWithOptions(decimal: true),
@@ -254,6 +268,42 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           bloc.setCategory(category);
           _categoryController.text = category.name;
         },
+      ),
+    );
+  }
+}
+
+class _CurrencyAction extends StatelessWidget {
+  const _CurrencyAction();
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.grey,
+        borderRadius: .circular(16),
+      ),
+      child: Padding(
+        padding: const .symmetric(horizontal: 12, vertical: 4),
+        child: SizedBox(
+          width: 50,
+          height: 30,
+          child: Center(
+            child: BlocBuilder<TransactionsCubit, TransactionsState>(
+              buildWhen: (prev, curr) =>
+                  (prev.selectedCurrency != curr.selectedCurrency) ||
+                  (prev.rates != curr.rates),
+              builder: (_, state) {
+                final currency = state.getRate(state.selectedCurrency);
+
+                return AnimatedNumber(
+                  text: "${currency?.value.toCleanString() ?? ''} Br",
+                  style: const TextStyle(color: Colors.white),
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -11,6 +11,8 @@ abstract class TransactionsState with _$TransactionsState {
     TransactionCategoryInput categoryInput,
     required TransactionDateTimeInput datetimeInput,
     @Default(false) bool isIncome,
+    @Default([]) List<Rate> rates,
+    @Default(Currency.byn) Currency selectedCurrency,
   }) = _TransactionsState;
 
   Expense get validExpense => Expense(
@@ -29,4 +31,19 @@ abstract class TransactionsState with _$TransactionsState {
       datetimeInput.isValid;
 
   bool get isIncomeCategorySelected => categoryInput.value.isIncome;
+
+  Rate? getRate(Currency cur) => switch (cur) {
+    .byn => rates.firstWhereOrNull(
+      (e) => e.shortName == Currency.byn.shortName,
+    ),
+    .dollar => rates.firstWhereOrNull(
+      (e) => e.shortName == Currency.dollar.shortName,
+    ),
+    .euro => rates.firstWhereOrNull(
+      (e) => e.shortName == Currency.euro.shortName,
+    ),
+    .lir => rates.firstWhereOrNull(
+      (e) => e.shortName == Currency.lir.shortName,
+    ),
+  };
 }

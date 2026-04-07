@@ -43,7 +43,10 @@ class DI {
         settingsBloc: GetIt.I<SettingsBloc>(),
       ),
     );
-    GetIt.I.registerFactory(() => TransactionsCubit());
+    GetIt.I.registerFactory(
+      () =>
+          TransactionsCubit(currencyRepository: GetIt.I<CurrencyRepository>()),
+    );
   }
 
   void _initRepositories() {

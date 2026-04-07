@@ -19,6 +19,8 @@ abstract class CurrencyModel with _$CurrencyModel {
 
 @freezed
 abstract class Rate with _$Rate {
+  const Rate._();
+
   const factory Rate({
     @JsonKey(name: "Cur_ID") required int id,
     @JsonKey(name: "Date") required DateTime date,
@@ -28,13 +30,23 @@ abstract class Rate with _$Rate {
     @JsonKey(name: "Cur_OfficialRate") required double value,
   }) = _Rate;
 
+  static Rate get blrRate => Rate(
+    id: 0,
+    date: DateTime.now(),
+    shortName: 'BLR',
+    scale: 1,
+    name: 'Белорусский рубль',
+    value: 1,
+  );
+
   factory Rate.fromJson(Map<String, dynamic> json) => _$RateFromJson(json);
 }
 
 enum Currency {
   dollar("Доллар США", "USD", Svgs.dollar),
   byn("Белорусский рубль", "BLR", Svgs.byn),
-  euro("Евро", "EUR", Svgs.euro);
+  euro("Евро", "EUR", Svgs.euro),
+  lir("Турецкая лира", "TRY", Svgs.lir);
 
   const Currency(this.name, this.shortName, this.icon);
 

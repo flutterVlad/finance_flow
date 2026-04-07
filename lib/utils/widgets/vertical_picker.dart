@@ -25,7 +25,9 @@ class VerticalPicker<T> extends StatelessWidget {
           onSelected(items[index]);
         },
         scrollController: FixedExtentScrollController(
-          initialItem: initialItem != null ? items.indexOf(initialItem!) : 0,
+          initialItem: initialItem != null
+              ? items.indexOf(initialItem as T)
+              : 0,
         ),
         children: items.map(builder).toList(),
       ),

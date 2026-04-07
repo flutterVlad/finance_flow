@@ -86,12 +86,7 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: Badge(
-                          child: Icon(
-                            Icons.notifications_none,
-                            size: 24 * scale,
-                          ),
-                        ),
+                        icon: Icon(Icons.notifications_none, size: 24 * scale),
                       ),
                     ],
                   ),

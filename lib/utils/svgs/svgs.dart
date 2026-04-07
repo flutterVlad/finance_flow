@@ -148,4 +148,6 @@ class Svgs {
   static const SvgData dollar = SvgData('assets/svg/dollar.svg', size: 20);
 
   static const SvgData euro = SvgData('assets/svg/euro.svg', size: 20);
+
+  static const SvgData lir = SvgData('assets/svg/lir.svg', size: 20);
 }

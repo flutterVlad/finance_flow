@@ -29,9 +29,9 @@ final class CurrencyRepositoryImpl implements CurrencyRepository {
         'https://api.nbrb.by/exrates/rates',
         queryParameters: {'periodicity': 0},
       );
-      final items = response.data as List<Map<String, dynamic>>;
+      final items = response.data as List<dynamic>;
 
-      return items.map(Rate.fromJson).toList();
+      return items.map((el) => Rate.fromJson(el)).toList();
     } on DioException catch (e) {
       debugPrint(e.message);
       return [];

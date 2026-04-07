@@ -97,3 +97,11 @@ abstract class SvgDataHelper {
 
   static Map<String, dynamic> svgDataToJson(SvgData svg) => svg.toJson();
 }
+
+extension DoubleRounding on double {
+  String toCleanString() {
+    final rounded = toStringAsFixed(2);
+    final trimmed = rounded.replaceAll(RegExp(r'\.?0+$'), '');
+    return trimmed;
+  }
+}
