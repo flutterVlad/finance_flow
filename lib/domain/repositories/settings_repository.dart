@@ -21,4 +21,6 @@ abstract class SettingsRepository {
   Future<Response> deleteAllAccounts();
 
   Future<Uint8List?> pickImage();
+
+  Future<Response> deleteAccountExpenses(String accountId);
 }

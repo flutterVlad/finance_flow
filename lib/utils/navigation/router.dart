@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '/data/models/account/account.dart';
+import '/data/models/expense/expense.dart';
 import '/presentation/screens/actions_screen/actions_screen.dart';
 import '/presentation/screens/actions_screen/features/add_transaction/add_transaction_screen.dart';
 import '/presentation/screens/home_screen/features/settings/features/edit_account_info.dart';
@@ -103,12 +104,22 @@ final router = GoRouter(
       name: 'add_transaction',
       pageBuilder: (context, state) {
         bool isAddIncome = false;
+        Expense? expense;
 
-        if (state.extra != null) isAddIncome = state.extra as bool;
+        if (state.extra != null) {
+          if (state.extra is Expense) {
+            expense = state.extra as Expense?;
+          } else {
+            isAddIncome = state.extra as bool;
+          }
+        }
 
         return MaterialPage(
           key: state.pageKey,
-          child: AddTransactionScreen(isAddIncome: isAddIncome),
+          child: AddTransactionScreen(
+            isAddIncome: isAddIncome,
+            initialExpense: expense,
+          ),
         );
       },
     ),

@@ -72,7 +72,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Future<Response> deleteAccount(String uid) async {
-    await _deleteAccountExpenses(uid);
+    await deleteAccountExpenses(uid);
     return await hiveService.deleteData<Account>(uid);
   }
 
@@ -93,12 +93,10 @@ final class SettingsRepositoryImpl implements SettingsRepository {
     return await imagePickerService.pickImage();
   }
 
-  Future<void> _deleteAccountExpenses(String accountId) async {
-    final allExpenses = await hiveService.getAllData<Expense>();
-    final deletedExpenses = allExpenses.where((e) => e.accountId == accountId);
-
-    for (final el in deletedExpenses) {
-      await hiveService.deleteData<Expense>(el.id.uuid);
-    }
+  @override
+  Future<Response> deleteAccountExpenses(String accountId) async {
+    return await hiveService.deleteAllData<Expense>(
+      boxKey: "Expense$accountId",
+    );
   }
 }

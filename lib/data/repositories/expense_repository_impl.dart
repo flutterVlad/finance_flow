@@ -9,23 +9,43 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<void> addExpense(Expense expense) async {
-    await hiveService.putData<Expense>(expense.id.uuid, expense);
+    await hiveService.putData<Expense>(
+      expense.id.uuid,
+      expense,
+      boxKey: expense.boxKey,
+    );
   }
 
   @override
   Future<void> deleteExpense(Expense expense) async {
-    await hiveService.deleteData<Expense>(expense.id.uuid);
+    await hiveService.deleteData<Expense>(
+      expense.id.uuid,
+      boxKey: expense.boxKey,
+    );
   }
 
   @override
-  Future<List<Expense>> getAllExpenses() async {
-    final result = await hiveService.getAllData<Expense>();
+  Future<List<Expense>> getAllExpenses(String? accountId) async {
+    final result = await hiveService.getAllData<Expense>(
+      boxKey: "Expense${accountId ?? ''}",
+    );
 
     return result;
   }
 
   @override
-  Future<void> deleteAllExpenses() async {
-    await hiveService.deleteAllData<Expense>();
+  Future<void> deleteAllExpenses(String? accountId) async {
+    await hiveService.deleteAllData<Expense>(
+      boxKey: "Expense${accountId ?? ''}",
+    );
+  }
+
+  @override
+  Future<void> updateExpense(Expense expense) async {
+    await hiveService.updateData<Expense>(
+      expense.id.uuid,
+      expense,
+      boxKey: expense.boxKey,
+    );
   }
 }

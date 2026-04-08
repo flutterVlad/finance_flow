@@ -28,7 +28,7 @@ class TransactionAmountInput extends FormzInput<String, String?> {
 
 class TransactionCategoryInput extends FormzInput<Category, String?> {
   const TransactionCategoryInput.pure({Category value = Category.empty})
-    : super.pure(Category.empty);
+    : super.pure(value);
 
   const TransactionCategoryInput.dirty({Category value = Category.empty})
     : super.dirty(value);

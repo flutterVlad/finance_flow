@@ -13,9 +13,6 @@ import 'data/service/secure_storage_service.dart';
 import 'domain/repositories/card_repository.dart';
 import 'domain/repositories/expense_repository.dart';
 import 'domain/repositories/settings_repository.dart';
-import 'domain/use_cases/add_expense_use_case.dart';
-import 'domain/use_cases/get_all_expenses_use_case.dart';
-import 'domain/use_cases/get_day_expenses_use_case.dart';
 import 'presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
 import 'presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
@@ -24,7 +21,6 @@ class DI {
   Future<void> initDI() async {
     await _initServices();
     _initRepositories();
-    _initUseCases();
     _initBloc();
   }
 
@@ -37,9 +33,7 @@ class DI {
     );
     GetIt.I.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
-        getDayExpensesUseCase: GetIt.I<GetDayExpensesUseCase>(),
-        getAllExpensesUseCase: GetIt.I<GetAllExpensesUseCase>(),
-        addExpenseUseCase: GetIt.I<AddExpenseUseCase>(),
+        expenseRepository: GetIt.I<ExpenseRepository>(),
         settingsBloc: GetIt.I<SettingsBloc>(),
       ),
     );
@@ -80,19 +74,5 @@ class DI {
     GetIt.I.registerLazySingleton(() => const ImagePickerService());
     GetIt.I.registerLazySingleton(() => const HiveService());
     await GetIt.I<HiveService>().init();
-  }
-
-  void _initUseCases() {
-    GetIt.I.registerLazySingleton(
-      () => GetDayExpensesUseCase(localService: GetIt.I<MockLocalService>()),
-    );
-    GetIt.I.registerLazySingleton(
-      () => GetAllExpensesUseCase(
-        expenseRepository: GetIt.I<ExpenseRepository>(),
-      ),
-    );
-    GetIt.I.registerLazySingleton(
-      () => AddExpenseUseCase(expenseRepository: GetIt.I<ExpenseRepository>()),
-    );
   }
 }

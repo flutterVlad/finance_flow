@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
@@ -246,7 +247,16 @@ class _AnimatedExpenseItemState extends State<AnimatedExpenseItem>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SingleExpense(expense: widget.expense),
+      child: SingleExpense(
+        expense: widget.expense,
+        isDismissible: true,
+        onDelete: () {
+          context.read<HomeBloc>().add(DeleteExpenseEvent(widget.expense));
+        },
+        onEdit: () {
+          context.pushNamed('add_transaction', extra: widget.expense);
+        },
+      ),
     );
   }
 }

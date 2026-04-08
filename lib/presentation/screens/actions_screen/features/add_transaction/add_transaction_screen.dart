@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
+import '/data/models/expense/expense.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
@@ -20,9 +21,15 @@ import '/utils/widgets/vertical_picker.dart';
 import 'bloc/transactions_cubit.dart';
 
 class AddTransactionScreen extends StatefulWidget {
+  const AddTransactionScreen({
+    super.key,
+    this.isAddIncome = false,
+    this.initialExpense,
+  });
+
   final bool isAddIncome;
 
-  const AddTransactionScreen({super.key, this.isAddIncome = false});
+  final Expense? initialExpense;
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -41,17 +48,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    bloc.getCurrencyRate();
+
+    final date = widget.initialExpense?.datetime ?? DateTime.now();
+    bloc.setDate(date);
     if (widget.isAddIncome) bloc.initIncomeTransaction();
-    _nameController = TextEditingController();
-    _amountController = TextEditingController();
-    _categoryController = TextEditingController();
-    bloc.setDate(DateTime.now());
+
+    bloc.getCurrencyRate();
+    bloc.setInitialExpense(widget.initialExpense);
+
+    _nameController = TextEditingController(
+      text: widget.initialExpense?.name.trim(),
+    );
+    _amountController = TextEditingController(
+      text: widget.initialExpense?.price.toString(),
+    );
+    _categoryController = TextEditingController(
+      text: widget.initialExpense?.category.name,
+    );
+
     _dateController = TextEditingController(
-      text: DateFormat('d MMMM y').format(DateTime.now()),
+      text: DateFormat('d MMMM y').format(date),
     );
     _timeController = TextEditingController(
-      text: DateFormat('HH:mm').format(DateTime.now()),
+      text: DateFormat('HH:mm').format(date),
     );
   }
 
@@ -164,6 +183,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           AppBottomSheet.showDatePicker(
                             context: context,
                             mode: .date,
+                            initialDateTime: state.datetimeInput.value,
                             onDateTimeChanged: (date) {
                               _dateController.text = DateFormat(
                                 'd MMMM y',
@@ -192,6 +212,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             context: context,
                             mode: .time,
                             header: "Choose time",
+                            initialDateTime: state.datetimeInput.value,
                             onDateTimeChanged: (date) {
                               _timeController.text = DateFormat(
                                 'HH:mm',
@@ -231,15 +252,34 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             child: BlocBuilder<TransactionsCubit, TransactionsState>(
               builder: (context, state) {
                 return PrimaryButton(
-                  text: 'Create transaction',
-                  enabled: state.isFormValid,
+                  text: widget.initialExpense == null
+                      ? 'Create transaction'
+                      : "Edit transaction",
+                  enabled:
+                      state.isFormValid &&
+                      state.isExpenseEdited(widget.initialExpense),
                   onTap: () {
-                    homeBloc.add(AddExpenseEvent(state.validExpense));
-                    ToastService.showToast(
-                      message:
-                          'Expense "${state.validExpense.name}" created successfully',
-                      status: .success,
-                    );
+                    if (widget.initialExpense == null) {
+                      homeBloc.add(AddExpenseEvent(state.validExpense));
+                      ToastService.showToast(
+                        message:
+                            'Expense "${state.validExpense.name}" created successfully',
+                        status: .success,
+                      );
+                    } else {
+                      homeBloc.add(
+                        UpdateExpenseEvent(
+                          state.validExpense.copyWith(
+                            accountId: widget.initialExpense?.accountId,
+                          ),
+                        ),
+                      );
+                      ToastService.showToast(
+                        message:
+                            'Expense "${state.validExpense.name}" edited successfully',
+                        status: .success,
+                      );
+                    }
                     if (context.canPop()) context.pop();
                   },
                 );
@@ -278,33 +318,33 @@ class _CurrencyAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.grey,
-        borderRadius: .circular(16),
-      ),
-      child: Padding(
-        padding: const .symmetric(horizontal: 12, vertical: 4),
-        child: SizedBox(
-          width: 50,
-          height: 30,
-          child: Center(
-            child: BlocBuilder<TransactionsCubit, TransactionsState>(
-              buildWhen: (prev, curr) =>
-                  (prev.selectedCurrency != curr.selectedCurrency) ||
-                  (prev.rates != curr.rates),
-              builder: (_, state) {
-                final currency = state.getRate(state.selectedCurrency);
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      buildWhen: (prev, curr) =>
+          (prev.selectedCurrency != curr.selectedCurrency) ||
+          (prev.rates != curr.rates),
+      builder: (_, state) {
+        final currency = state.getRate(state.selectedCurrency);
 
-                return AnimatedText(
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: state.rates.length > 1 ? AppColors.primary : AppColors.grey,
+            borderRadius: .circular(16),
+          ),
+          child: Padding(
+            padding: const .symmetric(horizontal: 12, vertical: 4),
+            child: SizedBox(
+              width: 50,
+              height: 30,
+              child: Center(
+                child: AnimatedText(
                   text: "${currency?.value.toCleanString() ?? ''} Br",
                   style: const TextStyle(color: Colors.white),
-                );
-              },
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

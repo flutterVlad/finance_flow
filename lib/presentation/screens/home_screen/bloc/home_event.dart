@@ -13,4 +13,8 @@ abstract class HomeEvent with _$HomeEvent {
   const factory HomeEvent.addExpense(Expense expense) = AddExpenseEvent;
 
   const factory HomeEvent.getAllExpenses() = GetAllExpensesEvent;
+
+  const factory HomeEvent.deleteExpense(Expense expense) = DeleteExpenseEvent;
+
+  const factory HomeEvent.updateExpense(Expense expense) = UpdateExpenseEvent;
 }

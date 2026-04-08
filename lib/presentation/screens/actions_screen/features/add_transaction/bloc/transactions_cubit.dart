@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:finance_flow/utils/extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -11,6 +10,7 @@ import '/data/models/currency/currency.dart';
 import '/data/models/expense/expense.dart';
 import '/domain/repositories/currency_repository.dart';
 import '/presentation/screens/actions_screen/features/add_transaction/bloc/input_forms.dart';
+import '/utils/extensions.dart';
 
 part 'transactions_cubit.freezed.dart';
 part 'transactions_state.dart';
@@ -51,6 +51,21 @@ class TransactionsCubit extends Cubit<TransactionsState> {
   void setName(String? name) {
     emit(
       state.copyWith(nameInput: TransactionNameInput.dirty(value: name ?? '')),
+    );
+  }
+
+  void setInitialExpense(Expense? expense) {
+    if (expense == null) return;
+
+    emit(
+      state.copyWith(
+        id: expense.id,
+        nameInput: .pure(value: expense.name.trim()),
+        amountInput: .pure(value: expense.price.toString()),
+        categoryInput: .pure(value: expense.category),
+        datetimeInput: .pure(value: expense.datetime),
+        isIncome: expense.isIncome,
+      ),
     );
   }
 

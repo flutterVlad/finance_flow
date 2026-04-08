@@ -8,28 +8,38 @@ class PrimaryButton extends StatelessWidget {
     this.enabled = true,
     required this.text,
     this.isLoading = false,
+    this.color,
   });
 
   final VoidCallback? onTap;
   final bool enabled;
   final String text;
   final bool isLoading;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final buttonColor = color ?? AppColors.primary;
+
     return Material(
       type: .button,
-      color: enabled ? AppColors.primary : AppColors.grey,
+      color: enabled ? buttonColor : AppColors.grey,
       borderRadius: .circular(16),
       elevation: 3,
       child: InkWell(
         borderRadius: .circular(16),
-        onTap: enabled ? onTap : null,
+        onTap: !isLoading && enabled ? onTap : null,
         child: SizedBox(
           height: 50,
           child: Center(
             child: isLoading
-                ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
+                ? const SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 2,
+                      backgroundColor: AppColors.onPrimary,
+                    ),
+                  )
                 : Text(
                     text,
                     style: const TextStyle(

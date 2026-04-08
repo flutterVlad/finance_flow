@@ -33,6 +33,8 @@ abstract class Expense with _$Expense {
 
   String get formattedPrice => price.toCleanString();
 
+  String get boxKey => "Expense${accountId ?? ''}";
+
   factory Expense.fromJson(Map<String, dynamic> json) =>
       _$ExpenseFromJson(json);
 }

@@ -5,10 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
-import '/domain/use_cases/add_expense_use_case.dart';
-import '/domain/use_cases/base_use_case.dart';
-import '/domain/use_cases/get_all_expenses_use_case.dart';
-import '/domain/use_cases/get_day_expenses_use_case.dart';
+import '/domain/repositories/expense_repository.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/utils/extensions.dart';
 
@@ -17,19 +14,13 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final GetDayExpensesUseCase _getDayExpensesUseCase;
-  final GetAllExpensesUseCase _getAllExpensesUseCase;
-  final AddExpenseUseCase _addExpenseUseCase;
+  final ExpenseRepository _expenseRepository;
   late final StreamSubscription _settingsSubscription;
 
   HomeBloc({
-    required GetDayExpensesUseCase getDayExpensesUseCase,
-    required GetAllExpensesUseCase getAllExpensesUseCase,
-    required AddExpenseUseCase addExpenseUseCase,
+    required ExpenseRepository expenseRepository,
     required SettingsBloc settingsBloc,
-  }) : _getDayExpensesUseCase = getDayExpensesUseCase,
-       _getAllExpensesUseCase = getAllExpensesUseCase,
-       _addExpenseUseCase = addExpenseUseCase,
+  }) : _expenseRepository = expenseRepository,
        super(HomeState(monthFilter: DateTime.now())) {
     on<HomeEvent>((event, emit) async {
       await event.map(
@@ -39,6 +30,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         clearFilter: (_) async => await _clearFilter(emit),
         addExpense: (event) async => await _addExpense(event, emit),
         getAllExpenses: (_) async => await _getAllExpenses(emit),
+        deleteExpense: (event) async => await _deleteExpense(event, emit),
+        updateExpense: (event) async => await _updateExpense(event, emit),
       );
     });
 
@@ -58,35 +51,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _init(InitHomeEvent event, Emitter<HomeState> emit) async {
-    final allFetchedExpenses = await _getAllExpensesUseCase.execute(
-      const NoParams(),
-    );
-
-    final incomes = allFetchedExpenses
-        .where((e) => _incomeFilter(e, event.accountId))
-        .toList();
-    final allExpenses = allFetchedExpenses
-        .where((e) => _expenseFilter(e, event.accountId))
-        .toList();
-
-    final dayExpenses = _getDayExpensesUseCase.execute(allExpenses);
-
-    emit(
-      state.copyWith(
-        accountId: event.accountId,
-        allDayExpenses: dayExpenses,
-        allExpenses: allExpenses,
-        incomes: incomes,
-      ),
-    );
-  }
-
-  bool _expenseFilter(Expense expense, String? accountId) {
-    return !expense.isIncome && expense.accountId == accountId;
-  }
-
-  bool _incomeFilter(Expense expense, String? accountId) {
-    return expense.isIncome && expense.accountId == accountId;
+    emit(state.copyWith(accountId: event.accountId));
+    add(const GetAllExpensesEvent());
   }
 
   Future<void> _updateData(Emitter<HomeState> emit) async {}
@@ -107,22 +73,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     final expense = event.expense.copyWith(accountId: state.accountId);
-    await _addExpenseUseCase.execute(expense);
+    await _expenseRepository.addExpense(expense);
     add(const GetAllExpensesEvent());
   }
 
   Future<void> _getAllExpenses(Emitter<HomeState> emit) async {
-    final fetchedExpenses = await _getAllExpensesUseCase.execute(
-      const NoParams(),
+    final fetchedExpenses = await _expenseRepository.getAllExpenses(
+      state.accountId,
     );
 
-    final incomes = fetchedExpenses
-        .where((e) => _incomeFilter(e, state.accountId))
-        .toList();
-    final expenses = fetchedExpenses
-        .where((e) => _expenseFilter(e, state.accountId))
-        .toList();
-    final dayExpenses = _getDayExpensesUseCase.execute(expenses);
+    final incomes = fetchedExpenses.where((e) => e.isIncome).toList();
+    final expenses = fetchedExpenses.where((e) => !e.isIncome).toList();
+    final dayExpenses = ExpenseRepository.getDayExpenses(expenses: expenses);
 
     emit(
       state.copyWith(
@@ -131,5 +93,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         incomes: incomes,
       ),
     );
+  }
+
+  Future<void> _deleteExpense(
+    DeleteExpenseEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    await _expenseRepository.deleteExpense(event.expense);
+    add(const GetAllExpensesEvent());
+  }
+
+  Future<void> _updateExpense(
+    UpdateExpenseEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    await _expenseRepository.updateExpense(event.expense);
+    add(const GetAllExpensesEvent());
   }
 }

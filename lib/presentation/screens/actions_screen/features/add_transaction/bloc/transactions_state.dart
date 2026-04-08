@@ -5,6 +5,7 @@ abstract class TransactionsState with _$TransactionsState {
   const TransactionsState._();
 
   const factory TransactionsState({
+    UuidValue? id,
     @Default(TransactionNameInput.pure()) TransactionNameInput nameInput,
     @Default(TransactionAmountInput.pure()) TransactionAmountInput amountInput,
     @Default(TransactionCategoryInput.pure())
@@ -16,7 +17,7 @@ abstract class TransactionsState with _$TransactionsState {
   }) = _TransactionsState;
 
   Expense get validExpense => Expense(
-    id: UuidValue.fromString(const Uuid().v4()),
+    id: id ?? UuidValue.fromString(const Uuid().v4()),
     name: nameInput.value,
     category: categoryInput.value,
     datetime: datetimeInput.value,
@@ -46,4 +47,14 @@ abstract class TransactionsState with _$TransactionsState {
       (e) => e.shortName == Currency.lir.shortName,
     ),
   };
+
+  bool isExpenseEdited(Expense? init) {
+    if (init == null) return true;
+
+    return nameInput.value != init.name ||
+        amountInput.value != init.price.toString() ||
+        categoryInput.value != init.category ||
+        datetimeInput.value != init.datetime ||
+        isIncome != init.isIncome;
+  }
 }
