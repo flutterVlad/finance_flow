@@ -24,7 +24,6 @@ final class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Future<(Response, Account?)> savePersonInfo(AccountForm form) async {
-    print(form.uid);
     if (form.uid == null) {
       return await createAccount(form);
     }

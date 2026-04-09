@@ -10,9 +10,6 @@ import '/utils/widgets/app_text_button.dart';
 import '/utils/widgets/toast_service.dart';
 import 'wallet_card.dart';
 
-// TODO: Repair widget:
-// - add more then one no added card
-// - after restart no cards
 class CardSwiper extends StatefulWidget {
   const CardSwiper({super.key});
 
