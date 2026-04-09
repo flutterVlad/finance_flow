@@ -146,8 +146,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               valueListenable: formNotifier,
               builder: (context, form, _) {
                 return PrimaryButton(
-                  enabled: form.isValid,
-                  onTap: () => settingsBloc.add(CreateAccountEvent(form: form)),
+                  enabled:
+                      form.isValid && !form.equals(widget.account?.toForm()),
+                  onTap: () =>
+                      settingsBloc.add(SavePersonInfoEvent(form: form)),
                   text: widget.mode == FormMode.create ? 'Create' : 'Save',
                 );
               },

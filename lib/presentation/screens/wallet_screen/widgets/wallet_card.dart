@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/data/models/bank_card/bank_card.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
@@ -23,7 +23,7 @@ class WalletCard extends StatelessWidget {
         borderRadius: borderRadius,
         child: GestureDetector(
           onLongPress: () {
-            GetIt.I<SettingsBloc>().add(RemoveCardEvent(card.number));
+            context.read<SettingsBloc>().add(RemoveCardEvent(card.id));
           },
           child: Container(
             decoration: BoxDecoration(

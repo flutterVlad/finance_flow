@@ -1,3 +1,4 @@
+import '/data/hive_boxes.dart';
 import '/data/models/expense/expense.dart';
 import '/data/service/hive_service.dart';
 import '/domain/repositories/expense_repository.dart';
@@ -12,7 +13,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     await hiveService.putData<Expense>(
       expense.id.uuid,
       expense,
-      boxKey: expense.boxKey,
+      boxKey: HiveBoxes.expenses(expense.accountId),
     );
   }
 
@@ -20,14 +21,14 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   Future<void> deleteExpense(Expense expense) async {
     await hiveService.deleteData<Expense>(
       expense.id.uuid,
-      boxKey: expense.boxKey,
+      boxKey: HiveBoxes.expenses(expense.accountId),
     );
   }
 
   @override
   Future<List<Expense>> getAllExpenses(String? accountId) async {
     final result = await hiveService.getAllData<Expense>(
-      boxKey: "Expense${accountId ?? ''}",
+      boxKey: HiveBoxes.expenses(accountId),
     );
 
     return result;
@@ -36,7 +37,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<void> deleteAllExpenses(String? accountId) async {
     await hiveService.deleteAllData<Expense>(
-      boxKey: "Expense${accountId ?? ''}",
+      boxKey: HiveBoxes.expenses(accountId),
     );
   }
 
@@ -45,7 +46,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     await hiveService.updateData<Expense>(
       expense.id.uuid,
       expense,
-      boxKey: expense.boxKey,
+      boxKey: HiveBoxes.expenses(expense.accountId),
     );
   }
 }

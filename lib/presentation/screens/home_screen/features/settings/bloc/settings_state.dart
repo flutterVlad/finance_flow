@@ -39,4 +39,13 @@ abstract class AccountForm with FormzMixin, _$AccountForm {
 
   @override
   List<FormzInput> get inputs => [email, firstName, lastName];
+
+  bool equals(AccountForm? other) {
+    if (other == null) return false;
+
+    return other.email.value == email.value &&
+        other.firstName.value == firstName.value &&
+        other.lastName.value == lastName.value &&
+        other.image == image;
+  }
 }

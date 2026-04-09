@@ -11,9 +11,6 @@ abstract class SettingsEvent with _$SettingsEvent {
   const factory SettingsEvent.savePersonInfo({required AccountForm form}) =
       SavePersonInfoEvent;
 
-  const factory SettingsEvent.createAccount({required AccountForm form}) =
-      CreateAccountEvent;
-
   const factory SettingsEvent.deleteAccount({required String uid}) =
       DeleteAccountEvent;
 
@@ -23,5 +20,5 @@ abstract class SettingsEvent with _$SettingsEvent {
 
   const factory SettingsEvent.saveCard(CardForm form) = SaveCardEvent;
 
-  const factory SettingsEvent.removeCard(String number) = RemoveCardEvent;
+  const factory SettingsEvent.removeCard(String id) = RemoveCardEvent;
 }

@@ -1,5 +1,6 @@
-import 'package:finance_flow/utils/svgs/svg.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '/utils/svgs/svg.dart';
 
 part 'bank_card.freezed.dart';
 part 'bank_card.g.dart';
@@ -20,6 +21,8 @@ abstract class BankCard with _$BankCard {
 
   factory BankCard.fromJson(Map<String, dynamic> json) =>
       _$BankCardFromJson(json);
+
+  String get id => "$number$owner$duration$cvv";
 
   String get formatNumber =>
       formatStringWithReplace(value: number, length: 16, replace: (' ', 2));

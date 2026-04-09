@@ -1,3 +1,4 @@
+import '/data/hive_boxes.dart';
 import '/data/mappers/account_mapper.dart';
 import '/data/models/bank_card/bank_card.dart';
 import '/data/models/response/response.dart';
@@ -17,30 +18,52 @@ class CardRepositoryImpl implements CardRepository {
        _encryptionKeyService = encryptionKeyService;
 
   @override
-  Future<Response> saveCard(CardForm form, String userUuid) async {
+  Future<Response> saveCard(CardForm form, String userId) async {
     final bankCard = form.toModel();
+    final cards = await getCards(userId);
 
-    return await _hiveService.putData<BankCard>(
-      bankCard.number,
+    if (cards.any((e) => e.id == bankCard.id)) {
+      return const Response(
+        message: "You already have the same card",
+        success: false,
+      );
+    }
+    final response = await _hiveService.putData<BankCard>(
+      bankCard.id,
       bankCard,
       encryptKey: await _encryptionKeyService.getOrCreateKey(),
-      boxKey: userUuid,
+      boxKey: HiveBoxes.cards(userId),
+    );
+
+    return response.changeSuccessMessage("Card saved successfully");
+  }
+
+  @override
+  Future<List<BankCard>> getCards(String userId) async {
+    return await _hiveService.getAllData<BankCard>(
+      encryptKey: await _encryptionKeyService.getOrCreateKey(),
+      boxKey: HiveBoxes.cards(userId),
     );
   }
 
   @override
-  Future<List<BankCard>> getCards(String userUuid) async =>
-      await _hiveService.getAllData<BankCard>(
-        encryptKey: await _encryptionKeyService.getOrCreateKey(),
-        boxKey: userUuid,
-      );
+  Future<Response> deleteCard(String id, String userId) async {
+    final response = await _hiveService.deleteData<BankCard>(
+      id,
+      encryptKey: await _encryptionKeyService.getOrCreateKey(),
+      boxKey: HiveBoxes.cards(userId),
+    );
+
+    return response.changeSuccessMessage("Card deleted");
+  }
 
   @override
-  Future<Response> deleteCard(String cardNumber, String userUuid) async {
-    return await _hiveService.deleteData<BankCard>(
-      cardNumber,
+  Future<Response> deleteAllCard(String userId) async {
+    final response = await _hiveService.deleteAllData<BankCard>(
       encryptKey: await _encryptionKeyService.getOrCreateKey(),
-      boxKey: userUuid,
+      boxKey: HiveBoxes.cards(userId),
     );
+
+    return response.changeSuccessMessage("All cards deleted");
   }
 }

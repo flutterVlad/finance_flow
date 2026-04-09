@@ -10,6 +10,7 @@ import '/data/models/bank_card/bank_card.dart';
 import '/data/models/response/response.dart';
 import '/domain/repositories/card_repository.dart';
 import '/domain/repositories/settings_repository.dart';
+import '/domain/use_cases/delete_account_use_case.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/forms.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
@@ -20,16 +21,19 @@ part 'settings_state.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository settingsRepository;
   final CardRepository cardRepository;
+  final DeleteAccountUseCase deleteAccountUseCase;
 
-  SettingsBloc({required this.settingsRepository, required this.cardRepository})
-    : super(const SettingsState()) {
+  SettingsBloc({
+    required this.settingsRepository,
+    required this.cardRepository,
+    required this.deleteAccountUseCase,
+  }) : super(const SettingsState()) {
     on<SettingsEvent>((event, emit) async {
       await event.map(
         init: (_) async => await _init(emit),
         clearCache: (_) async => await _clearCache(emit),
         changeLanguage: (_) async => await _changeLang(emit),
         savePersonInfo: (event) async => await _savePersonInfo(event, emit),
-        createAccount: (event) async => await _createAccount(event, emit),
         deleteAccount: (event) async => await _deleteAccount(event, emit),
         deleteAllAccounts: (_) async => await _deleteAllAccounts(emit),
         getCards: (_) async => await _getCards(emit),
@@ -66,18 +70,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     emit(state.copyWith(response: null));
   }
 
-  Future<void> _createAccount(
-    CreateAccountEvent event,
-    Emitter<SettingsState> emit,
-  ) async {
-    final (response, account) = await settingsRepository.createAccount(
-      event.form,
-    );
-
-    emit(state.copyWith(selectedAccount: account, response: response));
-    emit(state.copyWith(response: null));
-  }
-
   Future<void> _deleteAccount(
     DeleteAccountEvent event,
     Emitter<SettingsState> emit,
@@ -107,7 +99,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final cards = await cardRepository.getCards(
         state.selectedAccount!.uid!.uuid,
       );
-      emit(state.copyWith(cards: cards));
+      emit(state.copyWith(cards: cards, response: null));
     }
   }
 
@@ -116,10 +108,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
   ) async {
     if (state.selectedAccount != null) {
-      await cardRepository.saveCard(
+      final response = await cardRepository.saveCard(
         event.form,
         state.selectedAccount!.uid!.uuid,
       );
+      emit(state.copyWith(response: response));
       add(const GetCardsEvent());
     }
   }
@@ -129,10 +122,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
   ) async {
     if (state.selectedAccount != null) {
-      await cardRepository.deleteCard(
-        event.number,
+      final response = await cardRepository.deleteCard(
+        event.id,
         state.selectedAccount!.uid!.uuid,
       );
+      emit(state.copyWith(response: response));
       add(const GetCardsEvent());
     }
   }

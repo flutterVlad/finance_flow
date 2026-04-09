@@ -10,17 +10,13 @@ abstract class SettingsRepository {
 
   Future<List<Account>> fetchAllAccount();
 
-  Future<Response> clearCache();
-
   Future<(Response, Account?)> savePersonInfo(AccountForm form);
 
   Future<(Response, Account?)> createAccount(AccountForm form);
 
-  Future<Response> deleteAccount(String uid);
+  Future<Response> deleteAccount(String id);
 
   Future<Response> deleteAllAccounts();
 
   Future<Uint8List?> pickImage();
-
-  Future<Response> deleteAccountExpenses(String accountId);
 }

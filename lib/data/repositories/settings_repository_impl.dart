@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
+import '/data/hive_boxes.dart';
 import '/data/mappers/account_mapper.dart';
 import '/data/models/account/account.dart';
-import '/data/models/expense/expense.dart';
 import '/data/models/response/response.dart';
 import '/data/service/hive_service.dart';
 import '/data/service/image_picker.dart';
@@ -23,12 +23,8 @@ final class SettingsRepositoryImpl implements SettingsRepository {
   });
 
   @override
-  Future<Response> clearCache() async {
-    return await hiveService.deleteAllData<Expense>();
-  }
-
-  @override
   Future<(Response, Account?)> savePersonInfo(AccountForm form) async {
+    print(form.uid);
     if (form.uid == null) {
       return await createAccount(form);
     }
@@ -36,9 +32,15 @@ final class SettingsRepositoryImpl implements SettingsRepository {
     final response = await hiveService.updateData<Account>(
       form.uid!.uuid,
       form.toDomain(),
+      boxKey: HiveBoxes.accounts(),
     );
 
-    if (response.success) return (response, form.toDomain());
+    if (response.success) {
+      return (
+        response.changeSuccessMessage("Account data updated"),
+        form.toDomain(),
+      );
+    }
     return (response, null);
   }
 
@@ -52,7 +54,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Future<List<Account>> fetchAllAccount() async {
-    return await hiveService.getAllData<Account>();
+    return await hiveService.getAllData<Account>(boxKey: HiveBoxes.accounts());
   }
 
   @override
@@ -63,40 +65,37 @@ final class SettingsRepositoryImpl implements SettingsRepository {
     final response = await hiveService.putData<Account>(
       account.uid!.uuid,
       account,
+      boxKey: HiveBoxes.accounts(),
     );
 
-    if (response.success) return (response, account);
+    if (response.success) {
+      return (response.changeSuccessMessage("Account created"), account);
+    }
 
     return (response, null);
   }
 
   @override
-  Future<Response> deleteAccount(String uid) async {
-    await deleteAccountExpenses(uid);
-    return await hiveService.deleteData<Account>(uid);
+  Future<Response> deleteAccount(String id) async {
+    final response = await hiveService.deleteData<Account>(
+      id,
+      boxKey: HiveBoxes.accounts(),
+    );
+
+    return response.changeSuccessMessage("Account deleted");
   }
 
   @override
   Future<Response> deleteAllAccounts() async {
-    final allExpenses = await hiveService.getAllData<Expense>();
-    final deletedExpenses = allExpenses.where((e) => e.accountId != null);
+    final response = await hiveService.deleteAllData<Account>(
+      boxKey: HiveBoxes.accounts(),
+    );
 
-    for (final el in deletedExpenses) {
-      await hiveService.deleteData<Expense>(el.id.uuid);
-    }
-
-    return await hiveService.deleteAllData<Account>();
+    return response.changeSuccessMessage("All accounts deleted");
   }
 
   @override
   Future<Uint8List?> pickImage() async {
     return await imagePickerService.pickImage();
-  }
-
-  @override
-  Future<Response> deleteAccountExpenses(String accountId) async {
-    return await hiveService.deleteAllData<Expense>(
-      boxKey: "Expense$accountId",
-    );
   }
 }

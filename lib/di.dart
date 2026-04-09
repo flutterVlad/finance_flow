@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import '/data/repositories/currency_repository_impl.dart';
 import '/domain/repositories/currency_repository.dart';
+import '/domain/use_cases/delete_account_use_case.dart';
 import 'data/data_sources/local_datasource.dart';
 import 'data/repositories/card_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
@@ -21,6 +22,7 @@ class DI {
   Future<void> initDI() async {
     await _initServices();
     _initRepositories();
+    _initUseCases();
     _initBloc();
   }
 
@@ -29,6 +31,7 @@ class DI {
       SettingsBloc(
         settingsRepository: GetIt.I<SettingsRepository>(),
         cardRepository: GetIt.I<CardRepository>(),
+        deleteAccountUseCase: GetIt.I<DeleteAccountUseCase>(),
       ),
     );
     GetIt.I.registerLazySingleton<HomeBloc>(
@@ -74,5 +77,15 @@ class DI {
     GetIt.I.registerLazySingleton(() => const ImagePickerService());
     GetIt.I.registerLazySingleton(() => const HiveService());
     await GetIt.I<HiveService>().init();
+  }
+
+  void _initUseCases() {
+    GetIt.I.registerLazySingleton(
+      () => DeleteAccountUseCase(
+        cardRepository: GetIt.I<CardRepository>(),
+        expenseRepository: GetIt.I<ExpenseRepository>(),
+        settingsRepository: GetIt.I<SettingsRepository>(),
+      ),
+    );
   }
 }

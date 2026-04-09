@@ -5,6 +5,7 @@ import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
 extension FormToAccountMapper on AccountForm {
   Account toDomain() => Account(
+    uid: uid,
     email: email.value,
     firstName: firstName.value,
     lastName: lastName.value,
