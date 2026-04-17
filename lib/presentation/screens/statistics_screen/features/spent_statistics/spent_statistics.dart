@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '/data/models/expense/expense.dart';
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
@@ -12,8 +13,9 @@ import '/utils/theme.dart';
 import '/utils/widgets/animated_text.dart';
 import '../widgets/date_filter.dart';
 
-class RemainingStatistics extends StatelessWidget {
-  const RemainingStatistics({super.key});
+// TODO: replace [Expense] on [GroupedExpense]
+class SpentStatistics extends StatelessWidget {
+  const SpentStatistics({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class _DiagramState extends State<Diagram> {
   @override
   Widget build(BuildContext context) {
     final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
+    final s = S.of(context);
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
@@ -48,12 +51,12 @@ class _DiagramState extends State<Diagram> {
         final allSpends = state.spendsOnSelectedMonth;
 
         if (allSpends == 0) {
-          return const SliverToBoxAdapter(
+          return SliverToBoxAdapter(
             child: Padding(
-              padding: .all(16.0),
+              padding: const .all(16.0),
               child: AspectRatio(
                 aspectRatio: 1.5,
-                child: Center(child: Text('No data')),
+                child: Center(child: Text(s.noDataInThisMonth)),
               ),
             ),
           );
@@ -65,7 +68,7 @@ class _DiagramState extends State<Diagram> {
 
         final title = touchedIndex != -1
             ? expenses[touchedIndex].category.name
-            : "All spends";
+            : s.allSpends;
 
         return SliverToBoxAdapter(
           child: Padding(
@@ -79,7 +82,7 @@ class _DiagramState extends State<Diagram> {
                     child: Column(
                       mainAxisSize: .min,
                       children: [
-                        AnimatedText(text: "$price Br"),
+                        AnimatedText(text: '$price ${s.byn}'),
                         AnimatedText(
                           text: title,
                           style: const TextStyle(
@@ -164,6 +167,8 @@ class Income extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (prev, curr) => !const ListEquality().equals(
         prev.incomesOnSelectedMonth,
@@ -186,12 +191,12 @@ class Income extends StatelessWidget {
                     Row(
                       mainAxisAlignment: .spaceBetween,
                       children: [
-                        const Text(
-                          'Income',
-                          style: TextStyle(fontWeight: .bold),
+                        Text(
+                          s.incomes,
+                          style: const TextStyle(fontWeight: .bold),
                         ),
                         Text(
-                          '${income.toCleanString()} Br',
+                          '${income.toCleanString()} ${s.byn}',
                           style: const TextStyle(color: AppColors.primary),
                         ),
                       ],
@@ -205,7 +210,7 @@ class Income extends StatelessWidget {
                         itemBuilder: (context, index) {
                           if (index + 1 == incomeExpenses.length + 1) {
                             return _Element(
-                              elementName: 'income',
+                              elementName: s.income,
                               onTap: () {
                                 context.pushNamed(
                                   'add_transaction',
@@ -237,14 +242,15 @@ class Income extends StatelessWidget {
 }
 
 class _Element extends StatelessWidget {
+  const _Element({this.expense, this.elementName = '', this.onTap});
   final Expense? expense;
   final String elementName;
   final void Function()? onTap;
 
-  const _Element({this.expense, this.elementName = '', this.onTap});
-
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     if (expense != null) {
       return GestureDetector(
         onTap: onTap,
@@ -257,7 +263,7 @@ class _Element extends StatelessWidget {
               children: [
                 Text(expense!.category.name),
                 Text(
-                  expense!.formattedPrice,
+                  '${expense!.formattedPrice} ${s.byn}',
                   style: const TextStyle(color: AppColors.grey, fontSize: 12),
                 ),
               ],
@@ -273,7 +279,7 @@ class _Element extends StatelessWidget {
         spacing: 8,
         children: [
           const Svg(Svgs.addRounded, color: AppColors.grey, size: 30),
-          Text('Add $elementName'),
+          Text(s.addItem(elementName.toLowerCase())),
         ],
       ),
     );

@@ -4,26 +4,6 @@ import 'package:flutter/services.dart';
 import '../theme.dart';
 
 class Section extends StatelessWidget {
-  final String title;
-  final String? hintText;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextInputType? keyboardType;
-  final Widget? suffixIcon;
-  final Widget? suffix;
-  final Widget? prefixIcon;
-  final Widget? prefix;
-  final TextEditingController? controller;
-  final int maxLength;
-  final bool enableSuggestions;
-  final void Function()? onTap;
-  final void Function(String?)? onSubmit;
-  final String? errorText;
-  final bool isNumber;
-  final bool isBool;
-  final bool boolValue;
-  final void Function(bool)? onBoolChange;
-  final bool enabled;
-
   const Section({
     super.key,
     required this.title,
@@ -46,6 +26,26 @@ class Section extends StatelessWidget {
     this.onBoolChange,
     this.enabled = true,
   });
+
+  final String title;
+  final String? hintText;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
+  final Widget? suffixIcon;
+  final Widget? suffix;
+  final Widget? prefixIcon;
+  final Widget? prefix;
+  final TextEditingController? controller;
+  final int maxLength;
+  final bool enableSuggestions;
+  final void Function()? onTap;
+  final void Function(String?)? onSubmit;
+  final String? errorText;
+  final bool isNumber;
+  final bool isBool;
+  final bool boolValue;
+  final void Function(bool)? onBoolChange;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,6 @@ class Section extends StatelessWidget {
     } else {
       return Row(
         mainAxisAlignment: .spaceBetween,
-        crossAxisAlignment: .center,
         children: [
           Text(title, style: const TextStyle(fontWeight: .bold, fontSize: 16)),
           Switch.adaptive(

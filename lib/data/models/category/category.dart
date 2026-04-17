@@ -32,12 +32,12 @@ abstract class Category with _$Category {
     SvgData iconAsset,
   }) = _Category;
 
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
+
   static const empty = Category(id: -1, name: 'Empty');
 
   bool get isEmpty => id == -1 && name == 'Empty';
-
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json);
 }
 
 // Предопределенные категории
@@ -176,13 +176,7 @@ final defaultCategories = [
     color: Colors.deepPurpleAccent,
     iconAsset: Svgs.car,
   ),
-  const Category(
-    id: 19,
-    name: 'Home',
-    budget: 3000,
-    color: Colors.lightBlue,
-    iconAsset: Svgs.home,
-  ),
+  const Category(id: 19, name: 'Home', budget: 3000, color: Colors.lightBlue),
   const Category(
     id: 20,
     name: 'Travel',

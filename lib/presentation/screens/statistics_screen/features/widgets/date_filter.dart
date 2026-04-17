@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/theme.dart';
@@ -50,6 +51,7 @@ class DateFilter extends StatelessWidget {
                           child: Text(
                             DateFormat(
                               'LLLL y',
+                              S.of(context).localeName,
                             ).format(state.monthFilter).capitalize(),
                             textDirection: .rtl,
                           ),

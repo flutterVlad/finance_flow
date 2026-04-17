@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/presentation/screens/home_screen/widgets/today_expenses.dart';
 import '/utils/constants.dart';
@@ -50,7 +51,7 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
               else
                 ViewAllExpensesList(
                   dayExpenses: filteredDayExpenses,
-                  dateFormat: DateFormat('d MMMM y'),
+                  dateFormat: DateFormat('d MMMM y', S.of(context).localeName),
                 ),
             ],
           );
@@ -61,23 +62,22 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
 }
 
 class ViewAllExpensesAppBar extends StatelessWidget {
-  final DateTime selectedMonth;
-  final double spendsOnSelectedMonth;
-  final void Function(DateTime) onMonthFilterUpdate;
-
   const ViewAllExpensesAppBar({
     super.key,
     required this.selectedMonth,
     required this.spendsOnSelectedMonth,
     required this.onMonthFilterUpdate,
   });
+  final DateTime selectedMonth;
+  final double spendsOnSelectedMonth;
+  final void Function(DateTime) onMonthFilterUpdate;
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       backgroundColor: AppColors.secondary,
-      title: const Text(
-        AppStrings.monthlyExpenses,
+      title: Text(
+        S.of(context).monthlyExpenses,
         style: AppTextStyles.headerStyle,
       ),
       pinned: true,
@@ -100,11 +100,11 @@ class ViewAllExpensesSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(AppDimensions.defaultPadding),
+        padding: const EdgeInsets.all(AppDimensions.defaultPadding),
         child: Text(
-          AppStrings.recentExpenses,
+          S.of(context).recentExpenses,
           style: AppTextStyles.sectionTitleStyle,
         ),
       ),
@@ -117,23 +117,25 @@ class ViewAllExpensesEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverFillRemaining(
+    return SliverFillRemaining(
       child: Center(
-        child: Text("No data no this month", style: AppTextStyles.headerStyle),
+        child: Text(
+          S.of(context).noDataInThisMonth,
+          style: AppTextStyles.headerStyle,
+        ),
       ),
     );
   }
 }
 
 class ViewAllExpensesList extends StatelessWidget {
-  final List<DayExpense> dayExpenses;
-  final DateFormat dateFormat;
-
   const ViewAllExpensesList({
     super.key,
     required this.dayExpenses,
     required this.dateFormat,
   });
+  final List<DayExpense> dayExpenses;
+  final DateFormat dateFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -157,23 +159,22 @@ class ViewAllExpensesList extends StatelessWidget {
 }
 
 class ViewAllExpensesDayItem extends StatelessWidget {
-  final DayExpense day;
-  final DateFormat dateFormat;
-  final int animationDelay;
-
   const ViewAllExpensesDayItem({
     super.key,
     required this.day,
     required this.dateFormat,
     this.animationDelay = 0,
   });
+  final DayExpense day;
+  final DateFormat dateFormat;
+  final int animationDelay;
 
   @override
   Widget build(BuildContext context) {
     final title = day.date.isToday
-        ? AppStrings.today
+        ? S.of(context).today
         : day.date.isYesterday
-        ? AppStrings.yesterday
+        ? S.of(context).yesterday
         : dateFormat.format(day.date);
 
     return Padding(
@@ -197,14 +198,13 @@ class ViewAllExpensesDayItem extends StatelessWidget {
 }
 
 class AnimatedExpenseItem extends StatefulWidget {
-  final Expense expense;
-  final Duration delay;
-
   const AnimatedExpenseItem({
     super.key,
     required this.expense,
     this.delay = Duration.zero,
   });
+  final Expense expense;
+  final Duration delay;
 
   @override
   State<AnimatedExpenseItem> createState() => _AnimatedExpenseItemState();
@@ -262,19 +262,20 @@ class _AnimatedExpenseItemState extends State<AnimatedExpenseItem>
 }
 
 class MonthFilter extends StatelessWidget {
-  final void Function(DateTime)? onUpdate;
-  final DateTime selectedMonth;
-  final double spendsOnSelectedMonth;
-
   const MonthFilter({
     super.key,
     required this.selectedMonth,
     required this.spendsOnSelectedMonth,
     this.onUpdate,
   });
+  final void Function(DateTime)? onUpdate;
+  final DateTime selectedMonth;
+  final double spendsOnSelectedMonth;
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(
         top: AppDimensions.defaultPadding,
@@ -305,12 +306,13 @@ class MonthFilter extends StatelessWidget {
                     crossAxisAlignment: .start,
                     spacing: AppDimensions.smallPadding,
                     children: [
-                      const Text(
-                        AppStrings.spendThisMonth,
+                      Text(
+                        s.spendThisMonth,
                         style: AppTextStyles.monthFilterTitleStyle,
                       ),
                       AnimatedText(
-                        text: '${spendsOnSelectedMonth.toCleanString()} Br',
+                        text:
+                            '${spendsOnSelectedMonth.toCleanString()} ${s.byn}',
                         style: AppTextStyles.monthFilterAmountStyle,
                         useLayoutBuilder: true,
                         textAlignment: .left,
@@ -327,6 +329,7 @@ class MonthFilter extends StatelessWidget {
                       AnimatedText(
                         text: DateFormat(
                           'MMMM',
+                          s.localeName,
                         ).format(selectedMonth).capitalize(),
                         style: AppTextStyles.monthFilterTitleStyle,
                         useLayoutBuilder: true,

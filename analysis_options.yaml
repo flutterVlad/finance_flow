@@ -1,12 +1,3 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
@@ -17,21 +8,56 @@ analyzer:
     invalid_annotation_target: ignore
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    - prefer_const_constructors
-    - prefer_const_declarations
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    avoid_unused_constructor_parameters: true # Неиспользуемые параметры конструктора
+    avoid_void_async: true # async функции должны возвращать Future, а не void
+    no_duplicate_case_values: true # Запрет дублирующихся case в switch
+    prefer_null_aware_operators: true # Использовать ?., ?? для работы с null
+    avoid_print: true # Не использовать print в production-коде
+    await_only_futures: true # await можно использовать только с Future
+    library_private_types_in_public_api: true # Не использовать закрытые типы в публичных API
+    null_check_on_nullable_type_parameter: true # Проверка на null в nullable generic типах запрещена
+    unrelated_type_equality_checks: true # Проверка на равенство разных типов
+    void_checks: true # Проверка использования void значений
+    secure_pubspec_urls: true # Только HTTPS-ссылки в pubspec.yaml
+    prefer_const_literals_to_create_immutables: true # Использовать const для коллекций
+    prefer_final_locals: true # Локальные переменные делать final
+    curly_braces_in_flow_control_structures: true # Всегда фигурные скобки
+    sort_constructors_first: true # Конструкторы в начале класса
+    prefer_single_quotes: true # Использовать одинарные кавычки
+    avoid_empty_else: true # Не использовать пустые else
+    prefer_typing_uninitialized_variables: true # Типизировать неинициализированные переменные
+    prefer_is_empty: true # Использовать isEmpty вместо length == 0
+    prefer_is_not_empty: true # Использовать isNotEmpty вместо length > 0
+    prefer_iterable_whereType: true # Использовать whereType вместо ручной фильтрации
+    non_constant_identifier_names: true # Соблюдать правила именования
+    camel_case_extensions: true # Имена extension в camelCase
+    camel_case_types: true # Имена классов и enum в CamelCase
+    file_names: true # Файлы — в lower_snake_case
+    unintended_html_in_doc_comment: true # Не использовать HTML в doc-комментариях
+    dangling_library_doc_comments: true # Doc-комментарии не должны быть потеряны
+    library_annotations: true # Разрешены только допустимые аннотации библиотек
+    provide_deprecation_message: true # Добавлять сообщение при @Deprecated
+    type_literal_in_constant_pattern: true # Проверка типов в const pattern
+    valid_regexps: true # Проверка корректности регулярных выражений
+    prefer_const_constructors: true # Виджеты и объекты с const, если возможно
+    use_key_in_widget_constructors: true # В конструкторы виджетов передавать Key
+    avoid_redundant_argument_values: true # Не передавать дефолтные аргументы
+    prefer_const_declarations: true # Использовать const для констант
+    prefer_final_fields: true # Поля, которые не меняются, делать final
+    avoid_private_typedef_functions: true # Не использовать приватные typedef в публичном API
+    prefer_function_declarations_over_variables: true # Предпочитать декларации функций
+    avoid_positional_boolean_parameters: true # Использовать именованные bool параметры
+    avoid_relative_lib_imports: true # Избегать относительных импортов внутри lib/
+    directives_ordering: true # Упорядочить импорты
+    avoid_shadowing_type_parameters: true # Не перекрывать имена generic параметров
+    avoid_types_as_parameter_names: true # Не использовать типы в качестве имён параметров
+    collection_methods_unrelated_type: true # Проверка типов в методах коллекций
+    depend_on_referenced_packages: true # Только используемые пакеты должны быть зависимостями
+    hash_and_equals: true # Всегда переопределять hashCode при переопределении ==
+    implicit_call_tearoffs: true # Явно использовать tear-offs
+    no_wildcard_variable_uses: true # Не использовать `_` для хранения значений
+    prefer_generic_function_type_aliases: true # Использовать generic typedef
+    strict_top_level_inference: true # Строгая проверка типов на верхнем уровне
+    unnecessary_overrides: true # Не переопределять без причины
+    use_string_in_part_of_directives: true # Использовать строковые пути в part of

@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 
 class DropdownField<T> extends StatefulWidget {
-  final String label;
-  final T? value;
-  final String Function(T value) itemLabel;
-  final void Function(T value) onChanged;
-  final void Function()? onRemove;
-  final void Function()? onClose;
-  final String? errorText;
-  final bool enabled;
-  final bool isLoading;
-  final Widget item;
-
   const DropdownField({
     super.key,
     required this.label,
@@ -25,6 +14,17 @@ class DropdownField<T> extends StatefulWidget {
     this.isLoading = false,
     required this.item,
   });
+
+  final String label;
+  final T? value;
+  final String Function(T value) itemLabel;
+  final void Function(T value) onChanged;
+  final void Function()? onRemove;
+  final void Function()? onClose;
+  final String? errorText;
+  final bool enabled;
+  final bool isLoading;
+  final Widget item;
 
   @override
   State<DropdownField<T>> createState() => _DropdownFieldState<T>();
@@ -59,7 +59,7 @@ class _DropdownFieldState<T> extends State<DropdownField<T>> {
 
   String get _itemLabel => switch (widget.value) {
     null => '',
-    T value => widget.itemLabel(value),
+    final T value => widget.itemLabel(value),
   };
 
   void _setMenuState(bool isOpened) => _menuOpened.value = isOpened;

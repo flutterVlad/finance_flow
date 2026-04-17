@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'bottom_bar.dart';
 
 class MainScaffold extends StatefulWidget {
-  final StatefulNavigationShell navigationShell;
-
   const MainScaffold({super.key, required this.navigationShell});
+
+  final StatefulNavigationShell navigationShell;
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();

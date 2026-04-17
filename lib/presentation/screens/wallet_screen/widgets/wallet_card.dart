@@ -7,9 +7,8 @@ import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 
 class WalletCard extends StatelessWidget {
-  final BankCard card;
-
   const WalletCard({super.key, required this.card});
+  final BankCard card;
 
   @override
   Widget build(BuildContext context) {

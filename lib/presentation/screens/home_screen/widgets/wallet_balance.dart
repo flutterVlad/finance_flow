@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/widgets/gradient_progress_bar.dart';
@@ -12,6 +13,7 @@ class WalletBalance extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderRadius = BorderRadius.circular(16);
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final s = S.of(context);
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) => Padding(
@@ -39,12 +41,12 @@ class WalletBalance extends StatelessWidget {
                             Column(
                               crossAxisAlignment: .start,
                               children: [
-                                const Text(
-                                  'Wallet Balance',
-                                  style: TextStyle(color: Colors.white),
+                                Text(
+                                  s.walletBalance,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  '${state.remains.toCleanString()} Br',
+                                  '${state.remains.toCleanString()} ${s.byn}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -66,14 +68,14 @@ class WalletBalance extends StatelessWidget {
                           mainAxisAlignment: .spaceBetween,
                           children: [
                             Text(
-                              'Spent ${state.monthSpends.toCleanString()} Br',
+                              '${s.spent} ${state.monthSpends.toCleanString()} ${s.byn}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
                             ),
                             Text(
-                              'Budget ${state.monthBalance.toCleanString()} Br',
+                              '${s.budget} ${state.monthBalance.toCleanString()} ${s.byn}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

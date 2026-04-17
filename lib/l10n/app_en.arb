@@ -1,0 +1,84 @@
+{
+  "@@locale": "en",
+  "appTitle": "Finance Flow",
+  "cardSaved": "Card saved successfully",
+  "cardDeleted": "Card deleted",
+  "cardAlreadyExists": "You already have the same card",
+  "deleteAccount": "Delete account",
+  "confirmDelete": "Are you sure you want to delete {name}?",
+  "@confirmDelete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "myProfile": "My Profile",
+  "editAccount": "Edit account",
+  "createAccount": "Create account",
+  "language": "Language",
+  "paymentMethod": "Payment method",
+  "accountSecurity": "Account Security",
+  "notifications": "Notifications",
+  "clearCache": "Clear Cache",
+  "settings": "Settings",
+  "helpCentre": "Help Centre",
+  "privacyPolicy": "Privacy & Policy",
+  "aboutApp": "About App",
+  "makeThisAccountPrimary": "Make this account primary",
+  "create": "Create",
+  "save": "Save",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "monthlyExpenses": "Monthly expenses",
+  "recentExpenses": "Recent Expenses",
+  "spendThisMonth": "Spend this month",
+  "nothingToShow": "Nothing to show(",
+  "chooseDate": "Choose date",
+  "categories": "Categories",
+  "expenses": "Expenses",
+  "incomes": "Incomes",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "noDataInThisMonth": "No data in this month",
+  "byn": "Br",
+  "welcomeBack": "Welcome back 👋",
+  "expenseAnalytics": "Expense Analytics",
+  "todayExpenses": "Today's Expenses",
+  "viewAll": "View All",
+  "walletBalance": "Wallet Balance",
+  "wallet": "Wallet",
+  "spent": "Spent",
+  "budget": "Budget",
+  "income": "Income",
+  "allSpends": "All Spends",
+  "addItem": "Add {name}",
+  "@addItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actions": "Actions",
+  "addTransaction": "Add transaction",
+  "noCardsAddedYet": "No cards added yet",
+  "addCard": "Add card",
+  "needToCreateAccount": "Need to create account",
+  "cancel": "Cancel",
+  "exit": "Exit",
+  "confirm": "Confirm",
+  "fieldCanNotBeEmpty": "Field can not be empty",
+  "invalidLength": "Invalid length",
+  "invalidFormat": "Invalid format",
+  "invalidCardNumber": "Invalid card number",
+  "weeklyExpense": "Weekly Expense",
+  "fromDate": "From {date}",
+  "@fromDate": {
+    "placeholder": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -5,16 +5,15 @@ import '/utils/theme.dart';
 import '/utils/widgets/glass_container.dart';
 
 class BottomBar extends StatelessWidget {
-  final void Function(int) onTap;
-  final int currentIndex;
-  final Duration animationDuration;
-
   const BottomBar({
     super.key,
     required this.onTap,
     required this.currentIndex,
     this.animationDuration = const Duration(milliseconds: 200),
   });
+  final void Function(int) onTap;
+  final int currentIndex;
+  final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +65,6 @@ class BottomBar extends StatelessWidget {
 }
 
 class BottomBarItem extends StatelessWidget {
-  final SvgData icon;
-  final bool isSelected;
-  final Color selectedColor;
-  final Color disabledColor;
-  final VoidCallback? onPressed;
-  final Duration animationDuration;
-
   const BottomBarItem({
     super.key,
     required this.icon,
@@ -82,6 +74,12 @@ class BottomBarItem extends StatelessWidget {
     this.onPressed,
     this.animationDuration = const Duration(milliseconds: 200),
   });
+  final SvgData icon;
+  final bool isSelected;
+  final Color selectedColor;
+  final Color disabledColor;
+  final VoidCallback? onPressed;
+  final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {

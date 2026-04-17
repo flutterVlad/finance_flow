@@ -53,7 +53,6 @@ class _CardDurationInputState extends State<CardDurationInput> {
           });
           widget.onChanged?.call(_formatExpiryDate(value));
         },
-        maxLines: 1,
         onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );
@@ -63,7 +62,7 @@ class _CardDurationInputState extends State<CardDurationInput> {
     String digitsOnly = input.replaceAll(RegExp(r'\D'), '');
     if (digitsOnly.length > 4) digitsOnly = digitsOnly.substring(0, 4);
 
-    StringBuffer buffer = StringBuffer();
+    final StringBuffer buffer = StringBuffer();
     for (int i = 0; i < digitsOnly.length; i++) {
       if (i > 0 && i % 2 == 0) buffer.write('/');
       buffer.write(digitsOnly[i]);

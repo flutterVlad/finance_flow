@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '/l10n/app_localizations.dart';
 import '/utils/widgets/primary_button.dart';
 
 abstract class AppDialog {
   static Future<bool> confirmDelete({
     required BuildContext context,
     String? title,
+    String? confirmText,
+    bool barrierDismissible = true,
   }) async {
     final confirmation = await showGeneralDialog<bool>(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible,
       barrierLabel: 'dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.3),
-      transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (dContext, animation, _, _) {
+        final s = S.of(context);
+
         return BackdropFilter(
           filter: .blur(
             sigmaX: 8 * animation.value,
@@ -29,7 +33,7 @@ abstract class AppDialog {
                 color: Colors.white,
                 child: SizedBox(
                   width: 300,
-                  height: 150,
+                  height: 170,
                   child: Padding(
                     padding: const .all(16),
                     child: Column(
@@ -37,11 +41,12 @@ abstract class AppDialog {
                       mainAxisAlignment: .spaceBetween,
                       children: [
                         Text(
-                          title ?? 'Delete item?',
+                          title ?? s.cardDeleted,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: .w600,
                           ),
+                          textAlign: .center,
                         ),
                         Row(
                           spacing: 8,
@@ -49,12 +54,12 @@ abstract class AppDialog {
                             Expanded(
                               child: PrimaryButton(
                                 onTap: () => Navigator.of(dContext).pop(false),
-                                text: 'Cancel',
+                                text: s.cancel,
                               ),
                             ),
                             Expanded(
                               child: PrimaryButton(
-                                text: 'Delete',
+                                text: confirmText ?? s.confirm,
                                 onTap: () => Navigator.of(dContext).pop(true),
                                 color: Colors.red,
                               ),

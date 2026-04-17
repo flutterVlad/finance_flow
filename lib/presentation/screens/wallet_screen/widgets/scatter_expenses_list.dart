@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '/data/models/expense/expense.dart';
+import '/l10n/app_localizations.dart';
+import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
+import '/utils/widgets/animated_text.dart';
 
 class ScatterExpensesList extends StatelessWidget {
-  final List<Expense> expenses;
-
   const ScatterExpensesList({super.key, this.expenses = const []});
+  final List<GroupedExpense> expenses;
 
   @override
   Widget build(BuildContext context) {
@@ -23,42 +25,52 @@ class ScatterExpensesList extends StatelessWidget {
       ),
       itemCount: expenses.length,
       itemBuilder: (context, index) {
-        final expense = expenses[index];
+        final item = expenses[index];
 
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.secondary,
-            borderRadius: .circular(12),
-          ),
-          padding: const .all(8),
-          child: Row(
-            crossAxisAlignment: .center,
-            mainAxisSize: .min,
-            children: [
-              Svg(
-                expense.category.iconAsset,
-                size: 40,
-                color: expense.category.color,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: .center,
-                  children: [
-                    Text(expense.category.name),
-                    Text(
-                      '${expense.formattedPrice} Br',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+        return _ExpenseCard(key: ValueKey(item.category.name), expense: item);
       },
+    );
+  }
+}
+
+class _ExpenseCard extends StatelessWidget {
+  const _ExpenseCard({super.key, required this.expense});
+
+  final GroupedExpense expense;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: .circular(12),
+      ),
+      child: Padding(
+        padding: const .all(8),
+        child: Row(
+          mainAxisSize: .min,
+          children: [
+            Svg(
+              expense.category.iconAsset,
+              size: 40,
+              color: expense.category.color,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: .center,
+                children: [
+                  Text(expense.category.name),
+                  AnimatedText(
+                    text:
+                        '${expense.amount.toCleanString()} ${S.of(context).byn}',
+                    style: const TextStyle(fontSize: 12, color: AppColors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

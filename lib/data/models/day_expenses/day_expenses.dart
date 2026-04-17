@@ -16,12 +16,12 @@ abstract class DayExpense with _$DayExpense {
     required DateTime date,
   }) = _DayExpense;
 
+  factory DayExpense.fromJson(Map<String, dynamic> json) =>
+      _$DayExpenseFromJson(json);
+
   static final empty = DayExpense(date: DateTime.now());
 
   double get daySpend => dayExpenses.fold(.0, (a, b) => a + b.price);
 
   String get formattedAllSpends => daySpend.toCleanString();
-
-  factory DayExpense.fromJson(Map<String, dynamic> json) =>
-      _$DayExpenseFromJson(json);
 }

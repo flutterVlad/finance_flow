@@ -3,12 +3,6 @@ import 'package:flutter/material.dart';
 enum TextAlignment { right, left, center }
 
 class AnimatedText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlignment textAlignment;
-
-  final bool useLayoutBuilder;
-
   const AnimatedText({
     super.key,
     required this.text,
@@ -16,6 +10,11 @@ class AnimatedText extends StatelessWidget {
     this.useLayoutBuilder = false,
     this.textAlignment = .center,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlignment textAlignment;
+
+  final bool useLayoutBuilder;
 
   @override
   Widget build(BuildContext context) {

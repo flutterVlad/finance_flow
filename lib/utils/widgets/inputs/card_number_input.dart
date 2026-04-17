@@ -84,7 +84,6 @@ class _CardInputState extends State<CardNumberInput> {
           });
           widget.onChanged?.call(value);
         },
-        maxLines: 1,
         onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );

@@ -1,0 +1,77 @@
+{
+  "@@locale": "ru",
+  "appTitle": "Finance Flow",
+  "cardSaved": "Карта успешно сохранена",
+  "cardDeleted": "Карта удалена",
+  "cardAlreadyExists": "Такая карта уже существует",
+  "deleteAccount": "Удалить аккаунт?",
+  "confirmDelete": "Вы уверены, что хотите удалить {name}?",
+  "myProfile": "Мой профиль",
+  "editAccount": "Редактировать аккаунт",
+  "createAccount": "Создать аккаунт",
+  "language": "Язык",
+  "paymentMethod": "Способ оплаты",
+  "accountSecurity": "Безопасность аккаунта",
+  "notifications": "Уведомления",
+  "clearCache": "Очистить кэш",
+  "settings": "Настройки",
+  "helpCentre": "Центр помощи",
+  "privacyPolicy": "Конфиденциальность",
+  "aboutApp": "О приложении",
+  "makeThisAccountPrimary": "Сделать этот аккаунт основным",
+  "create": "Создать",
+  "save": "Сохранить",
+  "firstName": "Имя",
+  "lastName": "Фамилия",
+  "monthlyExpenses": "Траты за месяц",
+  "recentExpenses": "Последние траты",
+  "spendThisMonth": "Потрачено в этом месяце",
+  "nothingToShow": "Нечего показать(",
+  "chooseDate": "Выберите дату",
+  "categories": "Категории",
+  "expenses": "Траты",
+  "incomes": "Доходы",
+  "today": "Сегодня",
+  "yesterday": "Вчера",
+  "noDataInThisMonth": "Нет данных в этом месяце",
+  "byn": "руб.",
+  "welcomeBack": "Привет 👋",
+  "expenseAnalytics": "Анализ трат",
+  "todayExpenses": "Сегодняшние траты",
+  "viewAll": "Посмотреть всё",
+  "walletBalance": "Баланс кошелька",
+  "wallet": "Кошелек",
+  "spent": "Потрачено",
+  "budget": "Бюджет",
+  "income": "Доход",
+  "allSpends": "Все траты",
+  "addItem": "Добавить {name}",
+  "@addItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actions": "Опции",
+  "addTransaction": "Добавить транзакцию",
+  "noCardsAddedYet": "Карты ещё не добавлены",
+  "addCard": "Добавить карту",
+  "needToCreateAccount": "Нужно создать аккаунт",
+  "cancel": "Отмена",
+  "exit": "Выйти",
+  "confirm": "Подтвердить",
+  "fieldCanNotBeEmpty": "Поле не может быть пустым",
+  "invalidLength": "Некорректная длина",
+  "invalidFormat": "Некорректный формат",
+  "invalidCardNumber": "Некорректный номер карты",
+  "weeklyExpense": "Недельные траты",
+  "fromDate": "С {date}",
+  "@fromDate": {
+    "placeholder": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
+}

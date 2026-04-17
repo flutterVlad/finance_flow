@@ -34,12 +34,11 @@ class GlassContainer extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: borderRadius,
           color: color.withValues(alpha: 0.3),
-          border: Border.all(color: color.withValues(alpha: 0.1), width: 1),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
-              spreadRadius: 0,
               offset: const Offset(0, 4),
             ),
           ],
@@ -84,15 +83,11 @@ class AnimatedGlassContainer extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: currentColor.withValues(alpha: 0.3),
-        border: Border.all(
-          color: currentColor.withValues(alpha: 0.1),
-          width: 1,
-        ),
+        border: Border.all(color: currentColor.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.white.withValues(alpha: 0.3),
             blurRadius: 10,
-            spreadRadius: 0,
             offset: const Offset(0, 4),
           ),
         ],

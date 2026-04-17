@@ -7,7 +7,7 @@ class VerticalPicker<T> extends StatelessWidget {
     required this.onSelected,
     required this.items,
     required this.builder,
-  }) : assert(items.length != 0, "items not be empty");
+  }) : assert(items.length != 0, 'items not be empty');
 
   final T? initialItem;
   final void Function(T) onSelected;

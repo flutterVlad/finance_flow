@@ -1,7 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '/l10n/app_localizations.dart';
+
 part 'card_form.freezed.dart';
+
+enum CardError { empty, invalidCardNumber, invalidFormat, invalidLength }
 
 @freezed
 abstract class CardForm with _$CardForm, FormzMixin {
@@ -24,21 +29,21 @@ abstract class CardForm with _$CardForm, FormzMixin {
       cvv.value.isEmpty;
 }
 
-class CardNumber extends FormzInput<String, String?> {
+class CardNumber extends FormzInput<String, CardError?> with FormzLocalization {
   const CardNumber.pure([String? value]) : super.pure(value ?? '');
 
   const CardNumber.dirty(super.value) : super.dirty();
 
   @override
-  String? validator(String value) {
-    if (value.isEmpty) return 'Field can not be empty';
-    if (!_validateCard(value)) return 'Invalid card number';
+  CardError? validator(String value) {
+    if (value.isEmpty) return .empty;
+    if (!_validateCard(value)) return .invalidCardNumber;
 
     return null;
   }
 
   bool _validateCard(String value) {
-    String number = value.replaceAll(RegExp(r'\D'), '');
+    final String number = value.replaceAll(RegExp(r'\D'), '');
     if (number.length < 16) return true;
 
     int sum = 0;
@@ -57,47 +62,62 @@ class CardNumber extends FormzInput<String, String?> {
   }
 }
 
-class OwnerName extends FormzInput<String, String?> {
+class OwnerName extends FormzInput<String, CardError?> with FormzLocalization {
   const OwnerName.pure([String? value]) : super.pure(value ?? '');
 
   const OwnerName.dirty(super.value) : super.dirty();
 
   @override
-  String? validator(String value) {
-    if (value.isEmpty) return 'Field can not be empty';
+  CardError? validator(String value) {
+    if (value.isEmpty) return .empty;
 
     return null;
   }
 }
 
-class CardDuration extends FormzInput<String, String?> {
+class CardDuration extends FormzInput<String, CardError?>
+    with FormzLocalization {
   const CardDuration.pure([String? value]) : super.pure(value ?? '');
 
   const CardDuration.dirty(super.value) : super.dirty();
 
   @override
-  String? validator(String value) {
-    if (value.isEmpty) return 'Field can not be empty';
+  CardError? validator(String value) {
+    if (value.isEmpty) return .empty;
     if (!RegExp(
       r'(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[0-1])',
     ).hasMatch(value)) {
-      return 'Invalid format';
+      return .invalidFormat;
     }
 
     return null;
   }
 }
 
-class CardCVV extends FormzInput<String, String?> {
+class CardCVV extends FormzInput<String, CardError?> with FormzLocalization {
   const CardCVV.pure([String? value]) : super.pure(value ?? '');
 
   const CardCVV.dirty(super.value) : super.dirty();
 
   @override
-  String? validator(String value) {
-    if (value.isEmpty) return 'Field can not be empty';
-    if (value.length < 3) return 'Invalid length (minimum 3)';
+  CardError? validator(String value) {
+    if (value.isEmpty) return .empty;
+    if (value.length < 3) return .invalidLength;
 
     return null;
+  }
+}
+
+mixin FormzLocalization on FormzInput<String, CardError?> {
+  String? localizeError(BuildContext context) {
+    final s = S.of(context);
+
+    return switch (displayError) {
+      .empty => s.fieldCanNotBeEmpty,
+      .invalidLength => s.invalidLength,
+      .invalidFormat => s.invalidFormat,
+      .invalidCardNumber => s.invalidCardNumber,
+      _ => null,
+    };
   }
 }

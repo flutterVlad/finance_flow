@@ -41,11 +41,14 @@ extension DateTimeMonth on DateTime {
   }
 
   DateTime get startOfWeek {
-    final today = DateTime.now();
-    return today.subtract(Duration(days: today.weekday - 1));
+    return subtract(Duration(days: weekday - 1));
   }
 
   DateTime get endOfWeek => startOfWeek.add(const Duration(days: 6));
+
+  bool inWeekend(DateTime date) {
+    return isAfter(date.startOfWeek) && isBefore(date.endOfWeek);
+  }
 
   bool isSelectedMonth(DateTime date) =>
       date.month == month && date.year == year;
@@ -108,6 +111,6 @@ extension DoubleRounding on double {
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 }

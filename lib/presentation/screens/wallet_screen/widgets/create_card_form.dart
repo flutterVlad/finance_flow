@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 import '/utils/theme.dart';
+import '/utils/widgets/app_dialog.dart';
 import '/utils/widgets/inputs/card_cvv_input.dart';
 import '/utils/widgets/inputs/card_duration_input.dart';
 import '/utils/widgets/inputs/card_number_input.dart';
@@ -45,28 +47,11 @@ class _CreateCardFormState extends State<CreateCardForm> {
         onPopInvokedWithResult: (didPop, _) async {
           if (didPop) return;
 
-          final shouldPop = await showAdaptiveDialog<bool>(
+          final shouldPop = await AppDialog.confirmDelete(
             context: context,
-            builder: (dialogContext) => AlertDialog.adaptive(
-              title: const Text("Выйти?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop(false);
-                  },
-                  child: const Text(
-                    "Отмена",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop(true);
-                  },
-                  child: const Text("Подтвердить"),
-                ),
-              ],
-            ),
+            title: '${S.of(context).exit}?',
+            confirmText: S.of(context).confirm,
+            barrierDismissible: false,
           );
 
           if (shouldPop == true && context.mounted) {
@@ -121,7 +106,7 @@ class _CreateCardFormState extends State<CreateCardForm> {
                     GetIt.I<SettingsBloc>().add(SaveCardEvent(form));
                     Navigator.of(context).pop();
                   },
-                  text: 'Submit',
+                  text: S.of(context).save,
                 ),
               ],
             ),
@@ -144,7 +129,7 @@ class CardNumber extends StatelessWidget {
       builder: (context, form, _) {
         return CardNumberInput(
           text: form.cardNumber.value,
-          errorText: form.cardNumber.displayError,
+          errorText: form.cardNumber.localizeError(context),
           onChanged: (value) {
             formNotifier.value = form.copyWith(cardNumber: .dirty(value));
           },
@@ -166,7 +151,7 @@ class CardOwner extends StatelessWidget {
       builder: (context, form, _) {
         return CardOwnerInput(
           text: form.ownerName.value,
-          errorText: form.ownerName.displayError,
+          errorText: form.ownerName.localizeError(context),
           onChanged: (value) {
             formNotifier.value = form.copyWith(ownerName: .dirty(value));
           },
@@ -188,7 +173,7 @@ class CardDuration extends StatelessWidget {
       builder: (context, form, _) {
         return CardDurationInput(
           text: form.duration.value,
-          errorText: form.duration.displayError,
+          errorText: form.duration.localizeError(context),
           onChanged: (value) {
             formNotifier.value = form.copyWith(duration: .dirty(value));
           },
@@ -210,7 +195,7 @@ class CardCVV extends StatelessWidget {
       builder: (context, form, _) {
         return CardCVVInput(
           text: form.cvv.value,
-          errorText: form.cvv.displayError,
+          errorText: form.cvv.localizeError(context),
           onChanged: (value) {
             formNotifier.value = form.copyWith(cvv: .dirty(value));
           },

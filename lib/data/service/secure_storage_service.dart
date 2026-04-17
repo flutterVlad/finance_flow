@@ -1,17 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const encryptKeyName = "encrypt_key";
+const encryptKeyName = 'encrypt_key';
 
 class SecureStorageService {
   const SecureStorageService();
 
   final _storage = const FlutterSecureStorage(
     aOptions: AndroidOptions.biometric(enforceBiometrics: true),
-    iOptions: IOSOptions.defaultOptions,
-    wOptions: WindowsOptions.defaultOptions,
-    webOptions: WebOptions.defaultOptions,
-    lOptions: LinuxOptions.defaultOptions,
-    mOptions: MacOsOptions.defaultOptions,
   );
 
   Future<void> writeData(String key, String value) async {

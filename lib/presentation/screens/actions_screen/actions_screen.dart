@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '/l10n/app_localizations.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 
@@ -9,27 +10,22 @@ class ActionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return CustomScrollView(
       slivers: [
-        const SliverAppBar(
+        SliverAppBar(
           backgroundColor: Colors.transparent,
           centerTitle: true,
-          title: Text('Actions', style: TextStyle(fontWeight: .bold)),
+          title: Text(s.actions, style: const TextStyle(fontWeight: .bold)),
         ),
         SliverToBoxAdapter(
           child: ActionCard(
-            title: 'Add transaction',
+            title: s.addTransaction,
             icon: Svgs.addRounded,
             onPressed: () {
               context.pushNamed('add_transaction');
             },
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: ActionCard(
-            title: 'Add category',
-            icon: Svgs.category,
-            onPressed: () {},
           ),
         ),
       ],
@@ -38,16 +34,16 @@ class ActionsScreen extends StatelessWidget {
 }
 
 class ActionCard extends StatelessWidget {
-  final void Function()? onPressed;
-  final String title;
-  final SvgData icon;
-
   const ActionCard({
     super.key,
     this.onPressed,
     required this.title,
     this.icon = Svgs.home,
   });
+
+  final void Function()? onPressed;
+  final String title;
+  final SvgData icon;
 
   @override
   Widget build(BuildContext context) {

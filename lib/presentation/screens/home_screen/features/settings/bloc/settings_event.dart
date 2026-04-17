@@ -6,7 +6,7 @@ abstract class SettingsEvent with _$SettingsEvent {
 
   const factory SettingsEvent.clearCache() = ClearCacheEvent;
 
-  const factory SettingsEvent.changeLanguage() = ChangeLanguageEvent;
+  const factory SettingsEvent.changeLocale(String lang) = ChangeLocaleEvent;
 
   const factory SettingsEvent.savePersonInfo({required AccountForm form}) =
       SavePersonInfoEvent;

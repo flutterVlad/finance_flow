@@ -1,14 +1,5 @@
 part of 'settings_bloc.dart';
 
-enum Language {
-  ru('ru_RU'),
-  us('us_US');
-
-  final String value;
-
-  const Language(this.value);
-}
-
 @freezed
 abstract class SettingsState with _$SettingsState {
   const SettingsState._();
@@ -16,9 +7,9 @@ abstract class SettingsState with _$SettingsState {
   const factory SettingsState({
     Account? selectedAccount,
     @Default([]) List<Account> allAccounts,
-    @Default(Language.us) Language language,
     Response? response,
     @Default([]) List<BankCard> cards,
+    @Default(Locale('en')) Locale locale,
   }) = _SettingsState;
 
   bool get isAccountEmpty => selectedAccount == null;

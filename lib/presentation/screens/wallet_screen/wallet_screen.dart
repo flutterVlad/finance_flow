@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/widgets/card_swipper.dart';
 import '/presentation/screens/wallet_screen/widgets/weekly_expense.dart';
@@ -20,15 +21,18 @@ class WalletScreen extends StatelessWidget {
           );
         }
       },
-      child: const CustomScrollView(
+      child: CustomScrollView(
         slivers: [
           SliverAppBar(
             backgroundColor: Colors.transparent,
             centerTitle: true,
-            title: Text('Wallet', style: TextStyle(fontWeight: .bold)),
+            title: Text(
+              S.of(context).wallet,
+              style: const TextStyle(fontWeight: .bold),
+            ),
           ),
-          SliverToBoxAdapter(child: CardSwiper()),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(child: CardSwiper()),
+          const SliverToBoxAdapter(
             child: SafeArea(top: false, child: WeeklyExpense()),
           ),
         ],

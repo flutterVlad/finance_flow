@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '/data/hive_boxes.dart';
@@ -14,13 +15,13 @@ import '/domain/repositories/settings_repository.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 
 final class SettingsRepositoryImpl implements SettingsRepository {
-  final HiveService hiveService;
-  final ImagePickerService imagePickerService;
-
   const SettingsRepositoryImpl({
     required this.hiveService,
     required this.imagePickerService,
   });
+
+  final HiveService hiveService;
+  final ImagePickerService imagePickerService;
 
   @override
   Future<(Response, Account?)> savePersonInfo(AccountForm form) async {
@@ -36,7 +37,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
 
     if (response.success) {
       return (
-        response.changeSuccessMessage("Account data updated"),
+        response.changeSuccessMessage('Account data updated'),
         form.toDomain(),
       );
     }
@@ -68,7 +69,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
     );
 
     if (response.success) {
-      return (response.changeSuccessMessage("Account created"), account);
+      return (response.changeSuccessMessage('Account created'), account);
     }
 
     return (response, null);
@@ -81,7 +82,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
       boxKey: HiveBoxes.accounts(),
     );
 
-    return response.changeSuccessMessage("Account deleted");
+    return response.changeSuccessMessage('Account deleted');
   }
 
   @override
@@ -90,11 +91,25 @@ final class SettingsRepositoryImpl implements SettingsRepository {
       boxKey: HiveBoxes.accounts(),
     );
 
-    return response.changeSuccessMessage("All accounts deleted");
+    return response.changeSuccessMessage('All accounts deleted');
   }
 
   @override
   Future<Uint8List?> pickImage() async {
     return await imagePickerService.pickImage();
+  }
+
+  @override
+  Future<void> saveLocale(String locale) async {
+    await hiveService.putData<String>('locale', locale, boxKey: 'Locale');
+  }
+
+  @override
+  Future<Locale> getLocale() async {
+    final saved = await hiveService.getData<String>('locale', boxKey: 'Locale');
+    if (saved != null) return Locale(saved);
+
+    final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    return systemLocale;
   }
 }

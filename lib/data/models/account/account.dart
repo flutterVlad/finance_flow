@@ -23,11 +23,11 @@ abstract class Account with _$Account {
     @Default(true) bool isPrimary,
   }) = _Account;
 
-  bool get isEmpty =>
-      login == null && email == null && firstName == null && lastName == null;
-
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);
+
+  bool get isEmpty =>
+      login == null && email == null && firstName == null && lastName == null;
 }
 
 class Uint8ListConverter implements JsonConverter<Uint8List?, String?> {

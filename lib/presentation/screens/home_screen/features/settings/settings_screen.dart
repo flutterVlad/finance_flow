@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/home_screen/widgets/avatar_view.dart';
+import '/utils/theme.dart';
 import '/utils/widgets/toast_service.dart';
 import 'widgets/settings_column.dart';
 
@@ -12,6 +14,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final account = context.select(
       (SettingsBloc settings) => settings.state.selectedAccount,
     );
@@ -19,15 +22,15 @@ class SettingsScreen extends StatelessWidget {
     final firstSettings = [
       SettingElement(
         icon: Icons.person,
-        title: 'Personal Information',
+        title: account != null ? s.editAccount : s.createAccount,
         onTap: () {
           context.pushNamed('editAccount', extra: account);
         },
       ),
-      SettingElement(icon: Icons.language, title: 'Language', onTap: () {}),
+      SettingElement(icon: Icons.language, title: s.language, onTap: () {}),
       SettingElement(
         icon: Icons.credit_card_rounded,
-        title: 'Payment method',
+        title: s.paymentMethod,
         onTap: () {},
       ),
     ];
@@ -35,38 +38,34 @@ class SettingsScreen extends StatelessWidget {
     final secondSettings = [
       SettingElement(
         icon: Icons.security,
-        title: 'Account Security',
+        title: s.accountSecurity,
         onTap: () {},
       ),
       SettingElement(
         icon: Icons.notifications_none,
-        title: 'Notifications',
+        title: s.notifications,
         onTap: () {},
       ),
       SettingElement(
         icon: Icons.delete_outline,
-        title: 'Clear Cache',
+        title: s.clearCache,
         onTap: () {},
       ),
-      SettingElement(icon: Icons.settings, title: 'Settings', onTap: () {}),
+      SettingElement(icon: Icons.settings, title: s.settings, onTap: () {}),
     ];
 
     final thirdSettings = [
       SettingElement(
         icon: Icons.help_outline,
-        title: 'Help Centre',
+        title: s.helpCentre,
         onTap: () {},
       ),
       SettingElement(
         icon: Icons.policy_outlined,
-        title: 'Privacy & Policy',
+        title: s.privacyPolicy,
         onTap: () {},
       ),
-      SettingElement(
-        icon: Icons.info_outline,
-        title: 'Abount App',
-        onTap: () {},
-      ),
+      SettingElement(icon: Icons.info_outline, title: s.aboutApp, onTap: () {}),
     ];
 
     return BlocListener<SettingsBloc, SettingsState>(
@@ -82,10 +81,11 @@ class SettingsScreen extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: const Text(
-                'My Profile',
-                style: TextStyle(fontWeight: .bold),
+              title: Text(
+                s.myProfile,
+                style: const TextStyle(fontWeight: .bold),
               ),
+              backgroundColor: AppColors.secondary,
               pinned: true,
               actions: [
                 IconButton(

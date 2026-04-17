@@ -1,11 +1,13 @@
 import 'dart:math';
 
-import 'package:finance_flow/utils/theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
+import '/l10n/app_localizations.dart';
+import '/utils/theme.dart';
 import '../bloc/home_bloc.dart';
 
 class ExpenseAnalytics extends StatelessWidget {
@@ -21,9 +23,9 @@ class ExpenseAnalytics extends StatelessWidget {
             spacing: 16,
             crossAxisAlignment: .start,
             children: [
-              const Text(
-                'Expense Analytics',
-                style: TextStyle(fontWeight: .bold),
+              Text(
+                S.of(context).expenseAnalytics,
+                style: const TextStyle(fontWeight: .bold, fontSize: 16),
               ),
               Chart(
                 barColor: Theme.of(context).colorScheme.primary,
@@ -40,12 +42,6 @@ class ExpenseAnalytics extends StatelessWidget {
 }
 
 class Chart extends StatefulWidget {
-  final Color barColor;
-  final Color touchedBarColor;
-  final Color barBackgroundColor;
-  final List<DayExpense> values;
-  final double maxWeekSpends;
-
   const Chart({
     super.key,
     this.barColor = Colors.blue,
@@ -54,6 +50,11 @@ class Chart extends StatefulWidget {
     this.values = const [],
     this.maxWeekSpends = 0,
   });
+  final Color barColor;
+  final Color touchedBarColor;
+  final Color barBackgroundColor;
+  final List<DayExpense> values;
+  final double maxWeekSpends;
 
   @override
   State<Chart> createState() => _ChartState();
@@ -133,62 +134,62 @@ class _ChartState extends State<Chart> {
     });
   }
 
-  BarChartData get barChartData => BarChartData(
-    barTouchData: BarTouchData(
-      enabled: true,
-      touchTooltipData: BarTouchTooltipData(
-        tooltipBorderRadius: .circular(16),
-        getTooltipColor: (_) => Colors.white,
-        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          return BarTooltipItem(
-            '${widget.values[groupIndex].formattedAllSpends} Br',
-            const TextStyle(),
-          );
+  BarChartData get barChartData {
+    final s = S.of(context);
+
+    return BarChartData(
+      barTouchData: BarTouchData(
+        enabled: true,
+        touchTooltipData: BarTouchTooltipData(
+          tooltipBorderRadius: .circular(16),
+          getTooltipColor: (_) => Colors.white,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            final text =
+                '${widget.values[groupIndex].formattedAllSpends} ${s.byn}';
+
+            return BarTooltipItem(text, const TextStyle(fontSize: 16));
+          },
+        ),
+        touchCallback: (event, barTouchResponse) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                barTouchResponse == null ||
+                barTouchResponse.spot == null) {
+              touchedIndex = -1;
+              return;
+            }
+            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+          });
         },
       ),
-      touchCallback: (event, barTouchResponse) {
-        setState(() {
-          if (!event.isInterestedForInteractions ||
-              barTouchResponse == null ||
-              barTouchResponse.spot == null) {
-            touchedIndex = -1;
-            return;
-          }
-          touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
-        });
-      },
-    ),
-    titlesData: FlTitlesData(
-      show: true,
-      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      bottomTitles: AxisTitles(
-        sideTitles: SideTitles(
-          showTitles: true,
-          getTitlesWidget: getTitles,
-          reservedSize: 40,
+      titlesData: FlTitlesData(
+        rightTitles: const AxisTitles(),
+        leftTitles: const AxisTitles(),
+        topTitles: const AxisTitles(),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, _) => getTitles(value, s.localeName),
+            reservedSize: 40,
+          ),
         ),
       ),
-    ),
-    borderData: FlBorderData(show: false),
-    barGroups: barGroups,
-    gridData: const FlGridData(show: false),
-    alignment: .spaceAround,
-  );
+      borderData: FlBorderData(show: false),
+      barGroups: barGroups,
+      gridData: const FlGridData(show: false),
+      alignment: .spaceAround,
+    );
+  }
 
-  Widget getTitles(double value, TitleMeta meta) {
+  Widget getTitles(double value, String locale) {
     const style = TextStyle(color: Colors.grey, fontSize: 14);
-    String text = switch (value.toInt()) {
-      0 => 'Mon',
-      1 => 'Tue',
-      2 => 'Wed',
-      3 => 'Thu',
-      4 => 'Fri',
-      5 => 'Sat',
-      6 => 'Sun',
-      _ => '',
-    };
+
+    final now = DateTime.now();
+    final monday = now.subtract(Duration(days: now.weekday - 1));
+    final day = monday.add(Duration(days: value.toInt()));
+
+    final text = DateFormat.E(locale).format(day);
+
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Text(text, style: style, textAlign: TextAlign.center),

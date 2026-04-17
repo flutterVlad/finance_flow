@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '/data/mappers/account_mapper.dart';
 import '/data/models/account/account.dart';
 import '/data/service/image_picker.dart';
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/home_screen/widgets/avatar_view.dart';
 import '/utils/widgets/inputs/text_input.dart';
@@ -48,6 +49,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   @override
   Widget build(BuildContext context) {
     final settingsBloc = context.read<SettingsBloc>();
+    final s = S.of(context);
 
     return Nested(
       children: [
@@ -65,8 +67,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
             SliverAppBar(
               title: Text(
                 widget.mode == FormMode.create
-                    ? 'Create account'
-                    : 'Edit account',
+                    ? s.createAccount
+                    : s.editAccount,
                 style: const TextStyle(fontWeight: .bold),
               ),
               centerTitle: true,
@@ -121,9 +123,9 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       return Row(
                         mainAxisAlignment: .spaceBetween,
                         children: [
-                          const Text(
-                            'Make this account primary',
-                            style: TextStyle(fontWeight: .w600),
+                          Text(
+                            s.makeThisAccountPrimary,
+                            style: const TextStyle(fontWeight: .w600),
                           ),
                           Switch.adaptive(
                             value: form.isPrimary,
@@ -150,7 +152,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       form.isValid && !form.equals(widget.account?.toForm()),
                   onTap: () =>
                       settingsBloc.add(SavePersonInfoEvent(form: form)),
-                  text: widget.mode == FormMode.create ? 'Create' : 'Save',
+                  text: widget.mode == FormMode.create ? s.create : s.save,
                 );
               },
             ),
@@ -232,7 +234,10 @@ class _FirstNameSection extends StatelessWidget {
         crossAxisAlignment: .start,
         spacing: 8,
         children: [
-          const Text('First Name', style: TextStyle(fontWeight: .w600)),
+          Text(
+            S.of(context).firstName,
+            style: const TextStyle(fontWeight: .w600),
+          ),
           TextInput(
             text: form.firstName.value,
             onChanged: (value) =>
@@ -259,7 +264,10 @@ class _LastNameSection extends StatelessWidget {
         crossAxisAlignment: .start,
         spacing: 8,
         children: [
-          const Text('Last Name', style: TextStyle(fontWeight: .w600)),
+          Text(
+            S.of(context).lastName,
+            style: const TextStyle(fontWeight: .w600),
+          ),
           TextInput(
             text: form.lastName.value,
             onChanged: (value) =>

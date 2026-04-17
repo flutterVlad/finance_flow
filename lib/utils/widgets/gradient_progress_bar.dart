@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GradientProgressBar extends StatefulWidget {
-  final double percent;
   const GradientProgressBar({super.key, this.percent = 0.0});
+
+  final double percent;
 
   @override
   State<GradientProgressBar> createState() => _GradientProgressBarState();
@@ -78,11 +79,10 @@ class _GradientProgressBarState extends State<GradientProgressBar>
 }
 
 class ColorTweenSequence extends Tween<Color?> {
-  final List<Color> colors;
-  final List<double> stops;
-
   ColorTweenSequence({required this.colors, required this.stops})
     : assert(colors.length == stops.length);
+  final List<Color> colors;
+  final List<double> stops;
 
   @override
   Color? lerp(double t) {

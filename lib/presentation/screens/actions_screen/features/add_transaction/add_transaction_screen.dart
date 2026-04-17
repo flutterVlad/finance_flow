@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
 import '/data/models/expense/expense.dart';
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
@@ -65,13 +66,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     _categoryController = TextEditingController(
       text: widget.initialExpense?.category.name,
     );
+    _dateController = TextEditingController();
+    _timeController = TextEditingController();
 
-    _dateController = TextEditingController(
-      text: DateFormat('d MMMM y').format(date),
-    );
-    _timeController = TextEditingController(
-      text: DateFormat('HH:mm').format(date),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _dateController.text = DateFormat(
+        'd MMMM y',
+        S.of(context).localeName,
+      ).format(date);
+      _timeController.text = DateFormat(
+        'HH:mm',
+        S.of(context).localeName,
+      ).format(date);
+    });
   }
 
   @override
@@ -86,18 +93,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
         extendBody: true,
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
-          title: const Text(
-            'Add transaction',
-            style: TextStyle(fontWeight: .bold),
+          title: FittedBox(
+            child: Text(
+              s.addTransaction,
+              style: const TextStyle(fontWeight: .bold),
+            ),
           ),
           actionsPadding: const .only(right: 16),
-          actions: [const _CurrencyAction()],
+          actions: const [_CurrencyAction()],
         ),
         body: BlocBuilder<TransactionsCubit, TransactionsState>(
           builder: (context, state) {
@@ -144,7 +155,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         inputFormatters: [
                           TextInputFormatter.withFunction((_, newValue) {
                             return newValue.copyWith(
-                              text: newValue.text.replaceAll(',', "."),
+                              text: newValue.text.replaceAll(',', '.'),
                             );
                           }),
                           FilteringTextInputFormatter.allow(
@@ -211,7 +222,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           AppBottomSheet.showDatePicker(
                             context: context,
                             mode: .time,
-                            header: "Choose time",
+                            header: 'Choose time',
                             initialDateTime: state.datetimeInput.value,
                             onDateTimeChanged: (date) {
                               _timeController.text = DateFormat(
@@ -254,7 +265,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 return PrimaryButton(
                   text: widget.initialExpense == null
                       ? 'Create transaction'
-                      : "Edit transaction",
+                      : 'Edit transaction',
                   enabled:
                       state.isFormValid &&
                       state.isExpenseEdited(widget.initialExpense),
@@ -264,7 +275,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ToastService.showToast(
                         message:
                             'Expense "${state.validExpense.name}" created successfully',
-                        status: .success,
                       );
                     } else {
                       homeBloc.add(
@@ -277,7 +287,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ToastService.showToast(
                         message:
                             'Expense "${state.validExpense.name}" edited successfully',
-                        status: .success,
                       );
                     }
                     if (context.canPop()) context.pop();

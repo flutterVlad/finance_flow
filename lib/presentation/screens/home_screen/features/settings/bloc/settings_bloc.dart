@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -19,10 +20,6 @@ part 'settings_event.dart';
 part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  final SettingsRepository settingsRepository;
-  final CardRepository cardRepository;
-  final DeleteAccountUseCase deleteAccountUseCase;
-
   SettingsBloc({
     required this.settingsRepository,
     required this.cardRepository,
@@ -32,7 +29,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       await event.map(
         init: (_) async => await _init(emit),
         clearCache: (_) async => await _clearCache(emit),
-        changeLanguage: (_) async => await _changeLang(emit),
+        changeLocale: (event) async => await _changeLocale(event, emit),
         savePersonInfo: (event) async => await _savePersonInfo(event, emit),
         deleteAccount: (event) async => await _deleteAccount(event, emit),
         deleteAllAccounts: (_) async => await _deleteAllAccounts(emit),
@@ -44,19 +41,33 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     add(const InitSettingsEvent());
   }
+  final SettingsRepository settingsRepository;
+  final CardRepository cardRepository;
+  final DeleteAccountUseCase deleteAccountUseCase;
 
   Future<void> _init(Emitter<SettingsState> emit) async {
     final accounts = await settingsRepository.fetchAllAccount();
+    final locale = await settingsRepository.getLocale();
+    final account = await settingsRepository.fetchAccount(accounts);
 
-    if (accounts.isNotEmpty) {
-      final account = await settingsRepository.fetchAccount(accounts);
-      emit(state.copyWith(selectedAccount: account, allAccounts: accounts));
-    }
+    emit(
+      state.copyWith(
+        selectedAccount: account,
+        allAccounts: accounts,
+        locale: locale,
+      ),
+    );
   }
 
   Future<void> _clearCache(Emitter<SettingsState> emit) async {}
 
-  Future<void> _changeLang(Emitter<SettingsState> emit) async {}
+  Future<void> _changeLocale(
+    ChangeLocaleEvent event,
+    Emitter<SettingsState> emit,
+  ) async {
+    final lang = await settingsRepository.saveLocale(event.lang);
+    emit(state.copyWith(locale: Locale(event.lang)));
+  }
 
   Future<void> _savePersonInfo(
     SavePersonInfoEvent event,

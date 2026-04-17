@@ -8,9 +8,9 @@ part 'currency.g.dart';
 @freezed
 abstract class CurrencyModel with _$CurrencyModel {
   const factory CurrencyModel({
-    @JsonKey(name: "Cur_ID") required int id,
-    @JsonKey(name: "Cur_Name") required String name,
-    @JsonKey(name: "Cur_Abbreviation") required String shortName,
+    @JsonKey(name: 'Cur_ID') required int id,
+    @JsonKey(name: 'Cur_Name') required String name,
+    @JsonKey(name: 'Cur_Abbreviation') required String shortName,
   }) = _CurrencyModel;
 
   factory CurrencyModel.fromJson(Map<String, dynamic> json) =>
@@ -22,13 +22,15 @@ abstract class Rate with _$Rate {
   const Rate._();
 
   const factory Rate({
-    @JsonKey(name: "Cur_ID") required int id,
-    @JsonKey(name: "Date") required DateTime date,
-    @JsonKey(name: "Cur_Abbreviation") required String shortName,
-    @JsonKey(name: "Cur_Scale") required int scale,
-    @JsonKey(name: "Cur_Name") required String name,
-    @JsonKey(name: "Cur_OfficialRate") required double value,
+    @JsonKey(name: 'Cur_ID') required int id,
+    @JsonKey(name: 'Date') required DateTime date,
+    @JsonKey(name: 'Cur_Abbreviation') required String shortName,
+    @JsonKey(name: 'Cur_Scale') required int scale,
+    @JsonKey(name: 'Cur_Name') required String name,
+    @JsonKey(name: 'Cur_OfficialRate') required double value,
   }) = _Rate;
+
+  factory Rate.fromJson(Map<String, dynamic> json) => _$RateFromJson(json);
 
   static Rate get blrRate => Rate(
     id: 0,
@@ -38,15 +40,13 @@ abstract class Rate with _$Rate {
     name: 'Белорусский рубль',
     value: 1,
   );
-
-  factory Rate.fromJson(Map<String, dynamic> json) => _$RateFromJson(json);
 }
 
 enum Currency {
-  dollar("Доллар США", "USD", Svgs.dollar),
-  byn("Белорусский рубль", "BLR", Svgs.byn),
-  euro("Евро", "EUR", Svgs.euro),
-  lir("Турецкая лира", "TRY", Svgs.lir);
+  dollar('Доллар США', 'USD', Svgs.dollar),
+  byn('Белорусский рубль', 'BLR', Svgs.byn),
+  euro('Евро', 'EUR', Svgs.euro),
+  lir('Турецкая лира', 'TRY', Svgs.lir);
 
   const Currency(this.name, this.shortName, this.icon);
 

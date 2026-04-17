@@ -85,7 +85,7 @@ abstract class HomeState with _$HomeState {
 
     for (final expense in items) {
       if (tempExpenseMap.keys.contains(expense.category.name)) {
-        var temp = tempExpenseMap[expense.category.name]!;
+        final temp = tempExpenseMap[expense.category.name]!;
         tempExpenseMap[expense.category.name] = temp.copyWith(
           price: temp.price + expense.price,
         );
@@ -124,4 +124,29 @@ abstract class HomeState with _$HomeState {
 
   List<DayExpense> get filteredDayExpenses =>
       allDayExpenses.where((e) => e.date.isSelectedMonth(monthFilter)).toList();
+
+  List<GroupedExpense> getGroupedExpenseByDate(DateTime date) {
+    final expenses = allExpenses
+        .where((e) => e.datetime.inWeekend(date))
+        .toList();
+
+    return _unionByCat(expenses);
+  }
+
+  List<GroupedExpense> _unionByCat(List<Expense> items) {
+    final Map<String, List<Expense>> tempExpenseMap = {};
+
+    for (final expense in items) {
+      if (tempExpenseMap.keys.contains(expense.category.name)) {
+        tempExpenseMap[expense.category.name]?.add(expense);
+      } else {
+        tempExpenseMap[expense.category.name] = [expense];
+      }
+    }
+
+    final groups = tempExpenseMap.values.map(GroupedExpense.fromList).toList();
+    groups.sort((a, b) => b.amount.compareTo(a.amount));
+
+    return groups;
+  }
 }

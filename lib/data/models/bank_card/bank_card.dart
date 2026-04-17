@@ -22,7 +22,7 @@ abstract class BankCard with _$BankCard {
   factory BankCard.fromJson(Map<String, dynamic> json) =>
       _$BankCardFromJson(json);
 
-  String get id => "$number$owner$duration$cvv";
+  String get id => '$number$owner$duration$cvv';
 
   String get formatNumber =>
       formatStringWithReplace(value: number, length: 16, replace: (' ', 2));
@@ -44,7 +44,7 @@ abstract class BankCard with _$BankCard {
       digitsOnly = digitsOnly.substring(0, length);
     }
 
-    StringBuffer buffer = StringBuffer();
+    final StringBuffer buffer = StringBuffer();
     for (int i = 0; i < digitsOnly.length; i++) {
       if (i > 0 && i % replace.$2 == 0) buffer.write(replace.$1);
       buffer.write(digitsOnly[i]);
@@ -53,7 +53,7 @@ abstract class BankCard with _$BankCard {
   }
 
   static CardType detectCardType(String number) {
-    String cleanNumber = number.replaceAll(RegExp(r'\D'), '');
+    final String cleanNumber = number.replaceAll(RegExp(r'\D'), '');
 
     if (cleanNumber.startsWith('4')) return CardType.visa;
     if (cleanNumber.startsWith(RegExp(r'220[0-4]'))) return CardType.mir;

@@ -14,9 +14,6 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final ExpenseRepository _expenseRepository;
-  late final StreamSubscription _settingsSubscription;
-
   HomeBloc({
     required ExpenseRepository expenseRepository,
     required SettingsBloc settingsBloc,
@@ -43,6 +40,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       InitHomeEvent(accountId: settingsBloc.state.selectedAccount?.uid?.uuid),
     );
   }
+  final ExpenseRepository _expenseRepository;
+  late final StreamSubscription _settingsSubscription;
 
   @override
   Future<void> close() {

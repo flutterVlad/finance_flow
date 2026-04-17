@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/expense/expense.dart';
+import '/l10n/app_localizations.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
@@ -16,22 +17,23 @@ class TodayExpenses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) => Padding(
         padding: const .symmetric(horizontal: 16, vertical: 8),
         child: Column(
           spacing: 8,
-          crossAxisAlignment: .center,
           children: [
             Row(
               mainAxisAlignment: .spaceBetween,
               children: [
-                const Text(
-                  "Today's Expenses",
-                  style: TextStyle(fontWeight: .bold),
+                Text(
+                  s.todayExpenses,
+                  style: const TextStyle(fontWeight: .bold, fontSize: 16),
                 ),
                 AppTextButton(
-                  text: 'View all',
+                  text: s.viewAll,
                   onPressed: () async {
                     context.pushNamed('view_all_expenses');
                   },
@@ -53,9 +55,9 @@ class TodayExpenses extends StatelessWidget {
               ),
             if (state.todayExpenses.isEmpty) ...[
               const SizedBox(height: 20),
-              const Text(
-                'Nothing to show(',
-                style: TextStyle(fontSize: 18, fontWeight: .bold),
+              Text(
+                s.nothingToShow,
+                style: const TextStyle(fontSize: 18, fontWeight: .bold),
               ),
             ],
           ],
@@ -66,12 +68,6 @@ class TodayExpenses extends StatelessWidget {
 }
 
 class SingleExpense extends StatelessWidget {
-  final Expense expense;
-  final bool isDismissible;
-  final VoidCallback? onPressed;
-  final VoidCallback? onDelete;
-  final VoidCallback? onEdit;
-
   const SingleExpense({
     super.key,
     required this.expense,
@@ -80,11 +76,17 @@ class SingleExpense extends StatelessWidget {
     this.onDelete,
     this.onEdit,
   });
+  final Expense expense;
+  final bool isDismissible;
+  final VoidCallback? onPressed;
+  final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final borderRadius = BorderRadius.circular(16);
+    final s = S.of(context);
 
     final child = Material(
       color: colorScheme.onPrimary,
@@ -124,7 +126,7 @@ class SingleExpense extends StatelessWidget {
                         children: [
                           TextSpan(
                             text:
-                                ' - ${DateFormat.jm().format(expense.datetime)}',
+                                ' - ${DateFormat.jm(s.localeName).format(expense.datetime)}',
                             style: const TextStyle(fontWeight: .normal),
                           ),
                         ],
@@ -134,7 +136,7 @@ class SingleExpense extends StatelessWidget {
                 ),
               ),
               Text(
-                '${expense.isIncome ? '+' : '-'} ${expense.formattedPrice} Br',
+                '${expense.isIncome ? '+' : '-'} ${expense.formattedPrice} ${s.byn}',
                 style: TextStyle(
                   color: expense.isIncome
                       ? Colors.green
@@ -171,7 +173,7 @@ class SingleExpense extends StatelessWidget {
         if (direction == .endToStart) {
           return await AppDialog.confirmDelete(
             context: context,
-            title: 'Delete ${expense.name}?',
+            title: s.confirmDelete(expense.name),
           );
         } else if (direction == .startToEnd) {
           onEdit?.call();
@@ -207,12 +209,12 @@ class _Background extends StatelessWidget {
       bgColor = Colors.red.shade600;
       alignment = .centerRight;
       icon = Icons.delete_outline_rounded;
-      text = "Delete";
+      text = 'Delete';
     } else {
       bgColor = AppColors.primary;
       alignment = .centerLeft;
       icon = Icons.edit;
-      text = "Edit";
+      text = 'Edit';
     }
 
     return DecoratedBox(

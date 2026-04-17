@@ -63,7 +63,6 @@ class AvatarView extends StatelessWidget {
             children: [
               AnimatedGradiantBorder(
                 blurRadius: 15,
-                thickness: 3,
                 radius: imageSize / 2,
                 duration: const Duration(seconds: 5),
                 child: icon,

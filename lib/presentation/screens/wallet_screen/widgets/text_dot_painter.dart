@@ -4,13 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class TextDotPainter extends FlDotPainter {
-  final double radius;
-  final Color color;
-  final String text;
-  final TextStyle textStyle;
-  final double strokeWidth;
-  final Color strokeColor;
-
   const TextDotPainter({
     required this.radius,
     required this.color,
@@ -19,6 +12,12 @@ class TextDotPainter extends FlDotPainter {
     required this.strokeColor,
     this.textStyle = const TextStyle(color: Colors.white),
   });
+  final double radius;
+  final Color color;
+  final String text;
+  final TextStyle textStyle;
+  final double strokeWidth;
+  final Color strokeColor;
 
   @override
   void draw(Canvas canvas, FlSpot spot, Offset offsetInCanvas) {

@@ -51,7 +51,6 @@ abstract class AppBottomSheet {
     await show(
       context: context,
       useRootNavigator: true,
-      isScrollControlled: false,
       scaleFactor: 0.4,
       item: Column(
         mainAxisSize: .min,
@@ -166,10 +165,9 @@ abstract class AppBottomSheet {
 }
 
 class _KeyboardAwareBottomSheet extends StatelessWidget {
+  const _KeyboardAwareBottomSheet({required this.item, this.padding});
   final Widget item;
   final EdgeInsets? padding;
-
-  const _KeyboardAwareBottomSheet({required this.item, this.padding});
 
   @override
   Widget build(BuildContext context) {

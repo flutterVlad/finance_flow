@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '/l10n/app_localizations.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/presentation/screens/home_screen/widgets/avatar_view.dart';
 
 class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
+  const BlurAppBarDelegate({required this.minHeight, required this.maxHeight});
   final double minHeight;
   final double maxHeight;
-
-  const BlurAppBarDelegate({required this.minHeight, required this.maxHeight});
 
   @override
   Widget build(
@@ -52,7 +52,6 @@ class BlurAppBarDelegate extends SliverPersistentHeaderDelegate {
               bottom: 8,
             ),
             child: Row(
-              crossAxisAlignment: .center,
               children: [
                 // Аватар
                 Opacity(
@@ -136,7 +135,7 @@ class _AppBarTitle extends StatelessWidget {
         mainAxisAlignment: .center,
         children: [
           Text(
-            'Welcome back 👋',
+            S.of(context).welcomeBack,
             style: TextStyle(
               fontSize: fontSize * fontSizeFactor,
               color: textColor,

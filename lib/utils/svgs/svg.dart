@@ -9,11 +9,10 @@ part 'svg.g.dart';
 part 'svgs.dart';
 
 class Svg extends StatelessWidget {
+  const Svg(this.icon, {super.key, this.color, this.size});
   final SvgData icon;
   final Color? color;
   final double? size;
-
-  const Svg(this.icon, {super.key, this.color, this.size});
 
   @override
   Widget build(BuildContext context) {

@@ -47,7 +47,6 @@ class _CardCVVInputState extends State<CardCVVInput> {
         onChanged: (value) {
           widget.onChanged?.call(value.toUpperCase());
         },
-        maxLines: 1,
         onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );

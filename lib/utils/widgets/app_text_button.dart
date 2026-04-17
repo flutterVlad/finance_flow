@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppTextButton extends StatelessWidget {
-  final String text;
-  final Color? color;
-  final void Function()? onPressed;
-  final TextStyle? style;
-  final bool filled;
-
   const AppTextButton({
     super.key,
     required this.text,
@@ -15,6 +9,11 @@ class AppTextButton extends StatelessWidget {
     this.style,
     this.filled = false,
   });
+  final String text;
+  final Color? color;
+  final void Function()? onPressed;
+  final TextStyle? style;
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {

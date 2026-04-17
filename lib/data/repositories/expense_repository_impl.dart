@@ -4,9 +4,9 @@ import '/data/service/hive_service.dart';
 import '/domain/repositories/expense_repository.dart';
 
 class ExpenseRepositoryImpl implements ExpenseRepository {
-  final HiveService hiveService;
-
   const ExpenseRepositoryImpl({required this.hiveService});
+
+  final HiveService hiveService;
 
   @override
   Future<void> addExpense(Expense expense) async {

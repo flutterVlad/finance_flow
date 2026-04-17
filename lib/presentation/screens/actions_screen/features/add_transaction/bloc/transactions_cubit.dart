@@ -16,8 +16,6 @@ part 'transactions_cubit.freezed.dart';
 part 'transactions_state.dart';
 
 class TransactionsCubit extends Cubit<TransactionsState> {
-  final CurrencyRepository _currencyRepository;
-
   TransactionsCubit({required CurrencyRepository currencyRepository})
     : _currencyRepository = currencyRepository,
       super(
@@ -28,6 +26,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
           ),
         ),
       );
+  final CurrencyRepository _currencyRepository;
 
   FutureOr<void> getCurrencyRate() async {
     if (state.rates.isNotEmpty && state.rates.first.date.isToday) return;
@@ -39,7 +38,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
         (e) =>
             e.shortName == 'USD' ||
             e.shortName == 'EUR' ||
-            e.shortName == "TRY",
+            e.shortName == 'TRY',
       ),
     ];
 

@@ -8,14 +8,14 @@ import '/domain/repositories/card_repository.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
 class CardRepositoryImpl implements CardRepository {
-  final HiveService _hiveService;
-  final EncryptionKeyService _encryptionKeyService;
-
   const CardRepositoryImpl({
     required HiveService hiveService,
     required EncryptionKeyService encryptionKeyService,
   }) : _hiveService = hiveService,
        _encryptionKeyService = encryptionKeyService;
+
+  final HiveService _hiveService;
+  final EncryptionKeyService _encryptionKeyService;
 
   @override
   Future<Response> saveCard(CardForm form, String userId) async {
@@ -23,10 +23,7 @@ class CardRepositoryImpl implements CardRepository {
     final cards = await getCards(userId);
 
     if (cards.any((e) => e.id == bankCard.id)) {
-      return const Response(
-        message: "You already have the same card",
-        success: false,
-      );
+      return const Response(message: 'You already have the same card');
     }
     final response = await _hiveService.putData<BankCard>(
       bankCard.id,
@@ -35,7 +32,7 @@ class CardRepositoryImpl implements CardRepository {
       boxKey: HiveBoxes.cards(userId),
     );
 
-    return response.changeSuccessMessage("Card saved successfully");
+    return response.changeSuccessMessage('Card saved successfully');
   }
 
   @override
@@ -54,7 +51,7 @@ class CardRepositoryImpl implements CardRepository {
       boxKey: HiveBoxes.cards(userId),
     );
 
-    return response.changeSuccessMessage("Card deleted");
+    return response.changeSuccessMessage('Card deleted');
   }
 
   @override
@@ -64,6 +61,6 @@ class CardRepositoryImpl implements CardRepository {
       boxKey: HiveBoxes.cards(userId),
     );
 
-    return response.changeSuccessMessage("All cards deleted");
+    return response.changeSuccessMessage('All cards deleted');
   }
 }

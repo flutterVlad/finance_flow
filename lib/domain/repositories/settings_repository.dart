@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import '/data/models/account/account.dart';
 import '/data/models/response/response.dart';
@@ -19,4 +20,8 @@ abstract class SettingsRepository {
   Future<Response> deleteAllAccounts();
 
   Future<Uint8List?> pickImage();
+
+  Future<void> saveLocale(String locale);
+
+  Future<Locale> getLocale();
 }

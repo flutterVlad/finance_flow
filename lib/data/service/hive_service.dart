@@ -79,7 +79,7 @@ class HiveService {
       await box.delete(key);
       return const Response(message: 'Data delete from give', success: true);
     } on HiveError catch (e) {
-      return Response(message: e.message, success: false);
+      return Response(message: e.message);
     }
   }
 
@@ -96,7 +96,7 @@ class HiveService {
         success: true,
       );
     } on HiveError catch (e) {
-      return Response(message: e.message, success: false);
+      return Response(message: e.message);
     }
   }
 
@@ -112,7 +112,7 @@ class HiveService {
       await box.put(key, model);
       return const Response(message: 'Data updated in hive', success: true);
     } on HiveError catch (e) {
-      return Response(message: e.message, success: false);
+      return Response(message: e.message);
     }
   }
 

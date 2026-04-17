@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AnimatedGradiantBorder extends StatefulWidget {
+  const AnimatedGradiantBorder({
+    super.key,
+    this.radius = 30,
+    this.blurRadius = 30,
+    this.spreadRadius = 2,
+    this.topColor = Colors.red,
+    this.bottomColor = Colors.blue,
+    this.glowOpacity = 0.3,
+    this.duration = const Duration(milliseconds: 500),
+    this.thickness = 3,
+    this.child,
+  });
   final double radius;
 
   final double blurRadius;
@@ -18,19 +30,6 @@ class AnimatedGradiantBorder extends StatefulWidget {
   final double thickness;
 
   final Widget? child;
-
-  const AnimatedGradiantBorder({
-    super.key,
-    this.radius = 30,
-    this.blurRadius = 30,
-    this.spreadRadius = 2,
-    this.topColor = Colors.red,
-    this.bottomColor = Colors.blue,
-    this.glowOpacity = 0.3,
-    this.duration = const Duration(milliseconds: 500),
-    this.thickness = 3,
-    this.child,
-  });
 
   @override
   State<AnimatedGradiantBorder> createState() => _AnimatedGradiantBorderState();
@@ -57,22 +56,22 @@ class _AnimatedGradiantBorderState extends State<AnimatedGradiantBorder>
     const leftRightLength = 2.0;
     final perimeter = 2 * (topBottomLength + leftRightLength);
 
-    double pos = (t * perimeter) % perimeter;
+    final double pos = (t * perimeter) % perimeter;
 
     if (pos < topBottomLength) {
-      double x = pos - aspectRatio;
+      final double x = pos - aspectRatio;
       return Alignment(x / aspectRatio, -1.0);
     }
     if (pos < leftRightLength + topBottomLength) {
-      double y = -1.0 + (pos - topBottomLength);
+      final double y = -1.0 + (pos - topBottomLength);
       return Alignment(1.0, y);
     }
     if (pos < 2 * topBottomLength + leftRightLength) {
-      double x = aspectRatio - (pos - topBottomLength - leftRightLength);
+      final double x = aspectRatio - (pos - topBottomLength - leftRightLength);
       return Alignment(x / aspectRatio, 1.0);
     }
     if (pos < 2 * (leftRightLength + topBottomLength)) {
-      double y = 1.0 - (pos - 2 * topBottomLength - leftRightLength);
+      final double y = 1.0 - (pos - 2 * topBottomLength - leftRightLength);
       return Alignment(-1.0, y);
     }
 
@@ -129,7 +128,6 @@ class _AnimatedGradiantBorderState extends State<AnimatedGradiantBorder>
                           boxShadow: [
                             BoxShadow(
                               color: widget.topColor,
-                              offset: Offset.zero,
                               blurRadius: widget.blurRadius,
                               spreadRadius: widget.spreadRadius,
                             ),
@@ -148,7 +146,6 @@ class _AnimatedGradiantBorderState extends State<AnimatedGradiantBorder>
                             boxShadow: [
                               BoxShadow(
                                 color: widget.bottomColor,
-                                offset: Offset.zero,
                                 blurRadius: widget.blurRadius,
                                 spreadRadius: widget.spreadRadius,
                               ),
@@ -180,10 +177,9 @@ class _AnimatedGradiantBorderState extends State<AnimatedGradiantBorder>
 }
 
 class _CenterCutPath extends CustomClipper<Path> {
+  const _CenterCutPath({required this.radius, required this.thickness});
   final double radius;
   final double thickness;
-
-  const _CenterCutPath({required this.radius, required this.thickness});
 
   @override
   Path getClip(Size size) {
