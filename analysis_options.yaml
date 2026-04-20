@@ -5,6 +5,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
   errors:
+    experimental_member_use: ignore
     invalid_annotation_target: ignore
 
 linter:

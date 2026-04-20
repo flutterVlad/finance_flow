@@ -122,15 +122,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     children: [
                       Section(
                         controller: _nameController,
-                        title: 'Transaction name',
-                        hintText: 'Trip to Turkey',
+                        title: s.transactionName,
+                        hintText: s.tripToTurkey,
                         keyboardType: .text,
                         onSubmit: bloc.setName,
                         errorText: state.nameInput.displayError,
                       ),
                       Section(
                         controller: _amountController,
-                        title: 'Amount',
+                        title: s.amount,
                         hintText: '120',
                         suffixIcon: VerticalPicker<Currency>(
                           onSelected: bloc.setCurrency,
@@ -169,7 +169,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         onTap: () async {
                           await _chooseCategory(context);
                         },
-                        title: 'Category',
+                        title: s.category,
                         hintText: state.categoryInput.value.name,
                         errorText: state.categoryInput.displayError,
                         suffixIcon: const Icon(
@@ -183,7 +183,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                       ),
                       Section(
-                        title: 'Date',
+                        title: s.date,
                         controller: _dateController,
                         suffixIcon: const Icon(
                           Icons.keyboard_arrow_down,
@@ -198,6 +198,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             onDateTimeChanged: (date) {
                               _dateController.text = DateFormat(
                                 'd MMMM y',
+                                s.localeName,
                               ).format(date);
                               bloc.setDate(
                                 state.datetimeInput.value.copyWith(
@@ -211,7 +212,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         },
                       ),
                       Section(
-                        title: 'Time',
+                        title: s.time,
                         controller: _timeController,
                         suffixIcon: const Icon(
                           Icons.keyboard_arrow_down,
@@ -222,11 +223,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           AppBottomSheet.showDatePicker(
                             context: context,
                             mode: .time,
-                            header: 'Choose time',
+                            header: s.chooseTime,
                             initialDateTime: state.datetimeInput.value,
                             onDateTimeChanged: (date) {
                               _timeController.text = DateFormat(
                                 'HH:mm',
+                                s.localeName,
                               ).format(date);
                               bloc.setDate(
                                 state.datetimeInput.value.copyWith(
@@ -240,7 +242,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       SafeArea(
                         child: Section(
-                          title: 'Income',
+                          title: s.income,
                           enabled: !state.isIncomeCategorySelected,
                           boolValue: state.isIncome,
                           isBool: true,
@@ -264,8 +266,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               builder: (context, state) {
                 return PrimaryButton(
                   text: widget.initialExpense == null
-                      ? 'Create transaction'
-                      : 'Edit transaction',
+                      ? s.createTransaction
+                      : s.editTransaction,
                   enabled:
                       state.isFormValid &&
                       state.isExpenseEdited(widget.initialExpense),
@@ -273,8 +275,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     if (widget.initialExpense == null) {
                       homeBloc.add(AddExpenseEvent(state.validExpense));
                       ToastService.showToast(
-                        message:
-                            'Expense "${state.validExpense.name}" created successfully',
+                        message: s.expenseNameCreated(
+                          state.validExpense.name,
+                          state.isIncome ? 'income' : 'expense',
+                          state.isIncome ? s.income : s.expense,
+                        ),
                       );
                     } else {
                       homeBloc.add(
@@ -306,6 +311,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       isScrollControlled: true,
       scaleFactor: 0.75,
       item: AppBottomSheet.chooseCategoryItem(
+        context: context,
         categories: defaultCategories.sublist(
           0,
           defaultCategories.indexWhere((e) => e.isIncome),
@@ -342,11 +348,12 @@ class _CurrencyAction extends StatelessWidget {
           child: Padding(
             padding: const .symmetric(horizontal: 12, vertical: 4),
             child: SizedBox(
-              width: 50,
+              width: 70,
               height: 30,
               child: Center(
                 child: AnimatedText(
-                  text: "${currency?.value.toCleanString() ?? ''} Br",
+                  text:
+                      "${currency?.value.toCleanString() ?? ''} ${S.of(context).byn}",
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

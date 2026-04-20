@@ -45,12 +45,12 @@ abstract class HomeState with _$HomeState {
       .where((e) => e.datetime.isSelectedMonth(monthFilter))
       .fold(0, (a, b) => a + b.price);
 
-  List<Expense> get expenseOnSelectedMonth {
+  List<GroupedExpense> get expenseOnSelectedMonth {
     final expenses = allExpenses.where(
       (e) => e.datetime.isSelectedMonth(monthFilter),
     );
 
-    return _unionExpensesByCategory(expenses.toList());
+    return _unionByCat(expenses.toList());
   }
 
   List<DayExpense> get curWeekDayExpenses {
@@ -73,29 +73,6 @@ abstract class HomeState with _$HomeState {
     for (final dayExp in weekExp) {
       result[dayExp.date.weekday - 1] = dayExp;
     }
-
-    return result;
-  }
-
-  List<Expense> get comparedCurrentWeekExpenses =>
-      _unionExpensesByCategory(curWeekExpenses);
-
-  List<Expense> _unionExpensesByCategory(List<Expense> items) {
-    final Map<String, Expense> tempExpenseMap = {};
-
-    for (final expense in items) {
-      if (tempExpenseMap.keys.contains(expense.category.name)) {
-        final temp = tempExpenseMap[expense.category.name]!;
-        tempExpenseMap[expense.category.name] = temp.copyWith(
-          price: temp.price + expense.price,
-        );
-      } else {
-        tempExpenseMap[expense.category.name] = expense;
-      }
-    }
-
-    final result = tempExpenseMap.values.toList();
-    result.sort((a, b) => b.price.compareTo(a.price));
 
     return result;
   }

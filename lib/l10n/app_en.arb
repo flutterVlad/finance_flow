@@ -35,7 +35,10 @@
   "spendThisMonth": "Spend this month",
   "nothingToShow": "Nothing to show(",
   "chooseDate": "Choose date",
+  "chooseTime": "Choose time",
+  "category": "Category",
   "categories": "Categories",
+  "expense": "Expense",
   "expenses": "Expenses",
   "incomes": "Incomes",
   "today": "Today",
@@ -78,6 +81,27 @@
     "placeholder": {
       "date": {
         "type": "String"
+      }
+    }
+  },
+  "transactionName": "Transaction name",
+  "amount": "Amount",
+  "tripToTurkey": "Trip to Turkey",
+  "date": "Date",
+  "time": "Time",
+  "createTransaction": "Create transaction",
+  "editTransaction": "Edit transaction",
+  "expenseNameCreated": "{type} \"{expense}\" created successfully",
+  "@expenseNameCreated": {
+    "placeholder": {
+      "type": {
+        "type": "String"
+      },
+      "expense": {
+        "type": "String"
+      },
+      "gender": {
+        "type": "String?"
       }
     }
   }

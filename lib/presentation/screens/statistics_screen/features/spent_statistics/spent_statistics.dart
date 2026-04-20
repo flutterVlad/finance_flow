@@ -13,7 +13,6 @@ import '/utils/theme.dart';
 import '/utils/widgets/animated_text.dart';
 import '../widgets/date_filter.dart';
 
-// TODO: replace [Expense] on [GroupedExpense]
 class SpentStatistics extends StatelessWidget {
   const SpentStatistics({super.key});
 
@@ -63,7 +62,7 @@ class _DiagramState extends State<Diagram> {
         }
 
         final price = touchedIndex != -1
-            ? expenses[touchedIndex].formattedPrice
+            ? expenses[touchedIndex].formattedAmount
             : allSpends.toCleanString();
 
         final title = touchedIndex != -1
@@ -142,12 +141,12 @@ class _DiagramState extends State<Diagram> {
   }
 
   PieChartSectionData _makeSectionData({
-    required Expense expense,
+    required GroupedExpense expense,
     bool isTouched = false,
     double radius = 30,
   }) {
     return PieChartSectionData(
-      value: expense.price,
+      value: expense.amount,
       color: expense.category.color,
       showTitle: false,
       borderSide: BorderSide(
@@ -156,7 +155,7 @@ class _DiagramState extends State<Diagram> {
       ),
       radius: isTouched ? radius + 10 : radius,
       titleStyle: const TextStyle(color: AppColors.grey, fontSize: 12),
-      title: '${expense.formattedPrice}\n${expense.category.name}',
+      title: '${expense.formattedAmount}\n${expense.category.name}',
       titlePositionPercentageOffset: 1.8,
     );
   }

@@ -265,11 +265,29 @@ abstract class S {
   /// **'Choose date'**
   String get chooseDate;
 
+  /// No description provided for @chooseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose time'**
+  String get chooseTime;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
   /// No description provided for @categories.
   ///
   /// In en, this message translates to:
   /// **'Categories'**
   String get categories;
+
+  /// No description provided for @expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expense;
 
   /// No description provided for @expenses.
   ///
@@ -456,6 +474,54 @@ abstract class S {
   /// In en, this message translates to:
   /// **'From {date}'**
   String fromDate(Object date);
+
+  /// No description provided for @transactionName.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction name'**
+  String get transactionName;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @tripToTurkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip to Turkey'**
+  String get tripToTurkey;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// No description provided for @createTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create transaction'**
+  String get createTransaction;
+
+  /// No description provided for @editTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit transaction'**
+  String get editTransaction;
+
+  /// No description provided for @expenseNameCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} \"{expense}\" created successfully'**
+  String expenseNameCreated(Object expense, String gender, Object type);
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -64,4 +64,6 @@ abstract class GroupedExpense with _$GroupedExpense {
       expenses: expenses,
     );
   }
+
+  String get formattedAmount => amount.toCleanString();
 }

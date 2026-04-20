@@ -95,7 +95,16 @@ class SRu extends S {
   String get chooseDate => 'Выберите дату';
 
   @override
+  String get chooseTime => 'Выберите время';
+
+  @override
+  String get category => 'Категория';
+
+  @override
   String get categories => 'Категории';
+
+  @override
+  String get expense => 'Трата';
 
   @override
   String get expenses => 'Траты';
@@ -192,5 +201,36 @@ class SRu extends S {
   @override
   String fromDate(Object date) {
     return 'С $date';
+  }
+
+  @override
+  String get transactionName => 'Название';
+
+  @override
+  String get amount => 'Сумма';
+
+  @override
+  String get tripToTurkey => 'Путешествие в Турцию';
+
+  @override
+  String get date => 'Дата';
+
+  @override
+  String get time => 'Время';
+
+  @override
+  String get createTransaction => 'Создать транзакцию';
+
+  @override
+  String get editTransaction => 'Изменить транзакцию';
+
+  @override
+  String expenseNameCreated(Object expense, String gender, Object type) {
+    String _temp0 = intl.Intl.selectLogic(gender, {
+      'expense': 'создана',
+      'income': 'создан',
+      'other': 'создано',
+    });
+    return '$type \"$expense\" успешно $_temp0';
   }
 }

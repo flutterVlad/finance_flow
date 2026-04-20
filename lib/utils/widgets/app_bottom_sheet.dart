@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '/data/models/category/category.dart';
+import '/l10n/app_localizations.dart';
 import '../svgs/svg.dart';
 import '../theme.dart';
 
@@ -56,7 +57,7 @@ abstract class AppBottomSheet {
         mainAxisSize: .min,
         children: [
           Text(
-            header ?? 'Choose date',
+            header ?? S.of(context).chooseDate,
             style: const TextStyle(fontSize: 16, fontWeight: .bold),
           ),
           Expanded(
@@ -74,6 +75,7 @@ abstract class AppBottomSheet {
   }
 
   static Widget chooseCategoryItem({
+    required BuildContext context,
     List<Category> categories = const [],
     List<Category> incomeCategory = const [],
     void Function(Category category)? onTap,
@@ -83,31 +85,34 @@ abstract class AppBottomSheet {
       child: Column(
         spacing: 8,
         children: [
-          const Padding(
-            padding: .symmetric(horizontal: 16),
+          Padding(
+            padding: const .symmetric(horizontal: 16),
             child: Row(
               spacing: 16,
               children: [
-                Icon(Icons.list, color: AppColors.grey),
+                const Icon(Icons.list, color: AppColors.grey),
                 Text(
-                  'Categories',
-                  style: TextStyle(fontWeight: .bold, fontSize: 16),
+                  S.of(context).categories,
+                  style: const TextStyle(fontWeight: .bold, fontSize: 16),
                 ),
               ],
             ),
           ),
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: .circular(30),
-            ),
-            child: const TabBar(
-              indicatorPadding: .all(4),
-              tabs: [
-                Tab(text: 'Expenses', height: 40),
-                Tab(text: 'Incomes', height: 40),
-              ],
+          SizedBox(
+            width: 200,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: .circular(30),
+              ),
+              child: TabBar(
+                indicatorPadding: const .all(4),
+                tabAlignment: .fill,
+                tabs: [
+                  Tab(text: S.of(context).expenses, height: 40),
+                  Tab(text: S.of(context).incomes, height: 40),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -122,7 +127,7 @@ abstract class AppBottomSheet {
                             crossAxisSpacing: 16,
                           ),
                       itemCount: e.length,
-                      padding: const .symmetric(horizontal: 16),
+                      padding: const .fromLTRB(16, 16, 16, 32),
                       itemBuilder: (context, index) {
                         final category = e[index];
 

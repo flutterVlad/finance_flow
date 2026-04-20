@@ -95,7 +95,16 @@ class SEn extends S {
   String get chooseDate => 'Choose date';
 
   @override
+  String get chooseTime => 'Choose time';
+
+  @override
+  String get category => 'Category';
+
+  @override
   String get categories => 'Categories';
+
+  @override
+  String get expense => 'Expense';
 
   @override
   String get expenses => 'Expenses';
@@ -192,5 +201,31 @@ class SEn extends S {
   @override
   String fromDate(Object date) {
     return 'From $date';
+  }
+
+  @override
+  String get transactionName => 'Transaction name';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get tripToTurkey => 'Trip to Turkey';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get createTransaction => 'Create transaction';
+
+  @override
+  String get editTransaction => 'Edit transaction';
+
+  @override
+  String expenseNameCreated(Object expense, String gender, Object type) {
+    return '$type \"$expense\" created successfully';
   }
 }

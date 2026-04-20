@@ -65,7 +65,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     ChangeLocaleEvent event,
     Emitter<SettingsState> emit,
   ) async {
-    final lang = await settingsRepository.saveLocale(event.lang);
+    await settingsRepository.saveLocale(event.lang);
     emit(state.copyWith(locale: Locale(event.lang)));
   }
 

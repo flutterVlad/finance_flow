@@ -28,7 +28,10 @@
   "spendThisMonth": "Потрачено в этом месяце",
   "nothingToShow": "Нечего показать(",
   "chooseDate": "Выберите дату",
+  "chooseTime": "Выберите время",
+  "category": "Категория",
   "categories": "Категории",
+  "expense": "Трата",
   "expenses": "Траты",
   "incomes": "Доходы",
   "today": "Сегодня",
@@ -71,6 +74,27 @@
     "placeholder": {
       "date": {
         "type": "String"
+      }
+    }
+  },
+  "transactionName": "Название",
+  "amount": "Сумма",
+  "tripToTurkey": "Путешествие в Турцию",
+  "date": "Дата",
+  "time": "Время",
+  "createTransaction": "Создать транзакцию",
+  "editTransaction": "Изменить транзакцию",
+  "expenseNameCreated": "{type} \"{expense}\" успешно {gender, select, expense{создана} income{создан} other{создано}}",
+  "@expenseNameCreated": {
+    "placeholder": {
+      "type": {
+        "type": "String"
+      },
+      "expense": {
+        "type": "String"
+      },
+      "gender": {
+        "type": "String?"
       }
     }
   }
