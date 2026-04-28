@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/animated_gradiant_border.dart';
 

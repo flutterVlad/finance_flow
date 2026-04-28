@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/bloc/expense_bloc.dart';
+import '/presentation/bloc/expense/expense_bloc.dart';
 import '/utils/theme.dart';
 
 class ExpenseAnalytics extends StatelessWidget {

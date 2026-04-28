@@ -1,6 +1,6 @@
 import '/data/models/account/account.dart';
 import '/data/models/bank_card/bank_card.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
 extension FormToAccountMapper on AccountForm {

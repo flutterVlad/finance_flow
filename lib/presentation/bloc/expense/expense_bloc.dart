@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
 import '/domain/repositories/expense_repository.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/utils/extensions.dart';
 
 part 'expense_bloc.freezed.dart';

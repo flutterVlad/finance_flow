@@ -10,7 +10,7 @@ import '/data/mappers/account_mapper.dart';
 import '/data/models/account/account.dart';
 import '/data/service/image_picker.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/presentation/screens/home_screen/widgets/avatar_view.dart';
 import '/utils/widgets/inputs/text_input.dart';
 import '/utils/widgets/primary_button.dart';

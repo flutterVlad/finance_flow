@@ -12,7 +12,7 @@ import '/data/models/response/response.dart';
 import '/data/service/hive_service.dart';
 import '/data/service/image_picker.dart';
 import '/domain/repositories/settings_repository.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 
 final class SettingsRepositoryImpl implements SettingsRepository {
   const SettingsRepositoryImpl({

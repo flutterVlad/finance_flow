@@ -1,4 +1,4 @@
-import 'package:formz/formz.dart';
+part of 'settings_bloc.dart';
 
 class Email extends FormzInput<String?, String> {
   const Email.pure([String? value]) : super.pure(value ?? '');

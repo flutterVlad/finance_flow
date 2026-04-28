@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
+import '/di.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/bloc/expense_bloc.dart';
+import '/presentation/bloc/expense/expense_bloc.dart';
 import '/presentation/screens/home_screen/widgets/today_expenses.dart';
 import '/utils/constants.dart';
 import '/utils/extensions.dart';
@@ -25,7 +25,7 @@ class ViewAllExpensesScreen extends StatefulWidget {
 class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
   @override
   void dispose() {
-    GetIt.I<ExpenseBloc>().add(const .clearFilter());
+    getIt<ExpenseBloc>().add(const .clearFilter());
     super.dispose();
   }
 

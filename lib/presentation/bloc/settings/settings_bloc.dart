@@ -12,12 +12,12 @@ import '/data/models/response/response.dart';
 import '/domain/repositories/card_repository.dart';
 import '/domain/repositories/settings_repository.dart';
 import '/domain/use_cases/delete_account_use_case.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/forms.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 
 part 'settings_bloc.freezed.dart';
 part 'settings_event.dart';
 part 'settings_state.dart';
+part 'forms.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc({

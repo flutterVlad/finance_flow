@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '/di.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/bloc/expense_bloc.dart';
+import '/presentation/bloc/expense/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
@@ -14,7 +14,7 @@ class DateFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = GetIt.I<ExpenseBloc>();
+    final bloc = getIt<ExpenseBloc>();
 
     return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) {

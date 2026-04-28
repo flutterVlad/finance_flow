@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/widgets/card_swipper.dart';
 import '/presentation/screens/wallet_screen/widgets/weekly_expense.dart';
 import '/utils/widgets/toast_service.dart';

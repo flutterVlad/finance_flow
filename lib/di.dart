@@ -7,12 +7,9 @@ import 'package:talker/talker.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 
-import '/data/repositories/currency_repository_impl.dart';
-import '/domain/repositories/currency_repository.dart';
-import '/domain/use_cases/delete_account_use_case.dart';
-import '/presentation/bloc/expense_bloc.dart';
 import 'data/data_sources/local_datasource.dart';
 import 'data/repositories/card_repository_impl.dart';
+import 'data/repositories/currency_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
 import 'data/repositories/settings_repository_impl.dart';
 import 'data/service/encryption_key_service.dart';
@@ -20,10 +17,15 @@ import 'data/service/hive_service.dart';
 import 'data/service/image_picker.dart';
 import 'data/service/secure_storage_service.dart';
 import 'domain/repositories/card_repository.dart';
+import 'domain/repositories/currency_repository.dart';
 import 'domain/repositories/expense_repository.dart';
 import 'domain/repositories/settings_repository.dart';
+import 'domain/use_cases/delete_account_use_case.dart';
+import 'presentation/bloc/expense/expense_bloc.dart';
+import 'presentation/bloc/settings/settings_bloc.dart';
 import 'presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
-import 'presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+
+final getIt = GetIt.instance;
 
 class DI {
   Future<void> initDI() async {
@@ -36,22 +38,21 @@ class DI {
   }
 
   void _initBloc() {
-    GetIt.I.registerSingleton<SettingsBloc>(
+    getIt.registerSingleton<SettingsBloc>(
       SettingsBloc(
-        settingsRepository: GetIt.I<SettingsRepository>(),
-        cardRepository: GetIt.I<CardRepository>(),
-        deleteAccountUseCase: GetIt.I<DeleteAccountUseCase>(),
+        settingsRepository: getIt<SettingsRepository>(),
+        cardRepository: getIt<CardRepository>(),
+        deleteAccountUseCase: getIt<DeleteAccountUseCase>(),
       ),
     );
-    GetIt.I.registerLazySingleton<ExpenseBloc>(
+    getIt.registerLazySingleton<ExpenseBloc>(
       () => ExpenseBloc(
-        expenseRepository: GetIt.I<ExpenseRepository>(),
-        settingsBloc: GetIt.I<SettingsBloc>(),
+        expenseRepository: getIt<ExpenseRepository>(),
+        settingsBloc: getIt<SettingsBloc>(),
       ),
     );
-    GetIt.I.registerFactory(
-      () =>
-          TransactionsCubit(currencyRepository: GetIt.I<CurrencyRepository>()),
+    getIt.registerFactory(
+      () => TransactionsCubit(currencyRepository: getIt<CurrencyRepository>()),
     );
   }
 
@@ -59,56 +60,55 @@ class DI {
     final talker = Talker(
       logger: TalkerLogger(output: (message) => log(message, name: 'Talker')),
     );
-    GetIt.I.registerSingleton<Talker>(talker);
+    getIt.registerSingleton<Talker>(talker);
     Bloc.observer = TalkerBlocObserver(talker: talker);
   }
 
   void _initDio() {
     final dio = Dio(BaseOptions());
-    GetIt.I.registerSingleton<Dio>(dio);
-    final talker = GetIt.I<Talker>();
+    getIt.registerSingleton<Dio>(dio);
+    final talker = getIt<Talker>();
     dio.interceptors.add(TalkerDioLogger(talker: talker));
   }
 
   void _initRepositories() {
-    GetIt.I.registerLazySingleton<ExpenseRepository>(
-      () => ExpenseRepositoryImpl(hiveService: GetIt.I<HiveService>()),
+    getIt.registerLazySingleton<ExpenseRepository>(
+      () => ExpenseRepositoryImpl(hiveService: getIt<HiveService>()),
     );
-    GetIt.I.registerLazySingleton<SettingsRepository>(
+    getIt.registerLazySingleton<SettingsRepository>(
       () => SettingsRepositoryImpl(
-        hiveService: GetIt.I<HiveService>(),
-        imagePickerService: GetIt.I<ImagePickerService>(),
+        hiveService: getIt<HiveService>(),
+        imagePickerService: getIt<ImagePickerService>(),
       ),
     );
-    GetIt.I.registerLazySingleton<CardRepository>(
+    getIt.registerLazySingleton<CardRepository>(
       () => CardRepositoryImpl(
-        hiveService: GetIt.I<HiveService>(),
-        encryptionKeyService: GetIt.I<EncryptionKeyService>(),
+        hiveService: getIt<HiveService>(),
+        encryptionKeyService: getIt<EncryptionKeyService>(),
       ),
     );
-    GetIt.I.registerLazySingleton<CurrencyRepository>(
-      () => CurrencyRepositoryImpl(dio: GetIt.I<Dio>()),
+    getIt.registerLazySingleton<CurrencyRepository>(
+      () => CurrencyRepositoryImpl(dio: getIt<Dio>()),
     );
   }
 
   Future<void> _initServices() async {
-    GetIt.I.registerLazySingleton(() => const SecureStorageService());
-    GetIt.I.registerLazySingleton(
-      () =>
-          EncryptionKeyService(secureStorage: GetIt.I<SecureStorageService>()),
+    getIt.registerLazySingleton(() => const SecureStorageService());
+    getIt.registerLazySingleton(
+      () => EncryptionKeyService(secureStorage: getIt<SecureStorageService>()),
     );
-    GetIt.I.registerLazySingleton(() => const MockLocalService());
-    GetIt.I.registerLazySingleton(() => const ImagePickerService());
-    GetIt.I.registerLazySingleton(() => const HiveService());
-    await GetIt.I<HiveService>().init();
+    getIt.registerLazySingleton(() => const MockLocalService());
+    getIt.registerLazySingleton(() => const ImagePickerService());
+    getIt.registerLazySingleton(() => const HiveService());
+    await getIt<HiveService>().init();
   }
 
   void _initUseCases() {
-    GetIt.I.registerLazySingleton(
+    getIt.registerLazySingleton(
       () => DeleteAccountUseCase(
-        cardRepository: GetIt.I<CardRepository>(),
-        expenseRepository: GetIt.I<ExpenseRepository>(),
-        settingsRepository: GetIt.I<SettingsRepository>(),
+        cardRepository: getIt<CardRepository>(),
+        expenseRepository: getIt<ExpenseRepository>(),
+        settingsRepository: getIt<SettingsRepository>(),
       ),
     );
   }

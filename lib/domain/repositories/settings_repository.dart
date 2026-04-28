@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import '/data/models/account/account.dart';
 import '/data/models/response/response.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 
 abstract class SettingsRepository {
   FutureOr<Account?> fetchAccount([List<Account>? accounts]);

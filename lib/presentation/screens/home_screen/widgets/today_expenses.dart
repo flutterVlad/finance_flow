@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/bloc/expense_bloc.dart';
+import '/presentation/bloc/expense/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';

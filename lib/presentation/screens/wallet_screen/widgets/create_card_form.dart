@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
+import '/di.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/entities/card_form.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_dialog.dart';
@@ -103,7 +103,7 @@ class _CreateCardFormState extends State<CreateCardForm> {
                 PrimaryButton(
                   enabled: form.isValid,
                   onTap: () async {
-                    GetIt.I<SettingsBloc>().add(SaveCardEvent(form));
+                    getIt<SettingsBloc>().add(SaveCardEvent(form));
                     Navigator.of(context).pop();
                   },
                   text: S.of(context).save,

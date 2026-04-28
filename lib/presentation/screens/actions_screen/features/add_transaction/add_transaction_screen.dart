@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
 import '/data/models/expense/expense.dart';
+import '/di.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/bloc/expense_bloc.dart';
+import '/presentation/bloc/expense/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
@@ -37,8 +37,8 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  final bloc = GetIt.I<TransactionsCubit>();
-  final homeBloc = GetIt.I<ExpenseBloc>();
+  final bloc = getIt<TransactionsCubit>();
+  final homeBloc = getIt<ExpenseBloc>();
 
   late final TextEditingController _nameController;
   late final TextEditingController _amountController;

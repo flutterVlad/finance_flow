@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
+import '/di.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
+import '/presentation/bloc/settings/settings_bloc.dart';
 import '/presentation/screens/wallet_screen/widgets/create_card_form.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
@@ -26,7 +26,7 @@ class _CardSwiperState extends State<CardSwiper> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    final cardsLength = GetIt.I<SettingsBloc>().state.cards.length;
+    final cardsLength = getIt<SettingsBloc>().state.cards.length;
 
     _tabController = TabController(
       length: cardsLength == 0 ? 1 : cardsLength,
