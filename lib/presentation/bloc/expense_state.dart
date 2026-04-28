@@ -1,16 +1,16 @@
-part of 'home_bloc.dart';
+part of 'expense_bloc.dart';
 
 @freezed
-abstract class HomeState with _$HomeState {
-  const HomeState._();
+abstract class ExpenseState with _$ExpenseState {
+  const ExpenseState._();
 
-  const factory HomeState({
+  const factory ExpenseState({
     String? accountId,
     @Default([]) List<DayExpense> allDayExpenses,
     @Default([]) List<Expense> allExpenses,
     @Default([]) List<Expense> incomes,
     required DateTime monthFilter,
-  }) = _HomeState;
+  }) = _ExpenseState;
 
   List<Expense> get monthExpenses =>
       allExpenses.where((e) => e.datetime.isCurrentMonth).toList();

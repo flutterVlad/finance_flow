@@ -5,7 +5,9 @@ import '/data/models/currency/currency.dart';
 import '/domain/repositories/currency_repository.dart';
 
 final class CurrencyRepositoryImpl implements CurrencyRepository {
-  const CurrencyRepositoryImpl();
+  const CurrencyRepositoryImpl({required this.dio});
+
+  final Dio dio;
 
   @override
   Future<List<CurrencyModel>> fetchCurrencies() async {

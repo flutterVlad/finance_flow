@@ -14,38 +14,60 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  bloc: ^9.1.0
+  # Flutter dependencies
+  async: any
   collection: any
-  cupertino_icons: ^1.0.8
-  dio: ^5.9.0
-  equatable: ^2.0.5
+  intl: ^0.20.2
+  meta: any
+
+  # State manager
+  bloc: ^9.1.0
   flutter_bloc: ^9.1.1
-  fluttertoast: ^9.0.0
+  provider: ^6.1.5+1
+
+  # Network
+  dio: ^5.9.0
+
+  # Annotation
   freezed_annotation: ^3.1.0
-  flutter_svg: ^2.0.9
+  json_annotation: ^4.9.0
+
+  # Storage
   flutter_secure_storage: ^10.0.0
-  fl_chart: ^1.1.1
-  formz: ^0.8.0
-  google_fonts: ^6.3.3
-  go_router: ^17.0.0
-  get_it: ^9.2.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  intl: ^0.20.2
+
+  # Utils
+  equatable: ^2.0.5
+  fluttertoast: ^9.0.0
+  formz: ^0.8.0
   image_picker: ^1.2.1
-  json_annotation: ^4.9.0
   json_serializable_uuid_converter: ^1.0.0
   nested: ^1.0.0
-  provider: ^6.1.5+1
   path_provider: ^2.1.5
   uuid: ^4.5.2
+
+  # UI
+  fl_chart: ^1.1.1
+  flutter_svg: ^2.0.9
+  google_fonts: ^6.3.3
+
+  # Router
+  go_router: ^17.0.0
+
+  # DI
+  get_it: ^9.2.0
+
+  # Logger
+  talker: ^5.1.16
+  talker_bloc_logger: ^5.1.16
+  talker_dio_logger: ^5.1.16
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   freezed: ^3.2.3
-  #  hive_generator: any
   build_runner: ^2.4.6
   json_serializable: ^6.7.1
   flutter_lints: ^6.0.0

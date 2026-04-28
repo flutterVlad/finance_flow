@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
@@ -18,13 +18,7 @@ class SpentStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        return const CustomScrollView(
-          slivers: [DateFilter(), Diagram(), Income()],
-        );
-      },
-    );
+    return const CustomScrollView(slivers: [DateFilter(), Diagram(), Income()]);
   }
 }
 
@@ -43,7 +37,7 @@ class _DiagramState extends State<Diagram> {
     final centerSpaceRadius = MediaQuery.widthOf(context) / 5;
     final s = S.of(context);
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) {
         final expenses = state.expenseOnSelectedMonth;
 
@@ -168,7 +162,7 @@ class Income extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       buildWhen: (prev, curr) => !const ListEquality().equals(
         prev.incomesOnSelectedMonth,
         curr.incomesOnSelectedMonth,

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import '/presentation/bloc/expense_bloc.dart';
 import 'di.dart';
 import 'l10n/app_localizations.dart';
-import 'presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import 'utils/navigation/router.dart';
 import 'utils/theme.dart';
@@ -18,7 +18,7 @@ class FinanceFlowApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => GetIt.I<SettingsBloc>()),
-        BlocProvider(create: (_) => GetIt.I<HomeBloc>()),
+        BlocProvider(create: (_) => GetIt.I<ExpenseBloc>()),
       ],
       child: BlocSelector<SettingsBloc, SettingsState, Locale>(
         selector: (state) => state.locale,

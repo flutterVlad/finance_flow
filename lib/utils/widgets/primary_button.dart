@@ -21,32 +21,39 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttonColor = color ?? AppColors.primary;
 
-    return Material(
-      type: .button,
-      color: enabled ? buttonColor : AppColors.grey,
-      borderRadius: .circular(16),
-      elevation: 3,
-      child: InkWell(
+    return TweenAnimationBuilder(
+      duration: kThemeChangeDuration,
+      tween: ColorTween(
+        begin: enabled ? AppColors.grey : buttonColor,
+        end: enabled ? buttonColor : AppColors.grey,
+      ),
+      builder: (_, color, _) => Material(
+        type: .button,
+        color: color,
         borderRadius: .circular(16),
-        onTap: !isLoading && enabled ? onTap : null,
-        child: SizedBox(
-          height: 50,
-          child: Center(
-            child: isLoading
-                ? const SizedBox.square(
-                    dimension: 20,
-                    child: CircularProgressIndicator.adaptive(
-                      strokeWidth: 2,
-                      backgroundColor: AppColors.onPrimary,
+        elevation: 3,
+        child: InkWell(
+          borderRadius: .circular(16),
+          onTap: !isLoading && enabled ? onTap : null,
+          child: SizedBox(
+            height: 48,
+            child: Center(
+              child: isLoading
+                  ? const SizedBox.square(
+                      dimension: 20,
+                      child: CircularProgressIndicator.adaptive(
+                        strokeWidth: 2,
+                        backgroundColor: AppColors.onPrimary,
+                      ),
+                    )
+                  : Text(
+                      text,
+                      style: const TextStyle(
+                        color: AppColors.onPrimary,
+                        fontSize: 16,
+                      ),
                     ),
-                  )
-                : Text(
-                    text,
-                    style: const TextStyle(
-                      color: AppColors.onPrimary,
-                      fontSize: 16,
-                    ),
-                  ),
+            ),
           ),
         ),
       ),

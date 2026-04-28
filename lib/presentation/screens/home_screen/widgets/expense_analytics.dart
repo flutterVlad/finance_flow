@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 
 import '/data/models/day_expenses/day_expenses.dart';
 import '/l10n/app_localizations.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/theme.dart';
-import '../bloc/home_bloc.dart';
 
 class ExpenseAnalytics extends StatelessWidget {
   const ExpenseAnalytics({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) {
         return Padding(
           padding: const .symmetric(horizontal: 16, vertical: 8),

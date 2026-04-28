@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import '/data/models/day_expenses/day_expenses.dart';
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/presentation/screens/home_screen/widgets/today_expenses.dart';
 import '/utils/constants.dart';
 import '/utils/extensions.dart';
@@ -25,14 +25,14 @@ class ViewAllExpensesScreen extends StatefulWidget {
 class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
   @override
   void dispose() {
-    GetIt.I<HomeBloc>().add(const ClearMonthFilterEvent());
+    GetIt.I<ExpenseBloc>().add(const .clearFilter());
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<HomeBloc, HomeState>(
+      body: BlocBuilder<ExpenseBloc, ExpenseState>(
         builder: (context, state) {
           final filteredDayExpenses = state.filteredDayExpenses;
 
@@ -42,7 +42,7 @@ class _ViewAllExpensesScreenState extends State<ViewAllExpensesScreen> {
                 selectedMonth: state.monthFilter,
                 spendsOnSelectedMonth: state.spendsOnSelectedMonth,
                 onMonthFilterUpdate: (month) {
-                  context.read<HomeBloc>().add(FilterMonthEvent(month));
+                  context.read<ExpenseBloc>().add(.filterMonth(month));
                 },
               ),
               const ViewAllExpensesSectionTitle(),
@@ -251,7 +251,7 @@ class _AnimatedExpenseItemState extends State<AnimatedExpenseItem>
         expense: widget.expense,
         isDismissible: true,
         onDelete: () {
-          context.read<HomeBloc>().add(DeleteExpenseEvent(widget.expense));
+          context.read<ExpenseBloc>().add(.deleteExpense(widget.expense));
         },
         onEdit: () {
           context.pushNamed('add_transaction', extra: widget.expense);

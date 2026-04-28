@@ -1,10 +1,10 @@
+import 'package:finance_flow/presentation/bloc/expense_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
 import '/presentation/screens/wallet_screen/widgets/scatter_statistics.dart';
 import '/utils/extensions.dart';
 import '/utils/theme.dart';
@@ -100,12 +100,12 @@ class _WeeklyExpenseState extends State<WeeklyExpense> {
                 ],
               ),
 
-              BlocSelector<HomeBloc, HomeState, List<GroupedExpense>>(
+              BlocSelector<ExpenseBloc, ExpenseState, List<GroupedExpense>>(
                 selector: (state) => state.getGroupedExpenseByDate(date),
                 builder: (_, data) => ScatterStatistics(expenses: data),
               ),
 
-              BlocSelector<HomeBloc, HomeState, List<GroupedExpense>>(
+              BlocSelector<ExpenseBloc, ExpenseState, List<GroupedExpense>>(
                 selector: (state) => state.getGroupedExpenseByDate(date),
                 builder: (_, data) {
                   return ScatterExpensesList(expenses: data);

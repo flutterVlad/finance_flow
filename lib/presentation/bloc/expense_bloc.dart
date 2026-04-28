@@ -9,20 +9,19 @@ import '/domain/repositories/expense_repository.dart';
 import '/presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 import '/utils/extensions.dart';
 
-part 'home_bloc.freezed.dart';
-part 'home_event.dart';
-part 'home_state.dart';
+part 'expense_bloc.freezed.dart';
+part 'expense_event.dart';
+part 'expense_state.dart';
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc({
+class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
+  ExpenseBloc({
     required ExpenseRepository expenseRepository,
     required SettingsBloc settingsBloc,
   }) : _expenseRepository = expenseRepository,
-       super(HomeState(monthFilter: DateTime.now())) {
-    on<HomeEvent>((event, emit) async {
+       super(ExpenseState(monthFilter: DateTime.now())) {
+    on<ExpenseEvent>((event, emit) async {
       await event.map(
         init: (event) async => await _init(event, emit),
-        updateData: (_) async => await _updateData(emit),
         filterMonth: (event) async => await _filterMonth(event, emit),
         clearFilter: (_) async => await _clearFilter(emit),
         addExpense: (event) async => await _addExpense(event, emit),
@@ -33,12 +32,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
 
     _settingsSubscription = settingsBloc.stream.listen((state) {
-      add(InitHomeEvent(accountId: state.selectedAccount?.uid?.uuid));
+      add(.init(accountId: state.selectedAccount?.uid?.uuid));
     });
-
-    add(
-      InitHomeEvent(accountId: settingsBloc.state.selectedAccount?.uid?.uuid),
-    );
   }
   final ExpenseRepository _expenseRepository;
   late final StreamSubscription _settingsSubscription;
@@ -49,34 +44,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     return super.close();
   }
 
-  Future<void> _init(InitHomeEvent event, Emitter<HomeState> emit) async {
+  Future<void> _init(
+    ExpenseEvent$Init event,
+    Emitter<ExpenseState> emit,
+  ) async {
     emit(state.copyWith(accountId: event.accountId));
-    add(const GetAllExpensesEvent());
+    add(const .getAllExpenses());
   }
 
-  Future<void> _updateData(Emitter<HomeState> emit) async {}
-
   Future<void> _filterMonth(
-    FilterMonthEvent event,
-    Emitter<HomeState> emit,
+    ExpenseEvent$FilterMonth event,
+    Emitter<ExpenseState> emit,
   ) async {
     emit(state.copyWith(monthFilter: event.date));
   }
 
-  Future<void> _clearFilter(Emitter<HomeState> emit) async {
+  Future<void> _clearFilter(Emitter<ExpenseState> emit) async {
     emit(state.copyWith(monthFilter: DateTime.now()));
   }
 
   Future<void> _addExpense(
-    AddExpenseEvent event,
-    Emitter<HomeState> emit,
+    ExpenseEvent$Add event,
+    Emitter<ExpenseState> emit,
   ) async {
     final expense = event.expense.copyWith(accountId: state.accountId);
     await _expenseRepository.addExpense(expense);
-    add(const GetAllExpensesEvent());
+    add(const .getAllExpenses());
   }
 
-  Future<void> _getAllExpenses(Emitter<HomeState> emit) async {
+  Future<void> _getAllExpenses(Emitter<ExpenseState> emit) async {
     final fetchedExpenses = await _expenseRepository.getAllExpenses(
       state.accountId,
     );
@@ -95,18 +91,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _deleteExpense(
-    DeleteExpenseEvent event,
-    Emitter<HomeState> emit,
+    ExpenseEvent$Delete event,
+    Emitter<ExpenseState> emit,
   ) async {
     await _expenseRepository.deleteExpense(event.expense);
-    add(const GetAllExpensesEvent());
+    add(const .getAllExpenses());
   }
 
   Future<void> _updateExpense(
-    UpdateExpenseEvent event,
-    Emitter<HomeState> emit,
+    ExpenseEvent$Update event,
+    Emitter<ExpenseState> emit,
   ) async {
     await _expenseRepository.updateExpense(event.expense);
-    add(const GetAllExpensesEvent());
+    add(const .getAllExpenses());
   }
 }

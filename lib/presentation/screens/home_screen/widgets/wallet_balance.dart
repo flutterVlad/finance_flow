@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/widgets/gradient_progress_bar.dart';
 
@@ -15,7 +15,7 @@ class WalletBalance extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final s = S.of(context);
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) => Padding(
         padding: const .symmetric(horizontal: 16, vertical: 8),
         child: Material(

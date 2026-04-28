@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_bottom_sheet.dart';
@@ -14,9 +14,9 @@ class DateFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = GetIt.I<HomeBloc>();
+    final bloc = GetIt.I<ExpenseBloc>();
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) {
         return SliverToBoxAdapter(
           child: Padding(
@@ -28,7 +28,7 @@ class DateFilter extends StatelessWidget {
                   AppBottomSheet.showDatePicker(
                     context: context,
                     onDateTimeChanged: (date) {
-                      bloc.add(FilterMonthEvent(date));
+                      bloc.add(.filterMonth(date));
                     },
                     mode: .monthYear,
                     initialDateTime: state.monthFilter,

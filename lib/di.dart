@@ -1,8 +1,16 @@
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker/talker.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '/data/repositories/currency_repository_impl.dart';
 import '/domain/repositories/currency_repository.dart';
 import '/domain/use_cases/delete_account_use_case.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import 'data/data_sources/local_datasource.dart';
 import 'data/repositories/card_repository_impl.dart';
 import 'data/repositories/expense_repository_impl.dart';
@@ -15,11 +23,12 @@ import 'domain/repositories/card_repository.dart';
 import 'domain/repositories/expense_repository.dart';
 import 'domain/repositories/settings_repository.dart';
 import 'presentation/screens/actions_screen/features/add_transaction/bloc/transactions_cubit.dart';
-import 'presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'presentation/screens/home_screen/features/settings/bloc/settings_bloc.dart';
 
 class DI {
   Future<void> initDI() async {
+    _initTalker();
+    _initDio();
     await _initServices();
     _initRepositories();
     _initUseCases();
@@ -34,8 +43,8 @@ class DI {
         deleteAccountUseCase: GetIt.I<DeleteAccountUseCase>(),
       ),
     );
-    GetIt.I.registerLazySingleton<HomeBloc>(
-      () => HomeBloc(
+    GetIt.I.registerLazySingleton<ExpenseBloc>(
+      () => ExpenseBloc(
         expenseRepository: GetIt.I<ExpenseRepository>(),
         settingsBloc: GetIt.I<SettingsBloc>(),
       ),
@@ -44,6 +53,21 @@ class DI {
       () =>
           TransactionsCubit(currencyRepository: GetIt.I<CurrencyRepository>()),
     );
+  }
+
+  void _initTalker() {
+    final talker = Talker(
+      logger: TalkerLogger(output: (message) => log(message, name: 'Talker')),
+    );
+    GetIt.I.registerSingleton<Talker>(talker);
+    Bloc.observer = TalkerBlocObserver(talker: talker);
+  }
+
+  void _initDio() {
+    final dio = Dio(BaseOptions());
+    GetIt.I.registerSingleton<Dio>(dio);
+    final talker = GetIt.I<Talker>();
+    dio.interceptors.add(TalkerDioLogger(talker: talker));
   }
 
   void _initRepositories() {
@@ -63,7 +87,7 @@ class DI {
       ),
     );
     GetIt.I.registerLazySingleton<CurrencyRepository>(
-      () => const CurrencyRepositoryImpl(),
+      () => CurrencyRepositoryImpl(dio: GetIt.I<Dio>()),
     );
   }
 

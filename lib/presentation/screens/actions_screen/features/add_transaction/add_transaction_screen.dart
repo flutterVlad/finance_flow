@@ -9,7 +9,7 @@ import '/data/models/category/category.dart';
 import '/data/models/currency/currency.dart';
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
-import '/presentation/screens/home_screen/bloc/home_bloc.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
@@ -38,7 +38,7 @@ class AddTransactionScreen extends StatefulWidget {
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final bloc = GetIt.I<TransactionsCubit>();
-  final homeBloc = GetIt.I<HomeBloc>();
+  final homeBloc = GetIt.I<ExpenseBloc>();
 
   late final TextEditingController _nameController;
   late final TextEditingController _amountController;
@@ -273,7 +273,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       state.isExpenseEdited(widget.initialExpense),
                   onTap: () {
                     if (widget.initialExpense == null) {
-                      homeBloc.add(AddExpenseEvent(state.validExpense));
+                      homeBloc.add(.addExpense(state.validExpense));
                       ToastService.showToast(
                         message: s.expenseNameCreated(
                           state.validExpense.name,
@@ -283,7 +283,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       );
                     } else {
                       homeBloc.add(
-                        UpdateExpenseEvent(
+                        .updateExpense(
                           state.validExpense.copyWith(
                             accountId: widget.initialExpense?.accountId,
                           ),

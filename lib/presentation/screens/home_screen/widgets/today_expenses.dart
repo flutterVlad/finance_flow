@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 
 import '/data/models/expense/expense.dart';
 import '/l10n/app_localizations.dart';
+import '/presentation/bloc/expense_bloc.dart';
 import '/utils/extensions.dart';
 import '/utils/svgs/svg.dart';
 import '/utils/theme.dart';
 import '/utils/widgets/app_dialog.dart';
 import '/utils/widgets/app_text_button.dart';
-import '../bloc/home_bloc.dart';
 
 class TodayExpenses extends StatelessWidget {
   const TodayExpenses({super.key});
@@ -19,7 +19,7 @@ class TodayExpenses extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) => Padding(
         padding: const .symmetric(horizontal: 16, vertical: 8),
         child: Column(
@@ -46,7 +46,7 @@ class TodayExpenses extends StatelessWidget {
                   expense: el,
                   isDismissible: true,
                   onDelete: () {
-                    context.read<HomeBloc>().add(DeleteExpenseEvent(el));
+                    context.read<ExpenseBloc>().add(.deleteExpense(el));
                   },
                   onEdit: () {
                     context.pushNamed('add_transaction', extra: el);
